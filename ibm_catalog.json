@@ -1,0 +1,136 @@
+{
+    "name": "custom-solution",
+    "version": "0.0.6",
+    "flavors": [
+        {
+            "label": "CustomEdge",
+            "name": "customedge",
+            "compliance": {
+                "controls": [
+                    {
+                        "profile_name": "SLZ compliance v0.1.1",
+                        "control_id": "AC-2(c)"
+                    },
+                    {
+                        "profile_name": "SLZ compliance v0.1.1",
+                        "control_id": "AC-2(i)"
+                    },
+                    {
+                        "profile_name": "SLZ compliance v0.1.1",
+                        "control_id": "AC-6-0"
+                    },
+                    {
+                        "profile_name": "SLZ compliance v0.1.1",
+                        "control_id": "CM-2"
+                    },
+                    {
+                        "profile_name": "SLZ compliance v0.1.1",
+                        "control_id": "SC-12"
+                    },
+                    {
+                        "profile_name": "SLZ compliance v0.1.1",
+                        "control_id": "SC-36"
+                    }
+                ]
+            },
+            "iam_permissions": [
+                {
+                    "role_crns": [
+                        "crn:v1:bluemix:public:iam::::serviceRole:Manager"
+                    ],
+                    "service_name": "appid"
+                },
+                {
+                    "role_crns": [
+                        "crn:v1:bluemix:public:iam::::serviceRole:Manager"
+                    ],
+                    "service_name": "cloud-object-storage"
+                },
+                {
+                    "role_crns": [
+                        "crn:v1:bluemix:public:iam::::serviceRole:Manager"
+                    ],
+                    "service_name": "hs-crypto"
+                },
+                {
+                    "role_crns": [
+                        "crn:v1:bluemix:public:iam::::role:Administrator"
+                    ],
+                    "service_name": "iam-identity"
+                },
+                {
+                    "role_crns": [
+                        "crn:v1:bluemix:public:iam::::serviceRole:Manager"
+                    ],
+                    "service_name": "kms"
+                },
+                {
+                    "role_crns": [
+                        "crn:v1:bluemix:public:iam::::serviceRole:Manager",
+                        "crn:v1:bluemix:public:iam::::role:Administrator"
+                    ],
+                    "service_name": "is.vpc"
+                }
+            ],
+            "architecture": {
+                "descriptions": "",
+                "features": [
+                    {
+                        "title": "Customized",
+                        "description": "Yes"
+                    },
+                    {
+                        "title": "Separate VPC for management",
+                        "description": "Yes"
+                    },
+                    {
+                        "title": "Separate VPC for workloads",
+                        "description": "Yes"
+                    },
+                    {
+                        "title": "Virtual Server Instances for every subnet",
+                        "description": "Yes"
+                    },
+                    {
+                        "title": "Increases security with Key Management",
+                        "description": "Yes"
+                    },
+                    {
+                        "title": "Reduces failure events by using multizone regions",
+                        "description": "No"
+                    },
+                    {
+                        "title": "Collects and stores Internet Protocol (IP) traffic information with Activity Tracker and Flow Logs",
+                        "description": "No"
+                    },
+                    {
+                        "title": "Securely connects to multiple networks with a site-to-site virtual private network",
+                        "description": "No"
+                    },
+                    {
+                        "title": "Simplifies risk management and demonstrates regulatory compliance with Financial Services",
+                        "description": "No"
+                    },
+                    {
+                        "title": "Uses an edge VPC for secure access through the public internet",
+                        "description": "No"
+                    },
+                    {
+                        "title": "Uses Floating IP address for access through the public internet",
+                        "description": "Yes"
+                    }
+                ],
+                "diagrams": [
+                    {
+                        "diagram": {
+                            "caption": "Custom Edge variation",
+                            "url": "https://github.com/gmendel/deployable-architecture/raw/main/custom-slz-with-edge.svg",
+                            "metadata": []
+                        },
+                        "description": "Custom Edge variation of Secure infrastructure on VPC for regulated industries requires at least 2 CPUs and 4 GB of memory.\n\nSecure infrastructure on VPC for regulated industries is implemented with virtual servers. It utilizes two separate Virtual Private Clouds (VPC), a Management VPC and a Workload VPC, to manage the environment and the deployed workload. Each VPC is a multi-zoned, multi-subnet implementation that keeps your workloads secure.\n\nVirtual Private Endpoints connect the VPCs to each other and to IBM Cloud services, including Key Protect, IAM, Container Registry, Object Storage, and any additional services. IBM Cloud services are configured for storage and key management.\n\nIBM Cloud Flow Logs for VPC enable the collection, storage, and presentation of information about the Internet Protocol (IP) traffic that is going to and from network interfaces within your VPC. In addition, Activity Tracker logs events from enabled services. IBM Cloud Flow Logs for VPC and Activity Tracker are included in this configuration. Additional security services can be added such as Hyper Connect Crypto Service."
+                    }
+                ]
+            }
+        }
+    ]
+}

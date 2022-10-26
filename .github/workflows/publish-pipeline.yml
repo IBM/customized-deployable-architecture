@@ -1,0 +1,75 @@
+# This is a sample workflow to demonstrate a CI pipeline with onboarding of a new release of an offering
+# to the IBM Cloud catalog.
+
+name: custom-ci-pipeline
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on the publish of a release. Its assumed that the release has an associated tag.
+  release:
+    types:
+      - published
+       
+  workflow_dispatch: 
+jobs:
+  # This workflow contains a single job called "onboard-publish-release"
+  onboard-publish-release:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access scripts, etc.
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.release.tag_name }}
+
+      # For debugging - echo all the environment variables in sorted order and the github context
+      - name: Dump environment and Git context variables
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: |
+          env | sort
+          echo "$GITHUB_CONTEXT"
+
+      - name: Setup IBMCLOUD Cli
+        run: |
+          curl -sL https://ibm.biz/idt-installer | bash
+          ibmcloud plugin install catalogs-management
+          ibmcloud plugin install schematics
+          ibmcloud plugin list
+
+      - name: Upload, validate, scan and publish to cloud catalog
+        env: 
+          IBMCLOUD_API_KEY: ${{ secrets.IBMCLOUD_API_KEY }}
+        run: |
+          ibmcloud login --apikey "$IBMCLOUD_API_KEY" --no-region
+
+          CATALOG_NAME="Demo"
+          OFFERING_NAME="demo-custom-edge-slz"
+          VARIATION="customedge"
+          RESOURCE_GROUP="default"
+
+          VERSION=$(echo ${{ github.event.release.tag_name }})
+          TARBALL_URL="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/archive/refs/tags/${VERSION}.tar.gz"
+
+          echo "--------------------------------------------------------------------"
+          echo "onboard version, validate, scan, publish"
+
+          # generate an ssh key that can be used as a validation value 
+          ssh-keygen -f ./id_rsa -t rsa -N ''
+          SSH_KEY=$(cat ./id_rsa.pub)
+
+          # format offering validation values into json format
+          jq -n --arg IBMCLOUD_API_KEY "$IBMCLOUD_API_KEY" --arg SSH_KEY "$SSH_KEY" '{ "ibmcloud_api_key": $IBMCLOUD_API_KEY, "prefix": "validate", "ssh_key": $SSH_KEY }' > validation-values.json 
+
+          # import the version into the catalog and run schematics validation 
+          echo "importing to the catalog and validating"
+          ./.github/scripts/onboard_validate_publish.sh "$CATALOG_NAME" "$OFFERING_NAME" "$TARBALL_URL" "$VERSION" "$VARIATION" "$RESOURCE_GROUP"
+
+          echo "--------------------------------------------------------------------"
+          echo "destroy validation resources"
+
+          # get the schematics workspace id that was used for the validation of this version
+          WORKSPACE_ID=$(ibmcloud catalog offering get -c "$CATALOG_NAME" -o "$OFFERING_NAME" --output json | jq -r --arg version "$VERSION" '.kinds[] | select(.format_kind=="terraform").versions[] | select(.version==$version).validation.target.workspace_id')
+          ./.github/scripts/cleanup.sh "$WORKSPACE_ID"
