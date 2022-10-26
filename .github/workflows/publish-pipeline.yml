@@ -16,6 +16,12 @@ jobs:
   onboard-publish-release:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
+    env:
+      CATALOG_NAME: Demo
+      OFFERING_NAME: custom-deployable-arch
+      VARIATION: customedge
+      RESOURCE_GROUP: default
+      # Note that IBMCLOUD_API_KEY is a secret env. configured on the project
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -44,11 +50,6 @@ jobs:
           IBMCLOUD_API_KEY: ${{ secrets.IBMCLOUD_API_KEY }}
         run: |
           ibmcloud login --apikey "$IBMCLOUD_API_KEY" --no-region
-
-          CATALOG_NAME="Demo"
-          OFFERING_NAME="demo-custom-edge-slz"
-          VARIATION="customedge"
-          RESOURCE_GROUP="default"
 
           VERSION=$(echo ${{ github.event.release.tag_name }})
           TARBALL_URL="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/archive/refs/tags/${VERSION}.tar.gz"
