@@ -41,4 +41,6 @@ if [[ ret -eq 0 ]]; then
 
     # mark the version as ready in the catalog
     ibmcloud catalog offering ready --vl "$versionLocator" 
+else
+    exit 1    
 fi
