@@ -30,47 +30,31 @@ jobs:
         with:
           ref: ${{ github.event.release.tag_name }}
 
-      # For debugging - echo all the environment variables in sorted order and the github context
-      - name: Dump environment and Git context variables
-        env:
-          GITHUB_CONTEXT: ${{ toJson(github) }}
+      - name: Install and setup IBMCLOUD Cli
         run: |
-          env | sort
-          echo "$GITHUB_CONTEXT"
-
-      - name: Setup IBMCLOUD Cli
-        run: |
-          curl -sL https://ibm.biz/idt-installer | bash
-          ibmcloud plugin install catalogs-management
-          ibmcloud plugin install schematics
-          ibmcloud plugin list
+          ./.github/scripts/installCloudCli.sh
 
       - name: Upload, validate, scan and publish to cloud catalog
         env: 
           IBMCLOUD_API_KEY: ${{ secrets.IBMCLOUD_API_KEY }}
         run: |
+          # login to the IBM Cloud using an api key from the appropriate cloud account
           ibmcloud login --apikey "$IBMCLOUD_API_KEY" --no-region
-
-          VERSION=$(echo ${{ github.event.release.tag_name }})
-          TARBALL_URL="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/archive/refs/tags/${VERSION}.tar.gz"
 
           echo "--------------------------------------------------------------------"
           echo "onboard version, validate, scan, publish"
+          echo "--------------------------------------------------------------------"
 
-          # generate an ssh key that can be used as a validation value 
-          ssh-keygen -f ./id_rsa -t rsa -N ''
-          SSH_KEY=$(cat ./id_rsa.pub)
+          # generate deployment values for validation
+          VALIDATION_VALUES="validation-values.json"
+          ./.github/scripts/generateValidationValues.sh "$VALIDATION_VALUES"
 
-          # format offering validation values into json format
-          jq -n --arg IBMCLOUD_API_KEY "$IBMCLOUD_API_KEY" --arg SSH_KEY "$SSH_KEY" '{ "ibmcloud_api_key": $IBMCLOUD_API_KEY, "prefix": "validate", "ssh_key": $SSH_KEY }' > validation-values.json 
-
-          # import the version into the catalog and run schematics validation 
+          # import the version into the catalog and run validation via schematics
           echo "importing to the catalog and validating"
-          ./.github/scripts/onboard_validate_publish.sh "$CATALOG_NAME" "$OFFERING_NAME" "$TARBALL_URL" "$VERSION" "$VARIATION" "$RESOURCE_GROUP"
+          WORKSPACE_ID=$(./.github/scripts/onboard_validate_publish.sh "$CATALOG_NAME" "$OFFERING_NAME" "$VARIATION" "$RESOURCE_GROUP" "$VALIDATION_VALUES")
 
           echo "--------------------------------------------------------------------"
           echo "destroy validation resources"
-
-          # get the schematics workspace id that was used for the validation of this version
-          WORKSPACE_ID=$(ibmcloud catalog offering get -c "$CATALOG_NAME" -o "$OFFERING_NAME" --output json | jq -r --arg version "$VERSION" '.kinds[] | select(.format_kind=="terraform").versions[] | select(.version==$version).validation.target.workspace_id')
+          echo "--------------------------------------------------------------------"
+          
           ./.github/scripts/cleanup.sh "$WORKSPACE_ID"
