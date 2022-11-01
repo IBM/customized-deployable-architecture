@@ -1,6 +1,11 @@
 #! /bin/bash
 
-WORKSPACE_ID=$1
+VERSION=$(echo ${{ github.event.release.tag_name }})
+CATALOG_NAME=$1
+OFFERING_NAME=$2
+
+# get the schematics workspace id that was used for the validation of this version
+WORKSPACE_ID=$(ibmcloud catalog offering get -c "$CATALOG_NAME" -o "$OFFERING_NAME" --output json | jq -r --arg version "$VERSION" '.kinds[] | select(.format_kind=="terraform").versions[] | select(.version==$version).validation.target.workspace_id')
 
 echo "refreshing token and netrc"
 ibmcloud catalog utility netrc

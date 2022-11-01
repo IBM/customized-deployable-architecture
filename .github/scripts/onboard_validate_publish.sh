@@ -42,8 +42,3 @@ if [[ ret -eq 0 ]]; then
     # mark the version as ready in the catalog
     ibmcloud catalog offering ready --vl "$versionLocator" 
 fi
-
-# get the schematics workspace id that was used for the validation of this version
-WORKSPACE_ID=$(ibmcloud catalog offering get -c "$CATALOG_NAME" -o "$OFFERING_NAME" --output json | jq -r --arg version "$VERSION" '.kinds[] | select(.format_kind=="terraform").versions[] | select(.version==$version).validation.target.workspace_id')
-
-return $WORKSPACE_ID

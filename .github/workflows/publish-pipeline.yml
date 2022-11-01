@@ -51,10 +51,10 @@ jobs:
 
           # import the version into the catalog and run validation via schematics
           echo "importing to the catalog and validating"
-          WORKSPACE_ID=$(./.github/scripts/onboard_validate_publish.sh "$CATALOG_NAME" "$OFFERING_NAME" "$VARIATION" "$RESOURCE_GROUP" "$VALIDATION_VALUES")
+          ./.github/scripts/onboard_validate_publish.sh "$CATALOG_NAME" "$OFFERING_NAME" "$VARIATION" "$RESOURCE_GROUP" "$VALIDATION_VALUES"
 
           echo "--------------------------------------------------------------------"
           echo "destroy validation resources"
           echo "--------------------------------------------------------------------"
           
-          ./.github/scripts/cleanup.sh "$WORKSPACE_ID"
+          ./.github/scripts/cleanup.sh "$CATALOG_NAME" "$OFFERING_NAME"
