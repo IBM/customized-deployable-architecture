@@ -2,12 +2,12 @@
 
 CATALOG_NAME=$1
 OFFERING_NAME=$2
-VARIATION=$3
-RESOURCE_GROUP=$4
-VALIDATION_VALUES=$5
+VERSION=$3
+VARIATION=$4
+RESOURCE_GROUP=$5
+VALIDATION_VALUES=$6
 TIME_OUT=10800         # 3 hours - sufficiently large.  will not run this long.
 
-VERSION=$(echo ${{ github.event.release.tag_name }})
 TARBALL_URL="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/archive/refs/tags/${VERSION}.tar.gz"
 
 echo "CatalogName:"$CATALOG_NAME
