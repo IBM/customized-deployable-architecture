@@ -9,3 +9,6 @@ ibmcloud plugin install schematics
 
 # list whats installed into the log
 ibmcloud plugin list
+
+# login to the IBM Cloud using an api key from the appropriate cloud account
+ibmcloud login --apikey "$IBMCLOUD_API_KEY" --no-region
