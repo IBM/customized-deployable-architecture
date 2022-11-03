@@ -32,7 +32,7 @@ then
     echo "waiting for resources to be destroyed"
     # wait for destroy workspace to be started
     attempts=0
-    destroyStarted=$(getDestroyStatus)
+    destroyStarted=$(getWorkspaceStatus)
     while [ "$destroyStarted" != "INPROGRESS" ] && [[ $attempts -le 60 ]]
     do
         sleep 5
