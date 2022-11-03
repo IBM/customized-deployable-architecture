@@ -21,7 +21,7 @@ jobs:
       OFFERING_NAME: custom-deployable-arch
       VARIATION: customedge
       RESOURCE_GROUP: default
-      # Note that IBMCLOUD_API_KEY is a secret env. configured on the project
+      # Note that IBMCLOUD_API_KEY is a secret environment variable configured on the project
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -46,10 +46,6 @@ jobs:
           echo "--------------------------------------------------------------------"
           echo "onboard version, validate, scan, publish"
           echo "--------------------------------------------------------------------"
-
-          # generate deployment values for validation
-          VALIDATION_VALUES="validation-values.json"
-          ./.github/scripts/generateValidationValues.sh "$VALIDATION_VALUES"
 
           # import the version into the catalog and run validation via schematics
           echo "importing to the catalog and validating"
