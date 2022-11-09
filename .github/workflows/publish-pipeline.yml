@@ -21,7 +21,7 @@ jobs:
       OFFERING_NAME: custom-deployable-arch
       VARIATION: customedge
       RESOURCE_GROUP: default
-      # Note that IBMCLOUD_API_KEY is a secret env. configured on the project
+      # Note that IBMCLOUD_API_KEY is a secret environment variable configured on the project
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -31,32 +31,23 @@ jobs:
           ref: ${{ github.event.release.tag_name }}
 
       - name: Install and setup IBMCLOUD Cli
+        env: 
+          IBMCLOUD_API_KEY: ${{ secrets.IBMCLOUD_API_KEY }}
         run: |
           ./.github/scripts/installCloudCli.sh
 
       - name: Upload, validate, scan and publish to cloud catalog
         env: 
           IBMCLOUD_API_KEY: ${{ secrets.IBMCLOUD_API_KEY }}
+          VERSION: ${{ github.event.release.tag_name }}
         run: |
-          # login to the IBM Cloud using an api key from the appropriate cloud account
-          ibmcloud login --apikey "$IBMCLOUD_API_KEY" --no-region
-
-          VERSION=$(echo ${{ github.event.release.tag_name }})
 
           echo "--------------------------------------------------------------------"
           echo "onboard version, validate, scan, publish"
           echo "--------------------------------------------------------------------"
-
-          # generate deployment values for validation
-          VALIDATION_VALUES="validation-values.json"
-          ./.github/scripts/generateValidationValues.sh "$VALIDATION_VALUES"
-
-          # import the version into the catalog and run validation via schematics
-          echo "importing to the catalog and validating"
           ./.github/scripts/onboard_validate_publish.sh "$CATALOG_NAME" "$OFFERING_NAME" "$VERSION" "$VARIATION" "$RESOURCE_GROUP" "$VALIDATION_VALUES"
 
           echo "--------------------------------------------------------------------"
           echo "destroy validation resources"
           echo "--------------------------------------------------------------------"
-          
           ./.github/scripts/cleanup.sh "$CATALOG_NAME" "$OFFERING_NAME" "$VERSION"
