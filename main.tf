@@ -47,6 +47,8 @@ data "ibm_is_subnet" "subnet" {
 
 data "ibm_is_ssh_key" "ssh-key" {
   name = "${var.prefix}-ssh-key"
+  
+  depends_on = [module.landing_zone]
 }
 
 data "ibm_is_image" "image" {
