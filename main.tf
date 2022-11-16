@@ -12,7 +12,16 @@ module "landing_zone" {
 }
 
 locals {
-  subnet = "land-zone-vsi-qs-workload-vsi-zone-1"
+  config = jsondecode(module.landing_zone.config)
+  vpc = [ for vpc in local.config["vpcs"] :
+      vpc if vpc.prefix == "workload"
+  ][0]
+  subnet = join("-", [var.prefix, "workload", local.vpc.subnets.zone-1[0].name])
+  vpc_name = [ for vpcname in module.landing_zone.vpc_names :
+      vpcname if vpcname == join("-", [var.prefix, "workload", "vpc"])
+  ][0]
+
+  #subnet = "land-zone-vsi-qs-workload-vsi-zone-1"
 
   security_group = {
     name = "httpd-sg",
@@ -25,6 +34,20 @@ locals {
             port_max = 80,
             port_min = 80
         }
+      },
+      {
+        name      = "ssh-port-22",
+        direction = "inbound",
+        source    = "0.0.0.0/0",
+        tcp = {
+            port_max = 22,
+            port_min = 22
+        }
+      },
+      {
+        name      = "outbound-off",
+        direction = "outbound",
+        source    = "0.0.0.0/0"
       },
       { 
         name      = "httpd-port-443",
@@ -42,6 +65,12 @@ locals {
 data "ibm_is_subnet" "subnet" {
   name = local.subnet
   
+  depends_on = [module.landing_zone]
+}
+
+data "ibm_is_vpc" "vpc" {
+  name = local.vpc_name
+
   depends_on = [module.landing_zone]
 }
 
@@ -63,8 +92,8 @@ module "slz_vsi" {
   security_group             = local.security_group
   tags                       = []
   subnets                    = [{"name": local.subnet, "id": data.ibm_is_subnet.subnet.id, "zone":data.ibm_is_subnet.subnet.zone, "cidr": data.ibm_is_subnet.subnet.ipv4_cidr_block}]
-  vpc_id                     =  data.ibm_is_subnet.subnet.vpc
-  prefix                     = var.prefix
+  vpc_id                     = data.ibm_is_vpc.vpc.id
+  prefix                     = "apache-webserver"
   machine_type               = "cx2-2x4"
   user_data                  = <<EOF
 #!/bin/bash
@@ -76,4 +105,13 @@ EOF
   boot_volume_encryption_key = null
   vsi_per_subnet             = 1
   ssh_key_ids                = [data.ibm_is_ssh_key.ssh-key.id]
+}
+output "app_vsi_vpc" {
+  value       = local.vpc_name
+  description = "apache to be installed here"
+}
+
+output "app_vsi_subnet" {
+  value       = local.subnet
+  description = "apache to be installed on this subnet"
 }
