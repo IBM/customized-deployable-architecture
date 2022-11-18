@@ -3,7 +3,7 @@
 ##############################################################################
 
 module "landing_zone" {
-  source           = "git::https://github.com/terraform-ibm-modules/terraform-ibm-landing-zone.git//patterns/vsi"
+  source           = "https://cm.globalcatalog.cloud.ibm.com/api/v1-beta/offering/source//patterns/vsi?archive=tgz&catalogID=7df1e4ca-d54c-4fd0-82ce-3d13247308cd&flavor=standard&kind=terraform&name=slz-vpc-with-vsis&version=1.10.3"
   prefix           = var.prefix
   region           = var.region
   ibmcloud_api_key = var.ibmcloud_api_key
@@ -12,13 +12,23 @@ module "landing_zone" {
 }
 
 locals {
+
+  target_vpc = "workload"
+  application = <<EOF
+#!/bin/bash
+sudo apt-get update
+
+sudo apt-get --yes install apache2
+
+EOF
+
   config = jsondecode(module.landing_zone.config)
   vpc = [ for vpc in local.config["vpcs"] :
-      vpc if vpc.prefix == "workload"
+      vpc if vpc.prefix == local.target_vpc
   ][0]
-  subnet = join("-", [var.prefix, "workload", local.vpc.subnets.zone-1[0].name])
+  subnet = join("-", [var.prefix, local.target_vpc, local.vpc.subnets.zone-1[0].name])
   vpc_name = [ for vpcname in module.landing_zone.vpc_names :
-      vpcname if vpcname == join("-", [var.prefix, "workload", "vpc"])
+      vpcname if vpcname == join("-", [var.prefix, local.target_vpc, "vpc"])
   ][0]
 
   #subnet = "land-zone-vsi-qs-workload-vsi-zone-1"
@@ -95,23 +105,8 @@ module "slz_vsi" {
   vpc_id                     = data.ibm_is_vpc.vpc.id
   prefix                     = "apache-webserver"
   machine_type               = "cx2-2x4"
-  user_data                  = <<EOF
-#!/bin/bash
-sudo apt-get update
-
-sudo apt-get --yes install apache2
-
-EOF
+  user_data                  = local.application
   boot_volume_encryption_key = null
   vsi_per_subnet             = 1
   ssh_key_ids                = [data.ibm_is_ssh_key.ssh-key.id]
-}
-output "app_vsi_vpc" {
-  value       = local.vpc_name
-  description = "apache to be installed here"
-}
-
-output "app_vsi_subnet" {
-  value       = local.subnet
-  description = "apache to be installed on this subnet"
 }
