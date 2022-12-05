@@ -264,8 +264,8 @@
         },
         {
             "label": "Blueprint Full Appache App",
-            "name": "blueprint-fullapacheapp",
-            "working_directory": "examples/app/full",
+            "name": "bp-fullapp",
+            "working_directory": "examples/app/full/blueprint",
             "compliance": {
                 "controls": [
                     {
