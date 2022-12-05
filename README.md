@@ -14,7 +14,7 @@ The topology in this example builds starting from the standard Secure infrastruc
 1. Deploy an edge VPC with 3 subnets with:
    - 1 VSI in one of the 3 subnet
    - A VPC Loadbalancer in the edge vpc, exposing publicly the VSI.
-2. Deploy a 'jump-box' VSI in the management VPC, exposing a public floating IP.
+2. Deploy a 'jump-box' VSI in the management VPC, exposing a public floating IP. 
 
 
 ![Custom topology](custom-slz-with-edge.svg)
