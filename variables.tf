@@ -19,7 +19,15 @@ variable "prefix" {
   }
 }
 
+variable "region" {
+  default = "eu-de"
+}
+
 variable "ssh_key" {
   description = "Public SSH Key for VSI creation. Must be a valid SSH key that does not already exist in the deployment region."
   type        = string
+}
+
+variable "image" {
+  default = "ibm-ubuntu-20-04-4-minimal-amd64-2"
 }
