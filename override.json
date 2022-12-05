@@ -13,8 +13,7 @@
     "enable_transit_gateway": true,
     "transit_gateway_connections": [
       "management",
-      "workload",
-      "edge"
+      "workload"
     ],
     "transit_gateway_resource_group": "slz-service-rg",
     "virtual_private_endpoints": [
@@ -94,13 +93,6 @@
             "kms_key": "slz-key",
             "name": "workload-bucket",
             "storage_class": "standard"
-          },
-          {
-            "endpoint_type": "public",
-            "force_delete": true,
-            "kms_key": "slz-key",
-            "name": "edge-bucket",
-            "storage_class": "standard"
           }
         ],
         "keys": [],
@@ -150,11 +142,6 @@
       {
         "create": true,
         "name": "slz-workload-rg",
-        "use_prefix": true
-      },
-      {
-        "create": true,
-        "name": "slz-edge-rg",
         "use_prefix": true
       }
     ],
@@ -281,61 +268,6 @@
           "zone-2": false,
           "zone-3": false
         }
-      },
-      {
-        "address_prefixes": {
-          "zone-1": [],
-          "zone-2": [],
-          "zone-3": []
-        },
-        "default_security_group_rules": [],
-        "flow_logs_bucket_name": null,
-        "network_acls": [
-          {
-            "name": "edge-acl",
-            "rules": [
-              {
-                "action": "allow",
-                "destination": "0.0.0.0/0",
-                "direction": "inbound",
-                "name": "allow-all-inbound",
-                "source": "0.0.0.0/0"
-              },
-              {
-                "action": "allow",
-                "destination": "0.0.0.0/0",
-                "direction": "outbound",
-                "name": "allow-all-outbound",
-                "source": "0.0.0.0/0"
-              }
-            ]
-          }
-        ],
-        "prefix": "edge",
-        "resource_group": "slz-edge-rg",
-        "subnets": {
-          "zone-1": [
-            {
-              "acl_name": "edge-acl",
-              "cidr": "10.30.10.0/24",
-              "name": "vsi-zone-1",
-              "public_gateway": true
-            },
-            {
-              "acl_name": "edge-acl",
-              "cidr": "10.30.20.0/24",
-              "name": "vpe-zone-1",
-              "public_gateway": false
-            }
-          ],
-          "zone-2": null,
-          "zone-3": null
-        },
-        "use_public_gateways": {
-          "zone-1": true,
-          "zone-2": false,
-          "zone-3": false
-        }
       }
     ],
     "vsi": [
@@ -402,53 +334,6 @@
         ],
         "vpc_name": "workload",
         "vsi_per_subnet": 1
-      },
-      {
-        "boot_volume_encryption_key_name": "slz-vsi-volume-key",
-        "image_name": "ibm-ubuntu-18-04-6-minimal-amd64-2",
-        "machine_type": "cx2-2x4",
-        "name": "inet-svs",
-        "resource_group": "slz-edge-rg",
-        "security_group": {
-          "name": "inet-svs",
-          "rules": [
-            {
-              "direction": "inbound",
-              "name": "allow-all-inbound",
-              "source": "0.0.0.0/0"
-            },
-            {
-              "direction": "outbound",
-              "name": "allow-all-outbound",
-              "source": "0.0.0.0/0"
-            }
-          ],
-          "vpc_name": "edge"
-        },
-        "ssh_keys": [
-          "ssh-key"
-        ],
-        "subnet_names": [
-          "vsi-zone-1"
-        ],
-        "vpc_name": "edge",
-        "vsi_per_subnet": 1,
-        "load_balancers": [
-          {
-            "name": "edge",
-            "type": "public",
-            "listener_port": 443,
-            "listener_protocol": "tcp",
-            "protocol": "tcp",
-            "pool_member_port": 443,
-            "algorithm": "least_connections",
-            "connection_limit": 0,
-            "health_delay": 60,
-            "health_retries": 2,
-            "health_timeout": 2,
-            "health_type": "tcp"
-          }
-        ]
       }
     ],
     "wait_till": "IngressReady"
