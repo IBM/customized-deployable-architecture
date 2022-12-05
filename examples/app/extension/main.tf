@@ -1,22 +1,17 @@
 locals {
 
-  target_vpc = "workload"
-  application = <<EOF
-#!/bin/bash
-sudo apt-get update
-sudo apt-get --yes install apache2
-EOF
+  vpc_type = "workload"
+  application = file("appInit.sh")
+
 
   config = jsondecode(module.landing_zone.config)
   vpc = [ for vpc in local.config["vpcs"] :
-      vpc if vpc.prefix == local.target_vpc
+      vpc if vpc.prefix == local.vpc_type
   ][0]
-  subnet = join("-", [var.prefix, local.target_vpc, local.vpc.subnets.zone-1[0].name])
+  subnet = join("-", [var.prefix, local.vpc_type, local.vpc.subnets.zone-1[0].name])
   vpc_name = [ for vpcname in module.landing_zone.vpc_names :
-      vpcname if vpcname == join("-", [var.prefix, local.target_vpc, "vpc"])
+      vpcname if vpcname == join("-", [var.prefix, local.vpc_type, "vpc"])
   ][0]
-
-  #subnet = "land-zone-vsi-qs-workload-vsi-zone-1"
 
   security_group = {
     name = "httpd-sg",
@@ -59,20 +54,14 @@ EOF
 
 data "ibm_is_subnet" "subnet" {
   name = local.subnet
-  
-  depends_on = [module.landing_zone]
-}
+ }
 
 data "ibm_is_vpc" "vpc" {
   name = local.vpc_name
-
-  depends_on = [module.landing_zone]
 }
 
 data "ibm_is_ssh_key" "ssh-key" {
   name = "${var.prefix}-ssh-key"
-  
-  depends_on = [module.landing_zone]
 }
 
 data "ibm_is_image" "image" {

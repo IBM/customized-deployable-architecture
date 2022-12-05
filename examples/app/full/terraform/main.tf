@@ -1,7 +1,11 @@
 module "landing-zone" {
-    source = "../.."
+    source           = "../.."
+    prefix           = var.prefix
+    ibmcloud_api_key = var.ibmcloud_api_key
+    ssh_public_key   = var.ssh_key
 }
 
 module "apache" {
-    source = "../.."
+    source = "../../extension"
+    config = module.landing-zone.config
 }
