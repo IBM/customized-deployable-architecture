@@ -2,18 +2,18 @@ locals {
 
   vpc_type = "workload"
   application = file("appInit.sh")
+  config = file("config.txt")
 
+  decodeConfig = jsondecode("${local.config}")
 
-  config = jsondecode(module.landing_zone.config)
-  vpc = [ for vpc in local.config["vpcs"] :
+  vpc = [ for vpc in local.decodeConfig["vpcs"] :
       vpc if vpc.prefix == local.vpc_type
   ][0]
-  subnet = join("-", [var.prefix, local.vpc_type, local.vpc.subnets.zone-1[0].name])
-  vpc_name = [ for vpcname in module.landing_zone.vpc_names :
-      vpcname if vpcname == join("-", [var.prefix, local.vpc_type, "vpc"])
-  ][0]
 
-  security_group = {
+  prefix = "land-zone-vsi-qs"
+  subnet = join("-", [local.prefix, local.vpc_type, local.vpc.subnets.zone-1[0].name])
+
+   security_group = {
     name = "httpd-sg",
     rules = [
       {
@@ -54,14 +54,10 @@ locals {
 
 data "ibm_is_subnet" "subnet" {
   name = local.subnet
- }
-
-data "ibm_is_vpc" "vpc" {
-  name = local.vpc_name
 }
 
 data "ibm_is_ssh_key" "ssh-key" {
-  name = "${var.prefix}-ssh-key"
+  name = "${local.prefix}-ssh-key"
 }
 
 data "ibm_is_image" "image" {
@@ -76,7 +72,7 @@ module "slz_vsi" {
   security_group             = local.security_group
   tags                       = []
   subnets                    = [{"name": local.subnet, "id": data.ibm_is_subnet.subnet.id, "zone":data.ibm_is_subnet.subnet.zone, "cidr": data.ibm_is_subnet.subnet.ipv4_cidr_block}]
-  vpc_id                     = data.ibm_is_vpc.vpc.id
+  vpc_id                     = data.ibm_is_subnet.subnet.vpc
   prefix                     = "apache-webserver"
   machine_type               = "cx2-2x4"
   user_data                  = local.application
