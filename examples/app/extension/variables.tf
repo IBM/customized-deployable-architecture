@@ -1,4 +1,4 @@
-# this is the output from an SLZ deployment.
+# this is the output from the custom secure infrastructure deployment.
 variable "customSecInfra" {
   type = string
   default = "customSecInfra.json"
@@ -22,9 +22,15 @@ variable "ibmcloud_api_key" {
   sensitive   = true
 }
 
-# configure the terraform provider and direct it to the same region where the SLZ resources 
-# were deployed
+# configure the terraform provider and direct it to the same region where the 
+# custom secure infrastructure resources were deployed.
 variable "region" {
-    type = string
-    default = "eu-de"
+  type = string
+  default = "eu-de"
+}
+
+# prefix used when deploying resources in the custom secure infrastructure step
+variable "prefix" {
+  type = string
+  default = "land-zone-vsi-qs"
 }
