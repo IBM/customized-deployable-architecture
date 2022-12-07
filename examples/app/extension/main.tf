@@ -4,7 +4,7 @@ locals {
 
   appInstallScript = file("${var.appInstallScript}")
   customSecureInfrastructure = file("${var.customSecureInfrastructure}")
-  security_group = file("${var.appSecurityRules}")
+  #security_group = file("${var.appSecurityRules}")
 
   decodedInfrasctructure = jsondecode("${local.customSecureInfrastructure}")
   vpc = [ for vpc in local.decodedInfrasctructure["vpcs"] :
@@ -32,7 +32,7 @@ module "slz_vsi" {
   resource_group_id          = data.ibm_is_subnet.subnet.resource_group
   image_id                   = data.ibm_is_image.image.id
   create_security_group      = true
-  security_group             = local.security_group
+  security_group             = var.appSecurityRules
   tags                       = []
   subnets                    = [{"name": local.subnet, "id": data.ibm_is_subnet.subnet.id, "zone":data.ibm_is_subnet.subnet.zone, "cidr": data.ibm_is_subnet.subnet.ipv4_cidr_block}]
   vpc_id                     = data.ibm_is_subnet.subnet.vpc

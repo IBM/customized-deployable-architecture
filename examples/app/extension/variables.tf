@@ -10,12 +10,6 @@ variable "appInstallScript" {
   default = "appInstallScript.sh"
 }
 
-# network security rules for the application to be installed
-variable "appSecurityRules" {
-  type = string
-  default = "appSecurityGroup.txt"
-}
-
 # the OS image to install on the VSI
 variable "image" {
   default = "ibm-ubuntu-20-04-4-minimal-amd64-2"
