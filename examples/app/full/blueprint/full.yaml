@@ -47,5 +47,22 @@ modules:
         required: true
     outputs:
       - name: customSecInfra
-
+  - module_type: terraform
+    name: "application"
+    source:
+      git: 
+        source_type: github
+        git_repo_url: "https://github.com/IBM/customized-deployable-architecture/tree/main/examples/app/extension"
+    settings:
+      - name: TF_VERSION
+        value: 1.2
+    inputs:
+      - name: ibmcloud_api_key
+        sensitive: true
+        description: The IBM Cloud platform API key needed to deploy IAM enabled resources
+        value: $blueprint.ibmcloud_api_key
+      - name: sequencedummy
+        description: The IBM Cloud platform API key needed to deploy IAM enabled resources
+        value: $blueprint.modules.secureInfra.outputs.customSecInfra
+    
   
