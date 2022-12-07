@@ -3,10 +3,9 @@ locals {
   vpc_type = "workload"
 
   appInstallScript = file("${var.appInstallScript}")
-  customSecureInfrastructure = file("${var.customSecureInfrastructure}")
-  #security_group = file("${var.appSecurityRules}")
+  customSecInfra = file("${var.customSecInfra}")
 
-  decodedInfrasctructure = jsondecode("${local.customSecureInfrastructure}")
+  decodedInfrasctructure = jsondecode("${local.customSecInfra}")
   vpc = [ for vpc in local.decodedInfrasctructure["vpcs"] :
       vpc if vpc.prefix == local.vpc_type
   ][0]

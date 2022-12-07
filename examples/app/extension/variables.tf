@@ -1,7 +1,7 @@
 # this is the output from an SLZ deployment.
-variable "customSecureInfrastructure" {
+variable "customSecInfra" {
   type = string
-  default = "customSecureInfrastructure.json"
+  default = "customSecInfra.json"
 }
 
 # install script for the application to be installed on the VSI
