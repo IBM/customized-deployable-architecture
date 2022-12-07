@@ -10,8 +10,7 @@ locals {
       vpc if vpc.prefix == local.vpc_type
   ][0]
 
-  prefix = "land-zone-vsi-qs"
-  subnet = join("-", [local.prefix, local.vpc_type, local.vpc.subnets.zone-1[0].name])
+  subnet = join("-", [var.prefix, local.vpc_type, local.vpc.subnets.zone-1[0].name])
 }
 
 data "ibm_is_subnet" "subnet" {
@@ -19,7 +18,7 @@ data "ibm_is_subnet" "subnet" {
 }
 
 data "ibm_is_ssh_key" "ssh-key" {
-  name = "${local.prefix}-ssh-key"
+  name = "${var.prefix}-ssh-key"
 }
 
 data "ibm_is_image" "image" {
