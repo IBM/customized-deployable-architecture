@@ -2,7 +2,7 @@
 # Outputs
 ##############################################################################
 
-output "landing_zone" {
+output "customSecInfra" {
   value       = module.landing_zone
-  description = "Landing zone configuration"
+  description = "Custom secure infrastructure configuration"
 }
