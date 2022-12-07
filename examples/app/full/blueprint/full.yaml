@@ -61,5 +61,8 @@ modules:
         sensitive: true
         description: The IBM Cloud platform API key needed to deploy IAM enabled resources
         value: $blueprint.ibmcloud_api_key
+      - name: sequencedummy
+        description: The IBM Cloud platform API key needed to deploy IAM enabled resources
+        value: $blueprint.modules.secureInfra.outputs.customSecInfra
     
   
