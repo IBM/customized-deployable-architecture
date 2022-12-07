@@ -1,13 +1,11 @@
-# this is the output from the custom secure infrastructure deployment.
-variable "customSecInfra" {
-  type = string
-  default = "customSecInfra.json"
-}
-
 # install script for the application to be installed on the VSI
 variable "appInstallScript" {
   type = string
-  default = "appInstallScript.sh"
+  default = <<EOF
+#!/bin/bash
+sudo apt-get update
+sudo apt-get --yes install apache2
+EOF
 }
 
 # the OS image to install on the VSI
@@ -26,7 +24,7 @@ variable "ibmcloud_api_key" {
 # custom secure infrastructure resources were deployed.
 variable "region" {
   type = string
-  default = "eu-de"
+  default = "us-south"
 }
 
 # prefix used when deploying resources in the custom secure infrastructure step

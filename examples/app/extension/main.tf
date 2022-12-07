@@ -2,15 +2,15 @@ locals {
 
   vpc_type = "workload"
 
-  appInstallScript = file("${var.appInstallScript}")
-  customSecInfra = file("${var.customSecInfra}")
+  #appInstallScript = file("${var.appInstallScript}")
+  #customSecInfra = file("${var.customSecInfra}")
 
-  decodedInfrasctructure = jsondecode("${local.customSecInfra}")
-  vpc = [ for vpc in local.decodedInfrasctructure["vpcs"] :
-      vpc if vpc.prefix == local.vpc_type
-  ][0]
+  #decodedInfrasctructure = jsondecode("${local.customSecInfra}")
+  #vpc = [ for vpc in local.decodedInfrasctructure["vpcs"] :
+  #    vpc if vpc.prefix == local.vpc_type
+  #][0]
 
-  subnet = join("-", [var.prefix, local.vpc_type, local.vpc.subnets.zone-1[0].name])
+  subnet = join("-", [var.prefix, local.vpc_type, "vsi-zone-1"])
 }
 
 data "ibm_is_subnet" "subnet" {
@@ -36,7 +36,7 @@ module "slz_vsi" {
   vpc_id                     = data.ibm_is_subnet.subnet.vpc
   prefix                     = "apache-webserver"
   machine_type               = "cx2-2x4"
-  user_data                  = local.appInstallScript
+  user_data                  = var.appInstallScript
   boot_volume_encryption_key = null
   vsi_per_subnet             = 1
   ssh_key_ids                = [data.ibm_is_ssh_key.ssh-key.id]
