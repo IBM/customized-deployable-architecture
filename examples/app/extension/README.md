@@ -1,7 +1,7 @@
 # Application Extension for Custom Secure Infrastructure on VPC
 
 This example shows how an extension could be added on to an existing Custom Secure Infrastructure landscape by deploying an additional 
-Virtual Server into the Workload VPC.  The virtual server is initialized and configured as an Apache web server.
+Virtual Server into the Workload VPC.  The virtual server is initialized and configured as an *Apache web server*.
 
 Once this is deployed, the Apache server may be tested by:
 1. ssh to the jump box using the exposed floating IP address.  This is from the deployment of the Custom Secure Infrastructure.
