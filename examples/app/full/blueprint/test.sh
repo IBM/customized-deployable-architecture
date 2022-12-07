@@ -7,7 +7,7 @@
 ##   o env variable SSHKEY is set with your SSH Key to providion a VSI with
 
 export inFile="/tmp/in.json"
-export Name="TEST: appache app blueprint"
+export Name="FullTEST: appache app blueprint"
 export Location="us-south"
 
 if [ -z "$APIKEY" -o -z "$SSHKEY" ]; then
@@ -36,7 +36,7 @@ cat > $inFile <<EOF
         },
         {
             "name": "prefix",
-            "value": "gmtst"
+            "value": "fulltst"
         },
         {
             "name": "ssh_key",
