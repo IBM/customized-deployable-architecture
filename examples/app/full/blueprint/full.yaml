@@ -46,5 +46,6 @@ modules:
         value: $blueprint.ssh_key
         required: true
     outputs:
-      - name: secureInfra
+      - name: customSecInfra
+
   

@@ -8,6 +8,12 @@
 
 export inFile="/tmp/in.json"
 export Name="TEST: appache app blueprint"
+export Location="us-south"
+
+if [ -z "$APIKEY" -o -z "$SSHKEY" ]; then
+   echo "Environment not set"
+   exit 1
+fi
 
 cat > $inFile <<EOF
 {
@@ -30,7 +36,7 @@ cat > $inFile <<EOF
         },
         {
             "name": "prefix",
-            "value": "tst"
+            "value": "gmtst"
         },
         {
             "name": "ssh_key",
@@ -39,9 +45,11 @@ cat > $inFile <<EOF
     ],
     "description": "TEST: deployable architecture blueprint",
     "resource_group": "Default",
-    "location": "us-south"
+    "location": "${Location}"
 }
 EOF
+
+ic target -r "$Location"
 
 echo "Creating Blueprint: \"$Name\" using Inputfile: $inFile"
 ibmcloud schematics blueprint config create -f "${inFile}"
@@ -51,5 +59,5 @@ bpID=$(ic schematics blueprint list --output json | jq -r ".blueprints[]  | sele
 echo "Starting Blueprint: $bpID"
 ibmcloud  schematics blueprint run apply -i "${bpID}"
 
-echo -e "To delete:\n\tic schematics blueprint config delete -i "${bpID}"
+echo -e "To delete:\n\tic schematics blueprint run destroy -i ${bpID}\n\tic schematics blueprint config delete -i ${bpID}"
 
