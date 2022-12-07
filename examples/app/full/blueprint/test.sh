@@ -1,9 +1,10 @@
 #!/bin/bash
 
-## This scrip will create the blueprint on schematics using the CLI.  It is assume that your ibmcloud CLI
-## is logged in, and that an env 
-## env variable APIKEY is set with your cloud APIKEY
-## env variable SSHKEY is set with your SSH Key to providion a VSI with
+## This script will create this blueprint on schematics using the CLI and jq.  
+## The script assume that:
+##   o CLI is logged in
+##   o env variable APIKEY is set with your cloud APIKEY
+##   o env variable SSHKEY is set with your SSH Key to providion a VSI with
 
 export inFile="/tmp/in.json"
 export Name="TEST: appache app blueprint"
@@ -42,10 +43,13 @@ cat > $inFile <<EOF
 }
 EOF
 
+echo "Creating Blueprint: \"$Name\" using Inputfile: $inFile"
 ibmcloud schematics blueprint config create -f "${inFile}"
 
 bpID=$(ic schematics blueprint list --output json | jq -r ".blueprints[]  | select(.name == \"${Name}\") | .id")
+
+echo "Starting Blueprint: $bpID"
 ibmcloud  schematics blueprint run apply -i "${bpID}"
 
-echo -e "To delete:\n\tic schematics blueprint config delete -i ${bpID}"
+echo -e "To delete:\n\tic schematics blueprint config delete -i "${bpID}"
 
