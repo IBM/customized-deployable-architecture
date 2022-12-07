@@ -19,12 +19,12 @@ inputs:
     default: "__NOT_SET__"
     required: true
 outputs:
-  - name: id
-    value: $module.landscape.outputs.landing_zone
+  - name: customSecInfra
+    value: $module.secureInfra.outputs.secureInfra
     description: "landing zone JSON"
 modules:
   - module_type: terraform
-    name: "landscape"
+    name: "secureInfra"
     source:
       git: 
         source_type: github
@@ -46,6 +46,5 @@ modules:
         value: $blueprint.ssh_key
         required: true
     outputs:
-      - name: landing_zone
-
+      - name: secureInfra
   
