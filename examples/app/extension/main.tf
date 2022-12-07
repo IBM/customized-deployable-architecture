@@ -1,55 +1,18 @@
 locals {
 
   vpc_type = "workload"
-  application = file("appInit.sh")
-  config = file("config.txt")
 
-  decodeConfig = jsondecode("${local.config}")
+  appInstallScript = file("${var.appInstallScript}")
+  customSecureInfrastructure = file("${var.customSecureInfrastructure}")
+  security_group = file("${var.appSecurityRules}")
 
-  vpc = [ for vpc in local.decodeConfig["vpcs"] :
+  decodedInfrasctructure = jsondecode("${local.customSecureInfrastructure}")
+  vpc = [ for vpc in local.decodedInfrasctructure["vpcs"] :
       vpc if vpc.prefix == local.vpc_type
   ][0]
 
   prefix = "land-zone-vsi-qs"
   subnet = join("-", [local.prefix, local.vpc_type, local.vpc.subnets.zone-1[0].name])
-
-   security_group = {
-    name = "httpd-sg",
-    rules = [
-      {
-        name      = "httpd-port-80",
-        direction = "inbound",
-        source    = "0.0.0.0/0",
-        tcp = {
-            port_max = 80,
-            port_min = 80
-        }
-      },
-      {
-        name      = "ssh-port-22",
-        direction = "inbound",
-        source    = "0.0.0.0/0",
-        tcp = {
-            port_max = 22,
-            port_min = 22
-        }
-      },
-      {
-        name      = "outbound-off",
-        direction = "outbound",
-        source    = "0.0.0.0/0"
-      },
-      { 
-        name      = "httpd-port-443",
-        direction = "inbound",
-        source    = "0.0.0.0/0",
-        tcp = {
-            port_max = 443,
-            port_min = 443
-        }
-      }
-    ]
-  }
 }
 
 data "ibm_is_subnet" "subnet" {
@@ -75,7 +38,7 @@ module "slz_vsi" {
   vpc_id                     = data.ibm_is_subnet.subnet.vpc
   prefix                     = "apache-webserver"
   machine_type               = "cx2-2x4"
-  user_data                  = local.application
+  user_data                  = local.appInstallScript
   boot_volume_encryption_key = null
   vsi_per_subnet             = 1
   ssh_key_ids                = [data.ibm_is_ssh_key.ssh-key.id]

@@ -1,11 +1,19 @@
 # this is the output from an SLZ deployment.
-variable "config" {
-    type = string
+variable "customSecureInfrastructure" {
+  type = string
+  default = "customSecureInfrastructure.json"
 }
 
 # install script for the application to be installed on the VSI
-variable "appInstall" {
-    type = string
+variable "appInstallScript" {
+  type = string
+  default = "appInstallScript.sh"
+}
+
+# network security rules for the application to be installed
+variable "appSecurityRules" {
+  type = string
+  default = "appSecurityGroup.txt"
 }
 
 # the OS image to install on the VSI
@@ -24,4 +32,5 @@ variable "ibmcloud_api_key" {
 # were deployed
 variable "region" {
     type = string
+    default = "eu-de"
 }
