@@ -7,7 +7,7 @@ output "customSecInfra" {
   description = "Custom secure infrastructure configuration"
 }
 
-output "dummy" {
-  value       = "dumdum"
-  description = "just something"
+output "prefix" {
+  value       = var.prefix
+  description = "prefix used in this infrastructure"
 }

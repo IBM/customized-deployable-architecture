@@ -7,11 +7,11 @@
 ##   o env variable SSHKEY is set with your SSH Key to providion a VSI with
 
 export inFile="/tmp/in.json"
-export Name="FullTEST: appache app blueprint"
+export Name="appache app blueprint"
 export Location="us-east"
 
 if [ -z "$APIKEY" -o -z "$SSHKEY" ]; then
-   echo "Environment not set"
+   echo "Environment with SSHKEY and APIKEY is not set"
    exit 1
 fi
 

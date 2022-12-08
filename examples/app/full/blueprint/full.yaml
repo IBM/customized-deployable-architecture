@@ -46,7 +46,7 @@ modules:
         value: $blueprint.ssh_key
         required: true
     outputs:
-      - name: dummy
+      - name: prefix
   - module_type: terraform
     name: "application"
     source:
@@ -61,8 +61,8 @@ modules:
         sensitive: true
         description: The IBM Cloud platform API key needed to deploy IAM enabled resources
         value: $blueprint.ibmcloud_api_key
-      - name: sequencedummy
+      - name: prefix
         description: The IBM Cloud platform API key needed to deploy IAM enabled resources
-        value: $module.secureInfra.outputs.dummy
+        value: $module.secureInfra.outputs.prefix
     
   
