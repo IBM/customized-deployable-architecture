@@ -29,6 +29,7 @@ variable "region" {
 
 # prefix used when deploying resources in the custom secure infrastructure step
 variable "prefix" {
-  type    = string
-  default = "land-zone-vsi-qs"
+  type        = string
+  description = "A unique identifier for resources. Must be the same one that is used in the base infrastructure."
+  default     = "land-zone-vsi-qs"
 }
