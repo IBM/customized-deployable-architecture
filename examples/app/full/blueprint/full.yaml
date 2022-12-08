@@ -18,10 +18,10 @@ inputs:
     description: Public SSH Key for VSI creation. Must be a valid SSH key that does not already exist in the deployment region
     default: "__NOT_SET__"
     required: true
-outputs:
-  - name: customSecInfra
-    value: $module.secureInfra.outputs.secureInfra
-    description: "landing zone JSON"
+# outputs:
+#   - name: customSecInfra
+#     value: $module.secureInfra.outputs.secureInfra
+#     description: "landing zone JSON"
 modules:
   - module_type: terraform
     name: "secureInfra"
@@ -46,7 +46,7 @@ modules:
         value: $blueprint.ssh_key
         required: true
     outputs:
-      - name: customSecInfra
+      - name: dummy
   - module_type: terraform
     name: "application"
     source:
