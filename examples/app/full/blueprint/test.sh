@@ -36,7 +36,7 @@ cat > $inFile <<EOF
         },
         {
             "name": "prefix",
-            "value": "land-zone-vsi-qs"
+            "value": "aa-tst"
         },
         {
             "name": "ssh_key",
