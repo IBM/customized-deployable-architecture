@@ -49,15 +49,15 @@ cat > $inFile <<EOF
 }
 EOF
 
-ic target -r "$Location"
+ibmcloud target -r "$Location"
 
 echo "Creating Blueprint: \"$Name\" using Inputfile: $inFile"
 ibmcloud schematics blueprint config create -f "${inFile}"
 
-bpID=$(ic schematics blueprint list --output json | jq -r ".blueprints[]  | select(.name == \"${Name}\") | .id")
+bpID=$(ibmcloud schematics blueprint list --output json | jq -r ".blueprints[]  | select(.name == \"${Name}\") | .id")
 
 echo "Starting Blueprint: $bpID"
 ibmcloud  schematics blueprint run apply -i "${bpID}"
 
-echo -e "To delete:\n\tic schematics blueprint run destroy -i ${bpID}\n\tic schematics blueprint config delete -i ${bpID}"
+echo -e "To delete:\n\tibmcloud schematics blueprint run destroy --no-prompt -i ${bpID}\n\tic schematics blueprint config delete -fd -i ${bpID}"
 
