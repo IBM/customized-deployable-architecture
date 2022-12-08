@@ -2,14 +2,6 @@ locals {
 
   vpc_type = "workload"
 
-  #appInstallScript = file("${var.appInstallScript}")
-  #customSecInfra = file("${var.customSecInfra}")
-
-  #decodedInfrasctructure = jsondecode("${local.customSecInfra}")
-  #vpc = [ for vpc in local.decodedInfrasctructure["vpcs"] :
-  #    vpc if vpc.prefix == local.vpc_type
-  #][0]
-
   subnet = join("-", [var.prefix, local.vpc_type, "vsi-zone-1"])
 }
 
