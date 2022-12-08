@@ -8,7 +8,7 @@
 
 export inFile="/tmp/in.json"
 export Name="FullTEST: appache app blueprint"
-export Location="us-south"
+export Location="us-east"
 
 if [ -z "$APIKEY" -o -z "$SSHKEY" ]; then
    echo "Environment not set"
@@ -36,7 +36,7 @@ cat > $inFile <<EOF
         },
         {
             "name": "prefix",
-            "value": "fulltst"
+            "value": "land-zone-vsi-qs"
         },
         {
             "name": "ssh_key",

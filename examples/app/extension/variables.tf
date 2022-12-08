@@ -1,6 +1,6 @@
 # install script for the application to be installed on the VSI
 variable "appInstallScript" {
-  type = string
+  type    = string
   default = <<EOF
 #!/bin/bash
 sudo apt-get update
@@ -23,12 +23,12 @@ variable "ibmcloud_api_key" {
 # configure the terraform provider and direct it to the same region where the 
 # custom secure infrastructure resources were deployed.
 variable "region" {
-  type = string
-  default = "us-south"
+  type    = string
+  default = "us-east"
 }
 
 # prefix used when deploying resources in the custom secure infrastructure step
 variable "prefix" {
-  type = string
+  type    = string
   default = "land-zone-vsi-qs"
 }
