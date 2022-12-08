@@ -63,6 +63,6 @@ modules:
         value: $blueprint.ibmcloud_api_key
       - name: sequencedummy
         description: The IBM Cloud platform API key needed to deploy IAM enabled resources
-        value: $modules.secureInfra.outputs.customSecInfra
+        value: $module.secureInfra.outputs.customSecInfra
     
   
