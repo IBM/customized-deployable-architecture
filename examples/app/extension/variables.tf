@@ -31,5 +31,4 @@ variable "region" {
 variable "prefix" {
   type        = string
   description = "A unique identifier for resources. Must be the same one that is used in the base infrastructure."
-  default     = "land-zone-vsi-qs"
 }
