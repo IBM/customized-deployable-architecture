@@ -66,9 +66,6 @@ modules:
       - name: TF_VERSION
         value: 1.2
     inputs:
-      - name: appSecurityRules
-        value: ""
-        type: string
       - name: appInstallScript
         value: ""
         type: string
