@@ -33,3 +33,6 @@ override.tf.json
 
 **/.history/*
 **/.terraform.lock.hcl
+
+# Ignore custom blueprint input files
+examples/app/full/blueprint/inputs-custom-*.json
