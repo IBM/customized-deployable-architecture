@@ -13,6 +13,7 @@ export inFile="$1"
 export BlueprintName="${BlueprintName:-"Apache Web Server blueprint"}"
 export Location="${Location:-us-east}"
 export ResourceGroup="${ResourceGroup:-Default}"
+export Prefix="${Prefix:-aa-tst}"
 
 if [ -z "$APIKEY" -o -z "$SSHKEY" ]; then
    echo "Environment with SSHKEY and APIKEY is not set"
