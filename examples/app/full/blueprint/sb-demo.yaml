@@ -1,6 +1,6 @@
 name: 'fullapacheapp'
 type: 'blueprint'
-schema_version: '1.0'
+schema_version: '1.0.0'
 description: 'my blueprint'
 inputs:
   - name: ibmcloud_api_key
