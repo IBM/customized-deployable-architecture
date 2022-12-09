@@ -1,63 +1,43 @@
 #!/bin/bash
 
+# set -x
+
 ## This script will create this blueprint on schematics using the CLI and jq.  
 ## The script assume that:
 ##   o CLI is logged in
 ##   o env variable APIKEY is set with your cloud APIKEY
 ##   o env variable SSHKEY is set with your SSH Key to providion a VSI with
 
-export inFile="/tmp/in.json"
-export Name="appache app blueprint"
-export Location="us-east"
+export inFile="$1"
+export BlueprintName="${BlueprintName:-"appache app blueprint"}"
+export Location="${Location:-us-east}"
+export ResourceGroup="${ResourceGroup:-Default}"
 
 if [ -z "$APIKEY" -o -z "$SSHKEY" ]; then
    echo "Environment with SSHKEY and APIKEY is not set"
    exit 1
 fi
 
-cat > $inFile <<EOF
-{
-    "name": "${Name}",
-    "tags": [
-        "aa-test"
-    ],
-    "source": {
-        "source_type": "git_hub",
-        "git": {
-            "git_repo_url": "https://github.com/IBM/customized-deployable-architecture",
-            "git_repo_folder": "/examples/app/full/blueprint/full.yaml",
-            "git_branch": "main"
-        }
-    },
-    "inputs": [
-        {
-            "name": "ibmcloud_api_key",
-            "value": "${APIKEY}"
-        },
-        {
-            "name": "prefix",
-            "value": "aa-tst"
-        },
-        {
-            "name": "ssh_key",
-            "value": "${SSHKEY}"
-        }
-    ],
-    "description": "TEST: deployable architecture blueprint",
-    "resource_group": "Default",
-    "location": "${Location}"
-}
-EOF
+if [ -z "$inFile" ]; then
+   export inFile="inputs-full.json"
+fi
 
-ibmcloud target -r "$Location"
+export tmpFile="/tmp/in.json"
+envsubst < $inFile > $tmpFile
 
-echo "Creating Blueprint: \"$Name\" using Inputfile: $inFile"
-ibmcloud schematics blueprint config create -f "${inFile}"
+ibmcloud target -r "$Location" -g "$ResourceGroup"
 
-bpID=$(ibmcloud schematics blueprint list --output json | jq -r ".blueprints[]  | select(.name == \"${Name}\") | .id")
+echo "Creating Blueprint: \"$BlueprintName\" using Inputfile: \"$inFile\" and resource group ID: \"$ResourceGroup\""
+ibmcloud schematics blueprint config create -f "${tmpFile}"
 
-echo "Starting Blueprint: $bpID"
-ibmcloud  schematics blueprint run apply -i "${bpID}"
+bpID=$(ibmcloud schematics blueprint list --output json | jq --arg BlueprintName "$BlueprintName" -r '.blueprints[]  | select(.name == $BlueprintName) | .id')
 
-echo -e "To delete:\n\tibmcloud schematics blueprint run destroy --no-prompt -i ${bpID}\n\tic schematics blueprint config delete -fd -i ${bpID}"
+if [ -z "$bpID" ]; then
+    echo "Blueprint \"$BlueprintName\" not found"
+    exit 1
+fi
 
+echo "Applying Blueprint: $bpID"
+ibmcloud schematics blueprint run apply -i "${bpID}"
+
+echo -e "To delete:\n\tibmcloud schematics blueprint run destroy --no-prompt -i ${bpID}\n\tibmcloud schematics blueprint config delete -fd -i ${bpID}"
