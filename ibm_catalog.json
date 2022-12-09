@@ -143,7 +143,7 @@
             "version": "0.0.6",
             "flavors": [
                 {
-                    "label": "Standard",
+                    "label": "TF-Standard",
                     "name": "tf-onlyapp",
                     "working_directory": "examples/app/extension",
                     "compliance": {
@@ -274,7 +274,7 @@
                     }
                 },
                 {
-                    "label": "Standard",
+                    "label": "BP-Standard",
                     "name": "bp-fullapp",
                     "working_directory": "examples/app/full/blueprint",
                     "compliance": {
