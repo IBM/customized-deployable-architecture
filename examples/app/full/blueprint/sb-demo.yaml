@@ -1,7 +1,7 @@
-name: 'fullapacheapp'
-type: 'blueprint'
-schema_version: '1.0.0'
-description: 'my blueprint'
+name: "fullapacheapp"
+type: "blueprint"
+schema_version: "1.0.0"
+description: "my blueprint"
 inputs:
   - name: ibmcloud_api_key
     default: "__NOT_SET__"
@@ -9,7 +9,7 @@ inputs:
     description: The IBM Cloud platform API key needed to deploy IAM enabled resources
   - name: prefix
     description: "The prefix that you would like to append to your resources"
-    default: "apache-app" 
+    default: "apache-app"
     required: true
   - name: ssh_key
     description: Public SSH Key for VSI creation. Must be a valid SSH key that does not already exist in the deployment region
@@ -20,71 +20,72 @@ settings:
   - key: TF_VERSION
     value: 1.0
 modules:
- - name: secureInfra
-   module_type: terraform
-   source:
-     git:
-       source_type: github
-       git_repo_url: "https://github.com/IBM/customized-deployable-architecture"
-   inputs:
-     - name: ibmcloud_api_key
-       value: $blueprint.ibmcloud_api_key
-       description: The IBM Cloud platform API key needed to deploy IAM enabled resources.
-       type: string
-       sensitive: true
-     - name: prefix
-       value: $blueprint.prefix
-       description: A unique identifier for resources. Must begin with a lowercase
-         letter and end with a lowerccase letter or number. This prefix will be
-         prepended to any resources provisioned by this template. Prefixes must
-         be 16 or fewer characters.
-       type: string
-       default: land-zone-vsi-qs
-     - name: ssh_key
-       value: $blueprint.ssh_key
-       description: Public SSH Key for VSI creation. Must be a valid SSH key that does
-         not already exist in the deployment region.
-       type: string
-   outputs:
-     - name: customSecInfra
-       description: Custom secure infrastructure configuration
-     - name: prefix
-       description: prefix used in this infrastructure
- - name: application
-   module_type: terraform
-   source:
-     git:
-       source_type: github
-       git_repo_url: "https://github.com/IBM/customized-deployable-architecture//examples/app/extension?ref=main"
-       git_branch: main
-   inputs:
-     - name: appSecurityRules
-       value: ''
-       type: string
-     - name: appInstallScript
-       value: ''
-       type: string
-       default: |
-         #!/bin/bash
-         sudo apt-get update
-         sudo apt-get --yes install apache2
-     - name: image
-       value: ''
-       type: string
-       default: ibm-ubuntu-20-04-4-minimal-amd64-2
-     - name: ibmcloud_api_key
-       value: $blueprint.ibmcloud_api_key
-       description: The IBM Cloud platform API key needed to deploy IAM enabled resources.
-       type: string
-       sensitive: true
-     - name: region
-       value: ''
-       type: string
-       default: us-east
-     - name: prefix
-       value: $module.secureInfra.outputs.prefix
-       description: A unique identifier for resources. Must be the same one that is
-         used in the base infrastructure.
-       type: string
- 
-
+  - name: secureInfra
+    module_type: terraform
+    source:
+      git:
+        source_type: github
+        git_repo_url: "https://github.com/IBM/customized-deployable-architecture"
+    inputs:
+      - name: ibmcloud_api_key
+        value: $blueprint.ibmcloud_api_key
+        description: The IBM Cloud platform API key needed to deploy IAM enabled resources.
+        type: string
+        sensitive: true
+      - name: prefix
+        value: $blueprint.prefix
+        description:
+          A unique identifier for resources. Must begin with a lowercase
+          letter and end with a lowerccase letter or number. This prefix will be
+          prepended to any resources provisioned by this template. Prefixes must
+          be 16 or fewer characters.
+        type: string
+        default: land-zone-vsi-qs
+      - name: ssh_key
+        value: $blueprint.ssh_key
+        description:
+          Public SSH Key for VSI creation. Must be a valid SSH key that does
+          not already exist in the deployment region.
+        type: string
+    outputs:
+      - name: customSecInfra
+        description: Custom secure infrastructure configuration
+      - name: prefix
+        description: prefix used in this infrastructure
+  - name: application
+    module_type: terraform
+    source:
+      git:
+        source_type: github
+        git_repo_url: "https://github.com/IBM/customized-deployable-architecture/tree/main/examples/app/extension"
+        git_branch: main
+    inputs:
+      - name: appSecurityRules
+        value: ""
+        type: string
+      - name: appInstallScript
+        value: ""
+        type: string
+        default: |
+          #!/bin/bash
+          sudo apt-get update
+          sudo apt-get --yes install apache2
+      - name: image
+        value: ""
+        type: string
+        default: ibm-ubuntu-20-04-4-minimal-amd64-2
+      - name: ibmcloud_api_key
+        value: $blueprint.ibmcloud_api_key
+        description: The IBM Cloud platform API key needed to deploy IAM enabled resources.
+        type: string
+        sensitive: true
+      - name: region
+        value: ""
+        type: string
+        default: us-east
+      - name: prefix
+        value: $module.secureInfra.outputs.prefix
+        description:
+          A unique identifier for resources. Must be the same one that is
+          used in the base infrastructure.
+        type: string
