@@ -60,7 +60,7 @@ modules:
     source:
       git:
         source_type: github
-        git_repo_url: "https://github.com/IBM/customized-deployable-architecture/tree/main/examples/app/extension"
+        git_repo_url: "https://github.com/IBM/customized-deployable-architecture//examples/app/extension?ref=main"
         git_branch: main
     settings:
       - name: TF_VERSION
