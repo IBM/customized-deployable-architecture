@@ -18,7 +18,7 @@ inputs:
 outputs:
 settings:
   - key: TF_VERSION
-    value: 1.0
+    value: 1.2
 modules:
   - name: secureInfra
     module_type: terraform
@@ -60,7 +60,7 @@ modules:
     source:
       git:
         source_type: github
-        git_repo_url: "https://github.com/IBM/customized-deployable-architecture//examples/app/extension?ref=main"
+        git_repo_url: "https://github.com/IBM/customized-deployable-architecture/examples/app/extension?ref=main"
         git_branch: main
     settings:
       - name: TF_VERSION
