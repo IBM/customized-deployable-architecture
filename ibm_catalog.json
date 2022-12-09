@@ -138,8 +138,8 @@
             ]
         },
         {
-            "name": "custom-deployable-workload",
-            "label": "custom-deployable-workload",
+            "name": "custom-apache-workload",
+            "label": "custom-apache-workload",
             "version": "0.0.6",
             "flavors": [
                 {
