@@ -26,6 +26,9 @@ modules:
       git:
         source_type: github
         git_repo_url: "https://github.com/IBM/customized-deployable-architecture"
+    settings:
+      - name: TF_VERSION
+        value: 1.2
     inputs:
       - name: ibmcloud_api_key
         value: $blueprint.ibmcloud_api_key
@@ -59,6 +62,9 @@ modules:
         source_type: github
         git_repo_url: "https://github.com/IBM/customized-deployable-architecture/tree/main/examples/app/extension"
         git_branch: main
+    settings:
+      - name: TF_VERSION
+        value: 1.2
     inputs:
       - name: appSecurityRules
         value: ""
