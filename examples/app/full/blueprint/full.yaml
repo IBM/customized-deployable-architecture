@@ -5,6 +5,8 @@ description: "Apache workload with landscape"
 settings:
   # - name: TF_LOG
   #   value: "DEBUG"
+  - name: TF_LOG_PROVIDER
+    value: DEBUG
 inputs:
   - name: ibmcloud_api_key
     default: "__NOT_SET__"
@@ -12,7 +14,7 @@ inputs:
     description: The IBM Cloud platform API key needed to deploy IAM enabled resources
   - name: prefix
     description: "The prefix that you would like to append to your resources"
-    default: "apache-app" 
+    default: "apache-app"
     required: true
   - name: ssh_key
     description: Public SSH Key for VSI creation. Must be a valid SSH key that does not already exist in the deployment region
@@ -26,7 +28,7 @@ modules:
   - module_type: terraform
     name: "secureInfra"
     source:
-      git: 
+      git:
         source_type: github
         git_repo_url: "https://github.com/IBM/customized-deployable-architecture/tree/main"
     settings:
@@ -50,7 +52,7 @@ modules:
   - module_type: terraform
     name: "application"
     source:
-      git: 
+      git:
         source_type: github
         git_repo_url: "https://github.com/IBM/customized-deployable-architecture/tree/main/examples/app/extension"
     settings:
@@ -64,5 +66,3 @@ modules:
       - name: prefix
         description: The IBM Cloud platform API key needed to deploy IAM enabled resources
         value: $module.secureInfra.outputs.prefix
-    
-  
