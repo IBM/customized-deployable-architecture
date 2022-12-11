@@ -19,8 +19,8 @@ outputs:
 settings:
   - key: TF_VERSION
     value: 1.2
-  # - name: TF_LOG_PROVIDER
-  #   value: DEBUG
+  - name: TF_LOG_PROVIDER
+    value: DEBUG
 modules:
   - name: secureInfra
     module_type: terraform
