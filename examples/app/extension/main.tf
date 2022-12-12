@@ -26,7 +26,7 @@ module "slz_vsi" {
   tags                       = []
   subnets                    = [{"name": local.subnet, "id": data.ibm_is_subnet.subnet.id, "zone":data.ibm_is_subnet.subnet.zone, "cidr": data.ibm_is_subnet.subnet.ipv4_cidr_block}]
   vpc_id                     = data.ibm_is_subnet.subnet.vpc
-  prefix                     = "apache-webserver"
+  prefix                     = "${var.prefix}-apache-webserver"
   machine_type               = "cx2-2x4"
   user_data                  = var.appInstallScript
   boot_volume_encryption_key = null
