@@ -84,10 +84,6 @@ modules:
         description: The IBM Cloud platform API key needed to deploy IAM enabled resources.
         type: string
         sensitive: true
-      - name: region
-        value: ""
-        type: string
-        default: us-east
       - name: prefix
         value: $module.secureInfra.outputs.prefix
         description:
