@@ -5,8 +5,8 @@ description: "Apache workload with landscape"
 settings:
   # - name: TF_LOG
   #   value: "DEBUG"
-  - name: TF_LOG_PROVIDER
-    value: DEBUG
+  # - name: TF_LOG_PROVIDER
+  #   value: DEBUG
 inputs:
   - name: ibmcloud_api_key
     default: "__NOT_SET__"
