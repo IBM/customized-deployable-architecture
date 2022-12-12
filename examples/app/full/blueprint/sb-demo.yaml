@@ -68,13 +68,6 @@ modules:
       - name: TF_VERSION
         value: 1.2
     inputs:
-      - name: appInstallScript
-        value: ""
-        type: string
-        default: |
-          #!/bin/bash
-          sudo apt-get update
-          sudo apt-get --yes install apache2
       - name: image
         value: ""
         type: string
@@ -84,6 +77,10 @@ modules:
         description: The IBM Cloud platform API key needed to deploy IAM enabled resources.
         type: string
         sensitive: true
+      - name: region
+        value: ""
+        type: string
+        default: us-east
       - name: prefix
         value: $module.secureInfra.outputs.prefix
         description:
