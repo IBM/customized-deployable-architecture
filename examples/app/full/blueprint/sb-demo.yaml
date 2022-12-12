@@ -70,11 +70,26 @@ modules:
       - name: TF_LOG_PROVIDER
         value: DEBUG
     inputs:
+      - name: appInstallScript
+        value: ""
+        type: string
+        default: |
+          #!/bin/bash
+          sudo apt-get update
+          sudo apt-get --yes install apache2
+      - name: image
+        value: ""
+        type: string
+        default: ibm-ubuntu-20-04-4-minimal-amd64-2
       - name: ibmcloud_api_key
         value: $blueprint.ibmcloud_api_key
         description: The IBM Cloud platform API key needed to deploy IAM enabled resources.
         type: string
         sensitive: true
+      - name: region
+        value: ""
+        type: string
+        default: us-east
       - name: prefix
         value: $module.secureInfra.outputs.prefix
         description:
