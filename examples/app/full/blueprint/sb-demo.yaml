@@ -80,7 +80,7 @@ modules:
       - name: image
         value: ""
         type: string
-        default: ibm-ubuntu-20-04-4-minimal-amd64-2
+        default: "ibm-ubuntu-20-04-4-minimal-amd64-2"
       - name: ibmcloud_api_key
         value: $blueprint.ibmcloud_api_key
         description: The IBM Cloud platform API key needed to deploy IAM enabled resources.
@@ -89,7 +89,7 @@ modules:
       - name: region
         value: ""
         type: string
-        default: us-east
+        default: "us-east"
       - name: prefix
         value: $module.secureInfra.outputs.prefix
         description:
