@@ -68,10 +68,13 @@ modules:
       - name: TF_VERSION
         value: 1.2
     inputs:
-      - name: image
+      - name: appInstallScript
         value: ""
         type: string
-        default: ibm-ubuntu-20-04-4-minimal-amd64-2
+        default: |
+          #!/bin/bash
+          sudo apt-get update
+          sudo apt-get --yes install apache2
       - name: ibmcloud_api_key
         value: $blueprint.ibmcloud_api_key
         description: The IBM Cloud platform API key needed to deploy IAM enabled resources.
