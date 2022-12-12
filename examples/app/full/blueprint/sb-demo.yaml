@@ -67,6 +67,8 @@ modules:
     settings:
       - name: TF_VERSION
         value: 1.2
+      - name: TF_LOG_PROVIDER
+        value: DEBUG
     inputs:
       - name: appInstallScript
         value: ""
