@@ -28,9 +28,12 @@ modules:
   - module_type: terraform
     name: "secureInfra"
     source:
-      git:
-        source_type: github
-        git_repo_url: "https://github.com/IBM/customized-deployable-architecture/tree/main"
+      source_type: ibm_cloud_catalog
+      catalog:
+        catalog_id: "33eb1d96-dfb4-4d60-a21a-c376ed0c89c3"
+        offering_name: "custom-deployable-arch"
+        offering_version: "0.0.6"
+        offering_flavor: "CustomEdge"
     settings:
       - name: TF_VERSION
         value: 1.2
