@@ -300,9 +300,7 @@
         "subnet_names": [
           "vsi-zone-1"
         ],
-        "user_data": "#!/bin/bash 
-         sudo apt-get update 
-         sudo apt-get --yes install ansible ",
+        "user_data": "#!/bin/bash \n sudo apt-get update \n sudo apt-get --yes install ansible \n ",
         "vpc_name": "management",
         "vsi_per_subnet": 1
       },
