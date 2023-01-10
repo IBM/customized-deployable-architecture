@@ -33,3 +33,9 @@ variable "prefix" {
   type        = string
   description = "A unique identifier for resources. Must be the same one that is used in the base infrastructure."
 }
+
+variable "ssh_private_key" {
+  description = "Private SSH key (RSA format) that is paired with the public ssh key.  Will be used by Ansible to access the VSI. Entered data must be in [heredoc strings format](https://www.terraform.io/language/expressions/strings#heredoc-strings). The key is not uploaded or stored. For more information about SSH keys, see [SSH keys](https://cloud.ibm.com/docs/vpc?topic=vpc-ssh-keys)."
+  type        = string
+  sensitive   = true
+}
