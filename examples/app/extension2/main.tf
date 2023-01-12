@@ -17,7 +17,7 @@ data "ibm_is_image" "image" {
   name = var.image
 }
 
-data "ibm_floating_ip" "jump-box-fip" {
+data "ibm_is_floating_ip" "jump-box-fip" {
   name = "$(var.prefix}-jump-box-1-fip"
 }
 
@@ -39,12 +39,12 @@ module "slz_vsi" {
 }
 
 resource "null_resource" "execute_ansible" {
-  dependepends_on = [module.slz_vsi]
+  depends_on = [module.slz_vsi]
     
   connection {
     type         = "ssh"
     user         = "root"
-    bastion_host = data.ibm_floating_ip.jump-box-fip.address
+    bastion_host = data.ibm_is_floating_ip.jump-box-fip.address
     host         = module.slz_vsi.list[0].ipv4_address
     private_key  = var.ssh_private_key
     agent        = false
