@@ -58,7 +58,7 @@ resource "null_resource" "execute_ansible" {
 
   provisioner "remote-exec" {
     inline = [
-      "ansible-playbook --connection=local -i 'localhost,' install-apache.yml",
+      "ansible-playbook --connection=local -i 'localhost,' /root/install-apache.yml",
     ]
   }
 }
