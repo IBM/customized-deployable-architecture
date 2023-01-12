@@ -18,7 +18,7 @@ data "ibm_is_image" "image" {
 }
 
 data "ibm_is_floating_ip" "jump-box-fip" {
-  name = "$(var.prefix}-jump-box-1-fip"
+  name = "${var.prefix}-jump-box-1-fip"
 }
 
 module "slz_vsi" {
