@@ -53,7 +53,7 @@ resource "null_resource" "execute_ansible" {
 
   provisioner "file" {
     source      = "${path.module}/playbooks/install-apache.yml"
-    destination = "install-apache.yml"
+    destination = "/root/install-apache.yml"
   }
 
   provisioner "remote-exec" {
