@@ -5,7 +5,7 @@ variable "workLoadInitScript" {
   default = <<EOF
 #!/bin/bash
 sudo apt-get update
-sudo apt-get --yes install python
+sudo apt-get --yes install ansible
 EOF
 }
 

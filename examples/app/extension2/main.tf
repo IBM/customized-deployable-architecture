@@ -17,6 +17,10 @@ data "ibm_is_image" "image" {
   name = var.image
 }
 
+data "ibm_floating_ip" "jump-box-fip" {
+  name = "$(var.prefix}-jump-box-1-fip"
+}
+
 module "slz_vsi" {
   source                     = "git::https://github.com/terraform-ibm-modules/terraform-ibm-landing-zone-vsi.git?ref=v1.1.5"
   resource_group_id          = data.ibm_is_subnet.subnet.resource_group
@@ -32,4 +36,29 @@ module "slz_vsi" {
   boot_volume_encryption_key = null
   vsi_per_subnet             = 1
   ssh_key_ids                = [data.ibm_is_ssh_key.ssh-key.id]
+}
+
+resource "null_resource" "execute_ansible" {
+  dependepends_on = [module.slz_vsi]
+    
+  connection {
+    type         = "ssh"
+    user         = "root"
+    bastion_host = data.ibm_floating_ip.jump-box-fip.address
+    host         = module.slz_vsi.list[0].ipv4_address
+    private_key  = var.ssh_private_key
+    agent        = false
+    timeout      = "15m"
+  }
+
+  provisioner "file" {
+    source      = "${path.module}/playbooks/install-apache.yml"
+    destination = "install-apache.yml"
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "ansible-playbook --connection=local -i 'localhost,' install-apache.yml",
+    ]
+  }
 }
