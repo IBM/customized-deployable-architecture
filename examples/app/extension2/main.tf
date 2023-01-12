@@ -58,10 +58,11 @@ resource "null_resource" "execute_ansible" {
 
   provisioner "remote-exec" {
     inline = [
-      "pwd",
-      "ls -lag",
       "ls /root",
-      "ansible-playbook --connection=local -i 'localhost,' /root/install-apache.yml",
+      "echo $PATH",
+      "which ansible-playbook",
+      "ansible-playbook --help",
+      "ansible-playbook --connection=local -i 'localhost,' /root/install-apache.yml 2>&1 | tee ansible_execution.log",
     ]
   }
 }
