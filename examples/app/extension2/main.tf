@@ -60,6 +60,8 @@ resource "null_resource" "execute_ansible" {
     inline = [
       "ls /root",
       "echo $PATH",
+      "apt-get update",
+      "apt-get --yes install ansible",
       "which ansible-playbook",
       "ansible-playbook --help",
       "ansible-playbook --connection=local -i 'localhost,' /root/install-apache.yml 2>&1 | tee ansible_execution.log",
