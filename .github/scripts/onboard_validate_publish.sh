@@ -5,8 +5,8 @@
 function generateValidationValues() {
     local validationValues=$1
 
-    # generate an ssh key that can be used as a validation value 
-    ssh-keygen -f ./id_rsa -t rsa -N ''
+    # generate an ssh key that can be used as a validation value. overwrite file if already there. 
+    ssh-keygen -f ./id_rsa -t rsa -N '' <<<y
     SSH_KEY=$(cat ./id_rsa.pub)
 
     # format offering validation values into json format
