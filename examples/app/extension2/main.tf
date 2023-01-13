@@ -58,10 +58,7 @@ resource "null_resource" "execute_ansible" {
 
   provisioner "remote-exec" {
     inline = [
-      "ls /root",
-      "echo $PATH",
-      "whoami",
-      "ansible-playbook --help",
+      "sleep 300",
       "ansible-playbook --connection=local -i 'localhost,' /root/install-apache.yml",
     ]
   }
