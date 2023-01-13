@@ -60,8 +60,9 @@ resource "null_resource" "execute_ansible" {
     inline = [
       "ls /root",
       "echo $PATH",
-      "ansible-playbook --help",
-      "ansible-playbook --connection=local -i 'localhost,' /root/install-apache.yml 2>&1 | tee ansible_execution.log",
+      "whoami",
+      "/usr/bin/ansible-playbook --help",
+      "/usr/bin/ansible-playbook --connection=local -i 'localhost,' /root/install-apache.yml 2>&1 | tee ansible_execution.log",
     ]
   }
 }

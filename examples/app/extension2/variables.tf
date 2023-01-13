@@ -4,8 +4,8 @@ variable "workLoadInitScript" {
   type    = string
   default = <<EOF
 #!/bin/bash
-apt-get update
-apt-get --yes install ansible
+sudo apt-get update
+sudo apt-get --yes install ansible
 EOF
 }
 
