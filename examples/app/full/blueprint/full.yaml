@@ -20,6 +20,10 @@ inputs:
     description: Public SSH Key for VSI creation. Must be a valid SSH key that does not already exist in the deployment region
     default: "__NOT_SET__"
     required: true
+  - name: ssh_private_key
+    description: Private SSH Key for SSH access via Jump Box to VSI. Must be the private key that pairs with the public key also used here
+    default: "__NOT_SET__"
+    required: true  
 # outputs:
 #   - name: customSecInfra
 #     value: $module.secureInfra.outputs.secureInfra
@@ -54,7 +58,7 @@ modules:
     source:
       git:
         source_type: github
-        git_repo_url: "https://github.com/IBM/customized-deployable-architecture/tree/main/examples/app/extension"
+        git_repo_url: "https://github.com/IBM/customized-deployable-architecture/tree/main/examples/app/extension/ansible"
     settings:
       - name: TF_VERSION
         value: 1.2
@@ -63,6 +67,10 @@ modules:
         sensitive: true
         description: The IBM Cloud platform API key needed to deploy IAM enabled resources
         value: $blueprint.ibmcloud_api_key
+      - name: ssh_private_key
+        sensitive: true
+        description: Private SSH Key for SSH access via Jump Box to VSI. Must be the private key that pairs with the public key also used here
+        value: $blueprint.ssh_private_key  
       - name: prefix
         description: The IBM Cloud platform API key needed to deploy IAM enabled resources
         value: $module.secureInfra.outputs.prefix
