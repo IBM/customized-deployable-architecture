@@ -140,7 +140,7 @@
         {
             "name": "custom-apache-workload",
             "label": "custom-apache-workload",
-            "version": "0.0.9",
+            "version": "0.0.10",
             "flavors": [
                 {
                     "label": "AN-Standard",
