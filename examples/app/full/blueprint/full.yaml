@@ -23,7 +23,8 @@ inputs:
   - name: ssh_private_key
     description: Private SSH Key for SSH access via Jump Box to VSI. Must be the private key that pairs with the public key also used here
     default: "__NOT_SET__"
-    required: true  
+    required: true
+    max_length: 5000  
 # outputs:
 #   - name: customSecInfra
 #     value: $module.secureInfra.outputs.secureInfra
