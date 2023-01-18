@@ -58,7 +58,7 @@ resource "null_resource" "execute_ansible" {
 
   provisioner "remote-exec" {
     inline = [
-      "sleep 300",
+      "sleep 150",
       "ansible-playbook --connection=local -i 'localhost,' /root/install-apache.yml",
     ]
   }
