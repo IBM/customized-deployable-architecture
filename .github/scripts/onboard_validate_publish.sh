@@ -6,11 +6,16 @@ function generateValidationValues() {
     local validationValues=$1
 
     # generate an ssh key that can be used as a validation value. overwrite file if already there. 
-    ssh-keygen -f ./id_rsa -t rsa -N '' <<<y
+    FILE=./id_rsa.pub
+    if [ ! -f "$FILE" ]; then
+        ssh-keygen -f ./id_rsa -t rsa -N '' <<<y
+    fi
+
     SSH_KEY=$(cat ./id_rsa.pub)
+    SSH_PRIVATE_KEY=$(cat ./id_rsa)
 
     # format offering validation values into json format
-    jq -n --arg IBMCLOUD_API_KEY "$IBMCLOUD_API_KEY" --arg SSH_KEY "$SSH_KEY" '{ "ibmcloud_api_key": $IBMCLOUD_API_KEY, "prefix": "validation", "ssh_key": $SSH_KEY }' > "$validationValues"
+    jq -n --arg IBMCLOUD_API_KEY "$IBMCLOUD_API_KEY" --arg SSH_KEY "$SSH_KEY" --arg SSH_PRIVATE_KEY "$SSH_PRIVATE_KEY" '{ "ibmcloud_api_key": $IBMCLOUD_API_KEY, "prefix": "validation", "ssh_key": $SSH_KEY, "ssh_private_key": $SSH_PRIVATE_KEY }' > "$validationValues"
 }
 
 #
