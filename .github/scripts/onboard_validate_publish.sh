@@ -12,10 +12,13 @@ function generateValidationValues() {
     fi
 
     SSH_KEY=$(cat ./id_rsa.pub)
-    SSH_PRIVATE_KEY=$(cat ./id_rsa)
+    SSH_PRIVATE_KEY="$(cat ./id_rsa)"
 
     # format offering validation values into json format
     jq -n --arg IBMCLOUD_API_KEY "$IBMCLOUD_API_KEY" --arg SSH_KEY "$SSH_KEY" --arg SSH_PRIVATE_KEY "$SSH_PRIVATE_KEY" '{ "ibmcloud_api_key": $IBMCLOUD_API_KEY, "prefix": "validation", "ssh_key": $SSH_KEY, "ssh_private_key": $SSH_PRIVATE_KEY }' > "$validationValues"
+
+    echo "Validation values are:"
+    cat "$validationValues"
 }
 
 #
