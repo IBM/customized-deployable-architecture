@@ -46,4 +46,4 @@ fi
 echo "Applying Blueprint: $bpID"
 ibmcloud schematics blueprint run apply -i "${bpID}"
 
-echo -e "To delete:\n\tibmcloud schematics blueprint run destroy --no-prompt -i ${bpID}\n\tibmcloud schematics blueprint config delete -fd -i ${bpID}"
+echo -e "To delete:\n\tibmcloud schematics blueprint run destroy --no-prompt -i ${bpID}\n\tibmcloud schematics blueprint delete --fd -i ${bpID}"

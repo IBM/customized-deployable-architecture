@@ -55,7 +55,7 @@ modules:
     outputs:
       - name: prefix
   - module_type: terraform
-    name: "application"
+    name: "apache"
     source:
       git:
         source_type: github
