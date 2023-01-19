@@ -1,24 +1,28 @@
-#! /bin/bash
+
 
 #
 # this function generates values that will be used as deploy values during the validation of the offering version.
 function generateValidationValues() {
     local validationValues=$1
 
-    # generate an ssh key that can be used as a validation value. overwrite file if already there. 
-    FILE=./id_rsa.pub
-    if [ ! -f "$FILE" ]; then
-        ssh-keygen -f ./id_rsa -t rsa -N '' <<<y
+    # we only need to do this once.
+    FILE=$1
+    if [ -f "$FILE" ]; then
+        return
     fi
+
+    # generate an ssh key that can be used as a validation value. overwrite file if already there. 
+    ssh-keygen -f ./id_rsa -t rsa -N '' <<<y
 
     SSH_KEY=$(cat ./id_rsa.pub)
     SSH_PRIVATE_KEY="$(cat ./id_rsa)"
 
-    # format offering validation values into json format
-    jq -n --arg IBMCLOUD_API_KEY "$IBMCLOUD_API_KEY" --arg SSH_KEY "$SSH_KEY" --arg SSH_PRIVATE_KEY "$SSH_PRIVATE_KEY" '{ "ibmcloud_api_key": $IBMCLOUD_API_KEY, "prefix": "validation", "ssh_key": $SSH_KEY, "ssh_private_key": $SSH_PRIVATE_KEY }' > "$validationValues"
+    # use a unique prefix string value 
+    SUFFIX="$(date +%m%d-%H-%M)"
+    PREFIX="val-${SUFFIX}"
 
-    echo "Validation values are:"
-    cat "$validationValues"
+    # format offering validation values into json format
+    jq -n --arg IBMCLOUD_API_KEY "$IBMCLOUD_API_KEY" --arg PREFIX "$PREFIX" --arg SSH_KEY "$SSH_KEY" --arg SSH_PRIVATE_KEY "$SSH_PRIVATE_KEY" '{ "ibmcloud_api_key": $IBMCLOUD_API_KEY, "prefix": $PREFIX, "ssh_key": $SSH_KEY, "ssh_private_key": $SSH_PRIVATE_KEY }' > "$validationValues"
 }
 
 #
@@ -65,7 +69,11 @@ function validateVersion() {
 #
 # this function invokes a CRA scan on a validated version.
 function scanVersion() {
-    ibmcloud catalog offering version cra --vl ${VERSION_LOCATOR}
+    if [ "$CRA_SCAN" = SCAN ]; then
+        ibmcloud catalog offering version cra --vl ${VERSION_LOCATOR}
+    else
+        echo "CRA scan skipped"
+    fi    
 }
 
 #
@@ -85,6 +93,7 @@ VERSION=$3
 VARIATION=$4
 RESOURCE_GROUP=$5
 FORMAT_KIND=$6
+CRA_SCAN=$7
 
 echo "CatalogName:"$CATALOG_NAME
 echo "OfferingName:"$OFFERING_NAME

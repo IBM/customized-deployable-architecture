@@ -23,6 +23,7 @@ jobs:
       RESOURCE_GROUP: default
       EXTENSION_OFFERING_NAME: custom-apache-workload
       EXTENSION_VARIATION: Standard
+      BLUEPRINT_VARIATION: BP-Standard
       # Note that IBMCLOUD_API_KEY is a secret environment variable configured on the project
 
     # Steps represent a sequence of tasks that will be executed as part of the job
@@ -47,9 +48,9 @@ jobs:
           echo "--------------------------------------------------------------------"
           echo "onboard version, validate, scan, publish"
           echo "--------------------------------------------------------------------"
-          ./.github/scripts/onboard_validate_publish.sh "$CATALOG_NAME" "$OFFERING_NAME" "$VERSION" "$VARIATION" "$RESOURCE_GROUP" "terraform"
+          ./.github/scripts/onboard_validate_publish.sh "$CATALOG_NAME" "$OFFERING_NAME" "$VERSION" "$VARIATION" "$RESOURCE_GROUP" "terraform" "SCAN"
 
-          ./.github/scripts/onboard_validate_publish.sh "$CATALOG_NAME" "$EXTENSION_OFFERING_NAME" "$VERSION" "$EXTENSION_VARIATION" "$RESOURCE_GROUP" "terraform"
+          ./.github/scripts/onboard_validate_publish.sh "$CATALOG_NAME" "$EXTENSION_OFFERING_NAME" "$VERSION" "$EXTENSION_VARIATION" "$RESOURCE_GROUP" "terraform" "SCAN"
 
           echo "--------------------------------------------------------------------"
           echo "destroy validation resources"
@@ -57,3 +58,8 @@ jobs:
           ./.github/scripts/cleanup.sh "$CATALOG_NAME" "$EXTENSION_OFFERING_NAME" "$VERSION"
 
           ./.github/scripts/cleanup.sh "$CATALOG_NAME" "$OFFERING_NAME" "$VERSION"
+
+          echo "--------------------------------------------------------------------"
+          echo "onboard blueprint version, validate, publish"
+          echo "--------------------------------------------------------------------"
+          ./.github/scripts/onboard_validate_publish.sh "$CATALOG_NAME" "$EXTENSION_OFFERING_NAME" "$VERSION" "$BLUEPRINT_VARIATION" "$RESOURCE_GROUP" "blueprint" "NOSCAN"
