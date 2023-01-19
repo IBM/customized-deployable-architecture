@@ -3,7 +3,7 @@
         {
             "name": "custom-deployable-arch",
             "label": "custom-deployable-arch",
-            "version": "0.0.8",
+            "version": "0.0.10",
             "flavors": [
                 {
                     "label": "CustomEdge",
@@ -143,7 +143,7 @@
             "version": "0.0.10",
             "flavors": [
                 {
-                    "label": "AN-Standard",
+                    "label": "Standard",
                     "name": "tf-onlyapp-ansible",
                     "working_directory": "examples/app/extension/ansible",
                     "compliance": {
@@ -274,7 +274,7 @@
                     }
                 },
                 {
-                    "label": "Standard",
+                    "label": "BP-Standard",
                     "name": "bp-fullapp",
                     "working_directory": "examples/app/full/blueprint",
                     "compliance": {

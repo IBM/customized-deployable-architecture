@@ -27,7 +27,7 @@ function importVersionToCatalog() {
     local tarballURL="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/archive/refs/tags/${VERSION}.tar.gz"
 
     # import the version into the catalog
-    ibmcloud catalog offering import-version --zipurl "$tarballURL" --target-version "$VERSION" --catalog "$CATALOG_NAME" --offering "$OFFERING_NAME" --include-config --flavor $VARIATION || ret=$?
+    ibmcloud catalog offering import-version --zipurl "$tarballURL" --target-version "$VERSION" --catalog "$CATALOG_NAME" --offering "$OFFERING_NAME" --include-config --variation $VARIATION --format-kind $FORMAT_KIND || ret=$?
     if [[ ret -ne 0 ]]; then
         exit 1
     fi    
@@ -84,12 +84,14 @@ OFFERING_NAME=$2
 VERSION=$3
 VARIATION=$4
 RESOURCE_GROUP=$5
+FORMAT_KIND=$6
 
 echo "CatalogName:"$CATALOG_NAME
 echo "OfferingName:"$OFFERING_NAME
 echo "Version:"$VERSION
 echo "Variation:"$VARIATION
 echo "ResourceGroup:"$RESOURCE_GROUP
+echo "FormatKind:"$FORMAT_KIND
 
 # steps
 importVersionToCatalog 
