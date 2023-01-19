@@ -42,7 +42,7 @@ function importVersionToCatalog() {
 function getVersionLocator() {
     # get the catalog version locator for an offering version
     ibmcloud catalog offering get --catalog "$CATALOG_NAME" --offering "$OFFERING_NAME" --output json > offering.json
-    VERSION_LOCATOR=$(jq -r --arg version $VERSION '.kinds[] | select(.format_kind=="terraform").versions[] | select(.version==$version).version_locator' < offering.json)
+    VERSION_LOCATOR=$(jq -r --arg version $VERSION --arg format_kind $FORMAT_KIND '.kinds[] | select(.format_kind==$format_kind).versions[] | select(.version==$version).version_locator' < offering.json)
     echo "version locator is:"${VERSION_LOCATOR}
 }
 
