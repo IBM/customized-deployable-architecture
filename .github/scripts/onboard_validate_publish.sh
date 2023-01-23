@@ -1,7 +1,7 @@
 
 
 #
-# this function generates values that will be used as deploy values during the validation of the offering version.
+# this function generates values that will be used as deployment values during the validation of the offering version.
 function generateValidationValues() {
     local validationValues=$1
 
@@ -21,16 +21,16 @@ function generateValidationValues() {
     SUFFIX="$(date +%m%d-%H-%M)"
     PREFIX="val-${SUFFIX}"
 
-    # format offering validation values into json format
+    # format offering validation values into json format.  the json keys used here match the names of the defined deployment variables.  
     jq -n --arg IBMCLOUD_API_KEY "$IBMCLOUD_API_KEY" --arg PREFIX "$PREFIX" --arg SSH_KEY "$SSH_KEY" --arg SSH_PRIVATE_KEY "$SSH_PRIVATE_KEY" '{ "ibmcloud_api_key": $IBMCLOUD_API_KEY, "prefix": $PREFIX, "ssh_key": $SSH_KEY, "ssh_private_key": $SSH_PRIVATE_KEY }' > "$validationValues"
 }
 
 #
-# this function imports an offering version into a catalog.
+# this function imports a version of an existing offering into a catalog.
 function importVersionToCatalog() {
     local tarballURL="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/archive/refs/tags/${VERSION}.tar.gz"
 
-    # import the version into the catalog
+    # import the version into the catalog.  the offering already exists.
     ibmcloud catalog offering import-version --zipurl "$tarballURL" --target-version "$VERSION" --catalog "$CATALOG_NAME" --offering "$OFFERING_NAME" --include-config --variation $VARIATION --format-kind $FORMAT_KIND || ret=$?
     if [[ ret -ne 0 ]]; then
         exit 1
@@ -47,18 +47,19 @@ function getVersionLocator() {
 }
 
 #
-# this function calls the schematics service and validates the version.
+# this function calls the schematics service and validates a verion of the offering.
 function validateVersion() {
     local validationValues="validation-values.json"
     local timeOut=10800         # 3 hours - sufficiently large.  will not run this long.    
 
+    # generate values for the deployment variables defined for this version of the offering
     generateValidationValues "${validationValues}"
     getVersionLocator 
 
     # need to target a resource group - deployed resources will be in this resource group
     ibmcloud target -g "${RESOURCE_GROUP}"
 
-    # invoke schematics service to validate the version
+    # invoke schematics service to validate the version.  this will wait for that operation to complete.
     ibmcloud catalog offering version validate --vl ${VERSION_LOCATOR} --override-values "${validationValues}" --timeout $timeOut || ret=$?
 
     if [[ ret -ne 0 ]]; then

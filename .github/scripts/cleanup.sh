@@ -2,7 +2,7 @@
 
 #
 # this function queries the cloud catalog and deterines the schematics workspace id of the workspace that was used  
-# for validation.
+# for validation of this version of the offering.
 function getWorkspaceId() {
     ibmcloud catalog offering get -c "$CATALOG_NAME" -o "$OFFERING_NAME" --output json | jq -r --arg version "$VERSION" '.kinds[] | select(.format_kind=="terraform").versions[] | select(.version==$version).validation.target.workspace_id'
 }
@@ -167,7 +167,8 @@ function deleteBlueprint() {
     echo "blueprint and workspaces delete started."
 }
 
-
+#
+# destroy resources created by either a terraform or blueprint
 function destroyResources() {
     if [ "$FORMAT_KIND" = "terraform" ]
         then destroyWorkspaceResources
@@ -175,6 +176,8 @@ function destroyResources() {
     fi
 }
 
+# 
+# delete workspaces and blueprints
 function deleteWorkspaces() {
     if [ "$FORMAT_KIND" = "terraform" ]
         then deleteWorkspace
