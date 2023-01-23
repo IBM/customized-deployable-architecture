@@ -66,4 +66,4 @@ jobs:
 
           ./.github/scripts/tempNameFix.sh "$CATALOG_NAME" "$EXTENSION_OFFERING_NAME"
 
-          ./.github/scripts/cleanup.sh "$CATALOG_NAME" "$OFFERING_NAME" "$VERSION" "blueprint"
+          ./.github/scripts/cleanup.sh "$CATALOG_NAME" "$EXTENSION_OFFERING_NAME" "$VERSION" "blueprint"
