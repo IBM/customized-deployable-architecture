@@ -178,6 +178,7 @@
                         {
                             "catalog_id": "33eb1d96-dfb4-4d60-a21a-c376ed0c89c3",
                             "id": "cfd4c957-eb94-4230-8bf6-d522f0c18590",
+                            "name": "custom-deployable-arch",
                             "version": ">=0.0.8",
                             "flavors": [
                                 "CustomEdge"
