@@ -15,7 +15,7 @@ In addition, this repo provides:
 1. Create a custom deployable architecture and deploy it as a custom tile to the IBM cloud catalog.
 1. Create a custom module that extends the custom deployable architecture (based on the IBM VSI module) to deploy an Apache server.
 1. Create a blueprint deploys both the custom module and custom deployable architecture's base infrastructure and an apache server on top of it
-1. create a pipeline that will publish the custom architecture and apache server as private solutions on the ibm public catalog.
+1. create a pipeline that will publish the custom architecture and apache server as private solutions on the IBM public catalog.
 
 ![CustomTile](/images/custom-tile.png)
 
@@ -28,4 +28,8 @@ Catalog tiles:
 The Apache tile will hold both a terraform and a blueprint.  The blueprint is used to deploy both the app infra and the base deployable architecture.  The terraform template is use in the case that you want the apache server to run on an existing Secure Infra deployment.
 
 
+Publish Pipeline
 
+Included in this example is a Github Action to illustrated automated publishing to an IBM catalog.  The supplied action makes the following assumptions as pre-requisites.
+1. a secret in the repo has been configured for a IBM Cloud api key for an account that has sufficient IAM permissions to provision resources.
+1. the Action imports, validates, publishes new versions as they are created when a git release is created.  It is assumed that the offerings have already been created in the target catalog which is done only once.

@@ -71,7 +71,7 @@ function queryAndWaitForWorkspace() {
 }
 
 #
-# this function destroys a workspace and its resources.  the workspace is the workspace that ws used for the validation
+# this function destroys the resources associated to a workspace.  the workspace is the workspace that was used for the validation
 # operation for the offering version.
 function destroyWorkspaceResources() {
     # refresh token
@@ -98,7 +98,7 @@ function destroyWorkspaceResources() {
             sleep 5
             destroyStarted=$(getWorkspaceStatus)
             attempts=$((attempts+1))
-            if [[ counter -ge 30 ]]
+            if [[ attempts -ge 30 ]]
             then
                 echo "workspace status: ${destroyStatus} . failed to start destroy after 5 minutes.  giving up."
                 exit 1
@@ -121,6 +121,67 @@ function destroyWorkspaceResources() {
     echo "final resource destroy status: ${destroyStatus}"
 }
 
+#
+# this function queries the cloud catalog and deterines the schematics blueprint id of the blueprint that was used  
+# for validation of this version of this offering.
+function getBlueprintId() {
+    ibmcloud catalog offering get -c "$CATALOG_NAME" -o "$OFFERING_NAME" --output json | jq -r --arg version "$VERSION" '.kinds[] | select(.format_kind=="blueprint").versions[] | select(.version==$version).validation.target.blueprint_id'
+}
+
+#
+# this function queries the Schematics service to determine the status of the blueprint 
+function getBlueprintStatus() {
+    ibmcloud schematics blueprint get --id "$BLUEPRINT_ID" --output json | jq -r '.state.run_status'
+}
+
+#
+# this function destroys the resources associated with a blueprint which will be in multiple workspaces.
+# 
+function destroyBlueprintResources() {
+    # refresh token
+    ibmcloud catalog utility netrc
+
+    # get the schematics workspace id of the workspace that was used for the validation of this version
+    BLUEPRINT_ID=$(getBlueprintId)
+
+    echo "blueprint id: $BLUEPRINT_ID"
+    blueprintStatus=$(getBlueprintStatus)
+    echo "blueprint status: ${blueprintStatus}"
+
+    # this command self blocks until the destroy is finished
+    echo "destroying blueprint resources"
+    ibmcloud schematics blueprint destroy --id $BLUEPRINT_ID --no-prompt
+}
+
+#
+# this function deletes the workspaces associated to a blueprint and the blueprint itself.
+#
+function deleteBlueprint() {
+
+    # this command submits a schematics job to delete the individual workspaces and the blueprint
+    ibmcloud schematics blueprint delete --id $BLUEPRINT_ID --no-prompt
+
+    # let the delete finish
+    sleep 15 
+
+    echo "blueprint and workspaces delete started."
+}
+
+
+function destroyResources() {
+    if [ "$FORMAT_KIND" = "terraform" ]
+        then destroyWorkspaceResources
+        else destroyBlueprintResources
+    fi
+}
+
+function deleteWorkspaces() {
+    if [ "$FORMAT_KIND" = "terraform" ]
+        then deleteWorkspace
+        else deleteBlueprint
+    fi    
+}
+
 # ------------------------------------------------------------------------------------
 #  main
 # ------------------------------------------------------------------------------------
@@ -128,8 +189,9 @@ function destroyWorkspaceResources() {
 CATALOG_NAME=$1
 OFFERING_NAME=$2
 VERSION=$3
+FORMAT_KIND=$4
 
-echo "cleaning up workspace and resources"
+echo "cleaning up workspaces, resources"
 
-destroyWorkspaceResources
-deleteWorkspace
+destroyResources
+deleteWorkspaces
