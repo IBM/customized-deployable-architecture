@@ -148,6 +148,20 @@ function destroyBlueprintResources() {
     blueprintStatus=$(getBlueprintStatus)
     echo "blueprint status: ${blueprintStatus}"
 
+    # allow the status of the blueprint in schematics to fully update after the apply - wait up to two minutes
+    attempts=0
+    while [ "$blueprintStatus" != "RUN_APPLY_COMPLETE" ] && [[ $attempts -le 24 ]]
+    do
+        sleep 5
+        blueprintStatus=$(getBlueprintStatus)
+        attempts=$((attempts+1))
+        if [[ attempts -ge 24 ]]
+        then
+            echo "blueprint status: ${blueprintStatus} . Blueprint failed to be completely applied after 2 minutes.  giving up."
+            exit 1
+        fi
+    done 
+
     # this command self blocks until the destroy is finished
     echo "destroying blueprint resources"
     ibmcloud schematics blueprint destroy --id $BLUEPRINT_ID --no-prompt
