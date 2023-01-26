@@ -34,8 +34,8 @@ modules:
   - module_type: terraform
     name: "secureInfra"
     source:
+      source_type: github
       git:
-        source_type: github
         git_repo_url: "https://github.com/IBM/customized-deployable-architecture/tree/main"
     settings:
       - name: TF_VERSION
@@ -58,8 +58,8 @@ modules:
   - module_type: terraform
     name: "apache"
     source:
+      source_type: github
       git:
-        source_type: github
         git_repo_url: "https://github.com/IBM/customized-deployable-architecture/tree/main/examples/app/extension/ansible"
     settings:
       - name: TF_VERSION
