@@ -35,10 +35,11 @@ modules:
     name: "secureInfra"
     source:
       source_type: catalog
-      catalog_id: 33eb1d96-dfb4-4d60-a21a-c376ed0c89c3
-      offering_name: custom-deployable-arch
-      offering_version: 0.0.13
-      offering_version_flavour_name: customedge
+      catalog:
+        catalog_id: 33eb1d96-dfb4-4d60-a21a-c376ed0c89c3
+        offering_name: custom-deployable-arch
+        offering_version: 0.0.13
+        offering_version_flavour_name: customedge
     settings:
       - name: TF_VERSION
         value: 1.2
@@ -61,10 +62,11 @@ modules:
     name: "apache"
     source:
       source_type: catalog
-      catalog_id: 33eb1d96-dfb4-4d60-a21a-c376ed0c89c3
-      offering_name: custom-apache-workload
-      offering_version: 0.0.13
-      offering_version_flavour_name: tf-onlyapp-ansible
+      catalog:
+        catalog_id: 33eb1d96-dfb4-4d60-a21a-c376ed0c89c3
+        offering_name: custom-apache-workload
+        offering_version: 0.0.13
+        offering_version_flavour_name: tf-onlyapp-ansible
     settings:
       - name: TF_VERSION
         value: 1.2
