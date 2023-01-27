@@ -21,6 +21,10 @@
     {
       "name": "ssh_key",
       "value": "${SSHKEY}"
+    },
+    {
+      "name": "ssh_private_key",
+      "value": "${SSHPRIVATEKEYSTRING}"
     }
   ],
   "description": "TEST: Apache Server with Custom Infrastructure",

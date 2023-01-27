@@ -24,6 +24,7 @@ inputs:
     description: Private SSH Key for SSH access via Jump Box to VSI. Must be the private key that pairs with the public key also used here
     default: "__NOT_SET__"
     required: true
+    sensitive: true
     max_length: 5000  
 # outputs:
 #   - name: customSecInfra
@@ -33,8 +34,8 @@ modules:
   - module_type: terraform
     name: "secureInfra"
     source:
+      source_type: github
       git:
-        source_type: github
         git_repo_url: "https://github.com/IBM/customized-deployable-architecture/tree/main"
     settings:
       - name: TF_VERSION
@@ -57,8 +58,8 @@ modules:
   - module_type: terraform
     name: "apache"
     source:
+      source_type: github
       git:
-        source_type: github
         git_repo_url: "https://github.com/IBM/customized-deployable-architecture/tree/main/examples/app/extension/ansible"
     settings:
       - name: TF_VERSION
@@ -72,6 +73,7 @@ modules:
         sensitive: true
         description: Private SSH Key for SSH access via Jump Box to VSI. Must be the private key that pairs with the public key also used here
         value: $blueprint.ssh_private_key  
+        max_length: 5000
       - name: prefix
         description: The IBM Cloud platform API key needed to deploy IAM enabled resources
         value: $module.secureInfra.outputs.prefix
