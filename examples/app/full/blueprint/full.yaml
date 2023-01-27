@@ -45,7 +45,6 @@ modules:
         catalog_id: 33eb1d96-dfb4-4d60-a21a-c376ed0c89c3
         offering_name: custom-deployable-arch
         offering_version: 0.0.13
-        offering_kind: terraform
         offering_version_flavour_name: customedge
     settings:
       - name: TF_VERSION
@@ -70,7 +69,6 @@ modules:
         catalog_id: 33eb1d96-dfb4-4d60-a21a-c376ed0c89c3
         offering_name: custom-apache-workload
         offering_version: 0.0.13
-        offering_kind: terraform
         offering_version_flavour_name: tf-onlyapp-ansible
     settings:
       - name: TF_VERSION
