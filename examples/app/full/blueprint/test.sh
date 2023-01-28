@@ -38,8 +38,7 @@ envsubst < $inFile > $tmpFile
 ibmcloud target -r "$Location" -g "$ResourceGroup"
 
 echo -e "Creating Blueprint: \"$BlueprintName\"\n\tInputfile: \"$inFile\"\n\tResource Group: \"$ResourceGroup\"\n\tPrefix: \"$Prefix\""
-# the next command works with 1.12.4 of the schematics plugin.   subsequent versions do not have the "config" subcommand.
-ibmcloud schematics blueprint config create -f "${tmpFile}"
+ibmcloud schematics blueprint create -f "${tmpFile}"
 
 bpID=$(ibmcloud schematics blueprint list --output json | jq --arg BlueprintName "$BlueprintName" -r '.blueprints[]  | select(.name == $BlueprintName) | .id')
 
