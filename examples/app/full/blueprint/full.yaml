@@ -1,8 +1,10 @@
 name: "fullapacheapp"
+# yaml-language-server: $schema=https://raw.githubusercontent.com/Cloud-Schematics/vscode-blueprint-schema/master/blueprint_schema.json
+# Install the Red Hat VSCode YAML extension to enable assisted editing and validation
 schema_version: "1.0.0"
 type: "blueprint"
 description: "Apache workload with landscape"
-settings:
+#settings:
   # - name: TF_LOG
   #   value: "DEBUG"
   # - name: TF_LOG_PROVIDER
@@ -12,20 +14,24 @@ inputs:
     default: "__NOT_SET__"
     sensitive: true
     description: The IBM Cloud platform API key needed to deploy IAM enabled resources
+    type: string
   - name: prefix
     description: "The prefix that you would like to append to your resources"
     default: "apache-app"
     required: true
+    type: string
   - name: ssh_key
     description: Public SSH Key for VSI creation. Must be a valid SSH key that does not already exist in the deployment region
     default: "__NOT_SET__"
     required: true
+    type: string
   - name: ssh_private_key
     description: Private SSH Key for SSH access via Jump Box to VSI. Must be the private key that pairs with the public key also used here
     default: "__NOT_SET__"
     required: true
     sensitive: true
-    max_length: 5000  
+    max_length: 5000
+    type: string
 # outputs:
 #   - name: customSecInfra
 #     value: $module.secureInfra.outputs.secureInfra
@@ -34,46 +40,46 @@ modules:
   - module_type: terraform
     name: "secureInfra"
     source:
-      source_type: github
-      git:
-        git_repo_url: "https://github.com/IBM/customized-deployable-architecture/tree/main"
+      source_type: catalog
+      catalog:
+        catalog_id: 33eb1d96-dfb4-4d60-a21a-c376ed0c89c3
+        offering_name: custom-deployable-arch
+        offering_version: 0.0.13
+        offering_version_flavour_name: customedge
     settings:
       - name: TF_VERSION
         value: 1.2
     inputs:
       - name: prefix
         description: The region to which to deploy the VPC
-        required: true
         value: $blueprint.prefix
       - name: ibmcloud_api_key
-        sensitive: true
         description: The IBM Cloud platform API key needed to deploy IAM enabled resources
         value: $blueprint.ibmcloud_api_key
       - name: ssh_key
         description: Public SSH Key for VSI creation. Must be a valid SSH key that does not already exist in the deployment region
         value: $blueprint.ssh_key
-        required: true
     outputs:
       - name: prefix
   - module_type: terraform
     name: "apache"
     source:
-      source_type: github
-      git:
-        git_repo_url: "https://github.com/IBM/customized-deployable-architecture/tree/main/examples/app/extension/ansible"
+      source_type: catalog
+      catalog:
+        catalog_id: 33eb1d96-dfb4-4d60-a21a-c376ed0c89c3
+        offering_name: custom-apache-workload
+        offering_version: 0.0.13
+        offering_version_flavour_name: tf-onlyapp-ansible
     settings:
       - name: TF_VERSION
         value: 1.2
     inputs:
       - name: ibmcloud_api_key
-        sensitive: true
         description: The IBM Cloud platform API key needed to deploy IAM enabled resources
         value: $blueprint.ibmcloud_api_key
       - name: ssh_private_key
-        sensitive: true
         description: Private SSH Key for SSH access via Jump Box to VSI. Must be the private key that pairs with the public key also used here
         value: $blueprint.ssh_private_key  
-        max_length: 5000
       - name: prefix
         description: The IBM Cloud platform API key needed to deploy IAM enabled resources
         value: $module.secureInfra.outputs.prefix
