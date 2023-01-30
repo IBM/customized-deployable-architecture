@@ -1,4 +1,4 @@
-# Custom Secure infrastructure on VPC 
+# Customizing a Solution 
 
 This repo provides an example customizing the public IBM [Secure infrastructure on VPC for regulated industries](https://cloud.ibm.com/catalog/content/slz-vpc-with-vsis-a87ed9a5-d130-47a3-980b-5ceb1d4f9280-global) deployable architecture by [enforcing a set of values](https://github.com/IBM/customized-deployable-architecture/blob/main/main.tf#L8) and providing a [json override](override.json) file for modifying the deployment architecture pattern with out the need to modify the actual code.  
 In addition, this repo provides: 
