@@ -286,7 +286,7 @@
                     }
                 },
                 {
-                    "label": "BP-Standard",
+                    "label": "Standard",
                     "name": "bp-fullapp",
                     "working_directory": "solutions/custom-apache-workload/fullstack",
                     "compliance": {

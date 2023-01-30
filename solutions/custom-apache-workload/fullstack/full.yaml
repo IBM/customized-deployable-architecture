@@ -1,4 +1,4 @@
-name: "fullapacheapp"
+name: "fullstack"
 # yaml-language-server: $schema=https://raw.githubusercontent.com/Cloud-Schematics/vscode-blueprint-schema/master/blueprint_schema.json
 # Install the Red Hat VSCode YAML extension to enable assisted editing and validation
 schema_version: "1.0.0"
@@ -38,7 +38,7 @@ inputs:
 #     description: "landing zone JSON"
 modules:
   - module_type: terraform
-    name: "secureInfra"
+    name: "custom-deployable-arch"
     source:
       source_type: catalog
       catalog:
@@ -62,7 +62,7 @@ modules:
     outputs:
       - name: prefix
   - module_type: terraform
-    name: "apache"
+    name: "custom-apache-workload"
     source:
       source_type: catalog
       catalog:
