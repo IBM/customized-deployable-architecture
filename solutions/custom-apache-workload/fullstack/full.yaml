@@ -82,4 +82,4 @@ modules:
         value: $blueprint.ssh_private_key  
       - name: prefix
         description: The IBM Cloud platform API key needed to deploy IAM enabled resources
-        value: $module.secureInfra.outputs.prefix
+        value: $module.custom-deployable-arch.outputs.prefix
