@@ -47,6 +47,9 @@ if [ -z "$bpID" ]; then
     exit 1
 fi
 
+# need a token that will last a while
+ibmcloud catalog netrc
+
 echo "Applying Blueprint: $bpID"
 ibmcloud schematics blueprint apply -i "${bpID}"
 
