@@ -48,6 +48,6 @@ if [ -z "$bpID" ]; then
 fi
 
 echo "Applying Blueprint: $bpID"
-ibmcloud schematics blueprint run apply -i "${bpID}"
+ibmcloud schematics blueprint apply -i "${bpID}"
 
-echo -e "To delete:\n\tibmcloud schematics blueprint run destroy --no-prompt -i ${bpID}\n\tibmcloud schematics blueprint delete --fd -i ${bpID}"
+echo -e "To delete:\n\tibmcloud schematics blueprint destroy --no-prompt -i ${bpID}\n\tibmcloud schematics blueprint delete --fd -i ${bpID}"
