@@ -69,6 +69,7 @@ modules:
         catalog_id: 33eb1d96-dfb4-4d60-a21a-c376ed0c89c3
         offering_name: custom-apache-workload
         offering_version: 0.0.17
+        offering_kind: terraform
         offering_version_flavour_name: standard
     settings:
       - name: TF_VERSION
