@@ -3,7 +3,7 @@
         {
             "name": "custom-deployable-arch",
             "label": "custom-deployable-arch",
-            "version": "0.0.15",
+            "version": "0.0.17",
             "flavors": [
                 {
                     "label": "CustomEdge",
@@ -141,11 +141,11 @@
         {
             "name": "custom-apache-workload",
             "label": "custom-apache-workload",
-            "version": "0.0.15",
+            "version": "0.0.17",
             "flavors": [
                 {
                     "label": "Standard",
-                    "name": "tf-onlyapp-ansible",
+                    "name": "standard",
                     "working_directory": "solutions/custom-apache-workload/workload-only/ansible",
                     "compliance": {
                         "controls": [
@@ -180,9 +180,9 @@
                             "catalog_id": "33eb1d96-dfb4-4d60-a21a-c376ed0c89c3",
                             "id": "cfd4c957-eb94-4230-8bf6-d522f0c18590",
                             "name": "custom-deployable-arch",
-                            "version": ">=0.0.8",
+                            "version": ">=0.0.17",
                             "flavors": [
-                                "CustomEdge"
+                                "customedge"
                             ]    
                         }
                     ],
@@ -287,7 +287,7 @@
                 },
                 {
                     "label": "Standard",
-                    "name": "bp-fullapp",
+                    "name": "standard",
                     "working_directory": "solutions/custom-apache-workload/fullstack",
                     "compliance": {
                         "controls": [

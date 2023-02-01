@@ -1,4 +1,4 @@
-
+#! /bin/bash
 
 #
 # this function generates values that will be used as deployment values during the validation of the offering version.
@@ -30,7 +30,7 @@ function generateValidationValues() {
 function importVersionToCatalog() {
     local tarballURL="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/archive/refs/tags/${VERSION}.tar.gz"
 
-    # import the version into the catalog.  the offering already exists.
+    # import the version into the catalog.  the offering must already exist in the catalog - just adding a version here.
     ibmcloud catalog offering import-version --zipurl "$tarballURL" --target-version "$VERSION" --catalog "$CATALOG_NAME" --offering "$OFFERING_NAME" --include-config --variation $VARIATION --format-kind $FORMAT_KIND || ret=$?
     if [[ ret -ne 0 ]]; then
         exit 1
@@ -60,7 +60,7 @@ function validateVersion() {
     ibmcloud target -g "${RESOURCE_GROUP}" -r "us-south"
 
     # invoke schematics service to validate the version.  this will wait for that operation to complete.
-    ibmcloud catalog offering version validate --vl ${VERSION_LOCATOR} --override-values "${validationValues}" --timeout $timeOut || ret=$?
+    ibmcloud catalog offering version validate --vl ${VERSION_LOCATOR} --override-values "${validationValues}" --environment-variables "[{"name": "${OFFERING_NAME"}]" --workspace-tf-version 1.2.0 --timeout $timeOut || ret=$?
 
     if [[ ret -ne 0 ]]; then
         exit 1

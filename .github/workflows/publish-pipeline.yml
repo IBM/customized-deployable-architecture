@@ -23,7 +23,7 @@ jobs:
       RESOURCE_GROUP: default
       EXTENSION_OFFERING_NAME: custom-apache-workload
       EXTENSION_VARIATION: Standard
-      BLUEPRINT_VARIATION: BP-Standard
+      BLUEPRINT_VARIATION: Standard
       # Note that IBMCLOUD_API_KEY is a secret environment variable configured on the project
 
     # Steps represent a sequence of tasks that will be executed as part of the job
