@@ -61,8 +61,15 @@ function validateVersion() {
     ibmcloud target -g "${RESOURCE_GROUP}" -r "us-south"
 
     # invoke schematics service to validate the version.  this will wait for that operation to complete.
-    jq -n --arg OFFERING_NAME "$OFFERING_NAME" '{ "name": "name", "value": $OFFERING_NAME, "secure": "false" }' > "$envValues"
-    ibmcloud catalog offering version validate --vl "${VERSION_LOCATOR}" --override-values "${validationValues}" --environment-variables "$envValues" --workspace-tf-version 1.2.0 --timeout $timeOut || ret=$?
+
+    # temporary until forth coming fix from schematics
+    if [ "$FORMAT_KIND" = blueprint ]; then
+        # specifically set the blueprint name via an environment variable to ensure a compliant name is used.
+        jq -n --arg OFFERING_NAME "$OFFERING_NAME" '[{ "name": "name", "value": $OFFERING_NAME, "secure": "false" }]' > "$envValues"
+        ibmcloud catalog offering version validate --vl "${VERSION_LOCATOR}" --override-values "${validationValues}" --environment-variables "$envValues" --workspace-tf-version 1.2.0 --timeout $timeOut || ret=$?
+    else
+        ibmcloud catalog offering version validate --vl "${VERSION_LOCATOR}" --override-values "${validationValues}" --workspace-tf-version 1.2.0 --timeout $timeOut || ret=$?    
+    fi    
 
     if [[ ret -ne 0 ]]; then
         exit 1
