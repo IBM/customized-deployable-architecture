@@ -3,7 +3,7 @@
         {
             "name": "custom-deployable-arch",
             "label": "custom-deployable-arch",
-            "version": "0.0.17",
+            "version": "0.0.19",
             "flavors": [
                 {
                     "label": "CustomEdge",
@@ -139,14 +139,14 @@
             ]
         },
         {
-            "name": "custom-apache-workload",
-            "label": "custom-apache-workload",
-            "version": "0.0.17",
+            "name": "custom-apache",
+            "label": "custom-apache",
+            "version": "0.0.19",
             "flavors": [
                 {
                     "label": "Standard",
                     "name": "standard",
-                    "working_directory": "solutions/custom-apache-workload/workload-only/ansible",
+                    "working_directory": "solutions/custom-apache/workload-only/ansible",
                     "compliance": {
                         "controls": [
                             {
@@ -288,7 +288,7 @@
                 {
                     "label": "Standard",
                     "name": "standard",
-                    "working_directory": "solutions/custom-apache-workload/fullstack",
+                    "working_directory": "solutions/custom-apache/fullstack",
                     "compliance": {
                         "controls": [
                             {
