@@ -18,7 +18,9 @@ function getWorkspaceStatus() {
 # or fail to delete by exceeding the number of retries.  workspace delete should be a quick
 # operation.
 function deleteWorkspace() {
-    local destroyStatus=$(getWorkspaceStatus)
+    local destroyStatus
+    
+    destroyStatus=$(getWorkspaceStatus)
 
     if [ "$destroyStatus" != "FAILED" ] && [ -n "$destroyStatus" ]
     then
@@ -164,7 +166,7 @@ function destroyBlueprintResources() {
 
     # this command self blocks until the destroy is finished
     echo "destroying blueprint resources"
-    ibmcloud schematics blueprint destroy --id $BLUEPRINT_ID --no-prompt
+    ibmcloud schematics blueprint destroy --id "$BLUEPRINT_ID" --no-prompt
 }
 
 #
@@ -173,7 +175,7 @@ function destroyBlueprintResources() {
 function deleteBlueprint() {
 
     # this command submits a schematics job to delete the individual workspaces and the blueprint
-    ibmcloud schematics blueprint delete --id $BLUEPRINT_ID --no-prompt
+    ibmcloud schematics blueprint delete --id "$BLUEPRINT_ID" --no-prompt
 
     # let the delete finish
     sleep 15 
