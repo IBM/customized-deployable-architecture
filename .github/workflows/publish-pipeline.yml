@@ -21,7 +21,7 @@ jobs:
       OFFERING_NAME: custom-deployable-arch
       VARIATION: customedge
       RESOURCE_GROUP: default
-      EXTENSION_OFFERING_NAME: custom-apache-workload
+      EXTENSION_OFFERING_NAME: custom-apache
       EXTENSION_VARIATION: Standard
       BLUEPRINT_VARIATION: Standard
       # Note that IBMCLOUD_API_KEY is a secret environment variable configured on the project

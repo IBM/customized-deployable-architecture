@@ -50,7 +50,6 @@ function getVersionLocator() {
 # this function calls the schematics service and validates a verion of the offering.
 function validateVersion() {
     local validationValues="validation-values.json"
-    local envValues="validation-env-values.json"
     local timeOut=10800         # 3 hours - sufficiently large.  will not run this long.    
 
     # generate values for the deployment variables defined for this version of the offering
@@ -61,16 +60,8 @@ function validateVersion() {
     ibmcloud target -g "${RESOURCE_GROUP}" -r "us-south"
 
     # invoke schematics service to validate the version.  this will wait for that operation to complete.
-
-    # temporary until forth coming fix from schematics
-    if [ "$FORMAT_KIND" = blueprint ]; then
-        # specifically set the blueprint name via an environment variable to ensure a compliant name is used.
-        jq -n --arg OFFERING_NAME "$OFFERING_NAME" '[{ "name": "name", "value": $OFFERING_NAME, "secure": "false" }]' > "$envValues"
-        ibmcloud catalog offering version validate --vl "${VERSION_LOCATOR}" --override-values "${validationValues}" --environment-variables "$envValues" --workspace-tf-version 1.2.0 --timeout $timeOut || ret=$?
-    else
-        ibmcloud catalog offering version validate --vl "${VERSION_LOCATOR}" --override-values "${validationValues}" --workspace-tf-version 1.2.0 --timeout $timeOut || ret=$?    
-    fi    
-
+    ibmcloud catalog offering version validate --vl "${VERSION_LOCATOR}" --override-values "${validationValues}" --workspace-tf-version 1.2.0 --timeout $timeOut || ret=$?    
+    
     if [[ ret -ne 0 ]]; then
         exit 1
     fi

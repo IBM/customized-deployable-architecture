@@ -15,7 +15,7 @@ export Location="${Location:-us-east}"
 export ResourceGroup="${ResourceGroup:-Default}"
 export Prefix="${Prefix:-aa-tst}"
 
-if [ -z "$APIKEY" -o -z "$SSHKEY" -o -z "$SSHPRIVATEKEY" ]; then
+if [ -z "$APIKEY" ] || [ -z "$SSHKEY" ] || [ -z "$SSHPRIVATEKEY" ]; then
    echo "Environment with SSHKEY, APIKEY and SSHPRIVATEKEY is not set"
    exit 1
 fi
@@ -33,7 +33,7 @@ fi
 export SSHPRIVATEKEYSTRING="$(jq -n --arg SSHPRIVATEKEY "$SSHPRIVATEKEY" '{ "ssh_private_key": $SSHPRIVATEKEY }' | jq .ssh_private_key | tr -d '"' )"
 
 export tmpFile="/tmp/in.json"
-envsubst < $inFile > $tmpFile
+envsubst < "$inFile" > $tmpFile
 
 ibmcloud target -r "$Location" -g "$ResourceGroup"
 
