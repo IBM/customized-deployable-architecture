@@ -22,7 +22,7 @@ data "ibm_is_floating_ip" "jump-box-fip" {
 }
 
 module "slz_vsi" {
-  source                     = "git::https://github.com/terraform-ibm-modules/terraform-ibm-landing-zone-vsi.git?ref=v1.1.5"
+  source                     = "git::https://github.com/terraform-ibm-modules/terraform-ibm-landing-zone-vsi.git?ref=v2.0.0"
   resource_group_id          = data.ibm_is_subnet.subnet.resource_group
   image_id                   = data.ibm_is_image.image.id
   create_security_group      = true

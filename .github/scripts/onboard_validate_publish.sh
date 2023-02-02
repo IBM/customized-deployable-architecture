@@ -60,7 +60,7 @@ function validateVersion() {
     ibmcloud target -g "${RESOURCE_GROUP}" -r "us-south"
 
     # invoke schematics service to validate the version.  this will wait for that operation to complete.
-    ibmcloud catalog offering version validate --vl "${VERSION_LOCATOR}" --override-values "${validationValues}" --workspace-tf-version 1.2.0 --timeout $timeOut || ret=$?    
+    ibmcloud catalog offering version validate --vl "${VERSION_LOCATOR}" --override-values "${validationValues}" --timeout $timeOut || ret=$?    
     
     if [[ ret -ne 0 ]]; then
         exit 1
