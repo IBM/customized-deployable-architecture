@@ -64,6 +64,4 @@ jobs:
           echo "--------------------------------------------------------------------"
           ./.github/scripts/onboard_validate_publish.sh "$CATALOG_NAME" "$EXTENSION_OFFERING_NAME" "$VERSION" "$BLUEPRINT_VARIATION" "$RESOURCE_GROUP" "blueprint" "NOSCAN"
 
-          ./.github/scripts/tempNameFix.sh "$CATALOG_NAME" "$EXTENSION_OFFERING_NAME"
-
           ./.github/scripts/cleanup.sh "$CATALOG_NAME" "$EXTENSION_OFFERING_NAME" "$VERSION" "blueprint"
