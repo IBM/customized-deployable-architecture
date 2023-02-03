@@ -59,6 +59,9 @@ function validateVersion() {
     # need to target a resource group - deployed resources will be in this resource group
     ibmcloud target -g "${RESOURCE_GROUP}" -r "us-south"
 
+    # refresh our login token since validation can run a little while
+    ibmcloud catalog netrc
+
     # invoke schematics service to validate the version.  this will wait for that operation to complete.
     ibmcloud catalog offering version validate --vl "${VERSION_LOCATOR}" --override-values "${validationValues}" --timeout $timeOut || ret=$?    
     
