@@ -57,7 +57,7 @@ function validateVersion() {
     getVersionLocator 
 
     # need to target a resource group - deployed resources will be in this resource group
-    ibmcloud target -g "${RESOURCE_GROUP}" -r "us-south"
+    ibmcloud target -g "${RESOURCE_GROUP}"
 
     # refresh our login token since validation can run a little while
     ibmcloud catalog netrc
