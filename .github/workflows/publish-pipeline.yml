@@ -53,7 +53,7 @@ jobs:
           ./.github/scripts/onboard_validate_publish.sh "$CATALOG_NAME" "$EXTENSION_OFFERING_NAME" "$VERSION" "$EXTENSION_VARIATION" "$RESOURCE_GROUP" "terraform" "SCAN"
 
           echo "--------------------------------------------------------------------"
-          echo "destroy validation resources"
+          echo "cleanup all validation resources"
           echo "--------------------------------------------------------------------"
           ./.github/scripts/cleanup.sh "$CATALOG_NAME" "$EXTENSION_OFFERING_NAME" "$VERSION" "terraform"
 
@@ -64,4 +64,7 @@ jobs:
           echo "--------------------------------------------------------------------"
           ./.github/scripts/onboard_validate_publish.sh "$CATALOG_NAME" "$EXTENSION_OFFERING_NAME" "$VERSION" "$BLUEPRINT_VARIATION" "$RESOURCE_GROUP" "blueprint" "NOSCAN"
 
+          echo "--------------------------------------------------------------------"
+          echo "cleanup blueprint validation resources"
+          echo "--------------------------------------------------------------------"
           ./.github/scripts/cleanup.sh "$CATALOG_NAME" "$EXTENSION_OFFERING_NAME" "$VERSION" "blueprint"
