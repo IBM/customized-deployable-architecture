@@ -146,7 +146,7 @@ function destroyBlueprintResources() {
     # get the schematics workspace id of the workspace that was used for the validation of this version
     BLUEPRINT_ID=$(getBlueprintId)
 
-    echo "blueprint id: $BLUEPRINT_ID"
+    echo "destroying blueprint resources for blueprint id: $BLUEPRINT_ID"
     blueprintStatus=$(getBlueprintStatus)
     echo "blueprint status: ${blueprintStatus}"
 
@@ -173,22 +173,42 @@ function destroyBlueprintResources() {
 # this function deletes the workspaces associated to a blueprint and the blueprint itself.
 #
 function deleteBlueprint() {
+    # get the schematics workspace id of the workspace that was used for the validation of this version
+    BLUEPRINT_ID=$(getBlueprintId)
+
+    echo "deleting blueprint and workspaces for blueprint id: $BLUEPRINT_ID"
+    blueprintStatus=$(getBlueprintStatus)
+    echo "blueprint status: ${blueprintStatus}"
+
+    # allow the status of the blueprint in schematics to fully update after the destroy - wait up to two minutes
+    attempts=0
+    while [ "$blueprintStatus" != "RUN_DESTROY_COMPLETE" ] && [[ $attempts -le 24 ]]
+    do
+        sleep 5
+        blueprintStatus=$(getBlueprintStatus)
+        attempts=$((attempts+1))
+        if [[ attempts -ge 24 ]]
+        then
+            echo "blueprint status: ${blueprintStatus} . Blueprint modules failed to show destroyed.  giving up."
+            exit 1
+        fi
+    done
 
     # this command submits a schematics job to delete the individual workspaces and the blueprint
     ibmcloud schematics blueprint delete --id "$BLUEPRINT_ID" --no-prompt
 
     # let the delete finish
-    sleep 15 
+    sleep 60
 
-    echo "blueprint and workspaces delete started."
+    echo "blueprint and workspaces delete requested."
 }
 
 #
 # destroy resources created by either a terraform or blueprint
 function destroyResources() {
     if [ "$FORMAT_KIND" = "terraform" ]
-        then destroyWorkspaceResources
-        else destroyBlueprintResources
+    then destroyWorkspaceResources
+    else destroyBlueprintResources
     fi
 }
 
@@ -196,8 +216,8 @@ function destroyResources() {
 # delete workspaces and blueprints
 function deleteWorkspaces() {
     if [ "$FORMAT_KIND" = "terraform" ]
-        then deleteWorkspace
-        else deleteBlueprint
+    then deleteWorkspace
+    else deleteBlueprint
     fi    
 }
 
@@ -210,7 +230,7 @@ OFFERING_NAME=$2
 VERSION=$3
 FORMAT_KIND=$4
 
-echo "cleaning up workspaces, resources"
+echo "cleaning up workspaces, resources for: $OFFERING_NAME, version $VERSION, format kind $FORMAT_KIND"
 
 destroyResources
 deleteWorkspaces
