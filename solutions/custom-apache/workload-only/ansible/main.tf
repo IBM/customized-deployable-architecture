@@ -2,7 +2,23 @@ locals {
 
   vpc_type = "workload"
 
-  subnet = join("-", [var.prefix, local.vpc_type, "vsi-zone-1"])
+  location = regex("^[a-z/-]+", var.prerequisite_workspace_id)
+}
+
+data "ibm_schematics_workspace" "schematics_workspace" {
+  workspace_id = var.prerequisite_workspace_id
+  location     = local.location
+}
+
+data "ibm_schematics_output" "schematics_output" {
+  workspace_id = var.prerequisite_workspace_id
+  location     = local.location
+  template_id  = data.ibm_schematics_workspace.schematics_workspace.runtime_data[0].id
+}
+
+locals {
+  prefix = data.ibm_schematics_output.schematics_output.prefix
+  subnet = join("-", [local.prefix, local.vpc_type, "vsi-zone-1"])
 }
 
 data "ibm_is_subnet" "subnet" {

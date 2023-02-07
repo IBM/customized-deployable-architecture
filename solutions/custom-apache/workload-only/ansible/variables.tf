@@ -28,10 +28,9 @@ variable "region" {
   default = "us-east"
 }
 
-# prefix used when deploying resources in the custom secure infrastructure step
-variable "prefix" {
+variable "prerequisite_workspace_id" {
+  description = "IBM Cloud Schematics workspace ID of an existing custom-deployable-arch."
   type        = string
-  description = "A unique identifier for resources. Must be the same one that is used in the base infrastructure."
 }
 
 variable "ssh_private_key" {
