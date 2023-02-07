@@ -209,7 +209,7 @@ echo "Variation: $VARIATION"
 echo "ResourceGroup: $RESOURCE_GROUP"
 echo "FormatKind: $FORMAT_KIND"
 
-source common-functions.sh
+source ./.github/scripts/common-functions.sh
 
 # steps
 importVersionToCatalog "$CATALOG_NAME" "$OFFERING_NAME" "$VERSION" "$VARIATION" "$FORMAT_KIND"

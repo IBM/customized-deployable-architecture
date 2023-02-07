@@ -242,7 +242,7 @@ FORMAT_KIND=$4
 
 echo "cleaning up workspaces, resources for: $OFFERING_NAME, version $VERSION, format kind $FORMAT_KIND"
 
-source common-functions.sh
+source ./.github/scripts/common-functions.sh
 
 destroyResources "$CATALOG_NAME" "$OFFERING_NAME" "$VERSION" "$FORMAT_KIND"
 deleteWorkspaces "$CATALOG_NAME" "$OFFERING_NAME" "$VERSION" "$FORMAT_KIND"
