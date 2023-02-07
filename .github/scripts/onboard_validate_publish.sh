@@ -125,6 +125,7 @@ function retryValidateWorkspace() {
     do
         sleep 15
         validateStatus=$(getWorkspaceStatus "$workspaceId")
+        echo "retrying validation status is $validateStatus"
         attempts=$((attempts+1))
     done
 }
@@ -151,6 +152,7 @@ function retryValidateBlueprint() {
     do
         sleep 15
         validateStatus=$(getBlueprintStatus "${blueprintId}")
+        echo "retrying validation status is $validateStatus"
         attempts=$((attempts+1))
     done
 }
