@@ -23,7 +23,7 @@ function deleteWorkspace() {
         while [[ ret -ne 0 ]] && [[ $attempts -le 3 ]] && [[ $deleteStatus != "NOTFOUND" ]]
         do
             ret=0
-            ibmcloud schematics workspace delete --id "$WORKSPACE_ID" -f || ret=$?
+            ibmcloud schematics workspace delete --id "$workspaceId" -f || ret=$?
             if [[ ret -ne 0 ]]
             then
                 attempts=$((attempts+1))
