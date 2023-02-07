@@ -115,7 +115,7 @@ function retryValidateWorkspace() {
 
     workspaceId=$(getWorkspaceId "$catalogName" "$offeringName" "$version")
     echo "retrying apply for workspace ${workspaceId}"
-    ibmcloud schematics apply --id "${workspaceId}"  
+    ibmcloud schematics apply --id "${workspaceId}" --force 
 
     # wait 15 seconds between each query up to a limit of 60 minutes which is 240 attempts
     attempts=0
