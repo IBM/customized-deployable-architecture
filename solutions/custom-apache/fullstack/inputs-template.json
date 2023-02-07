@@ -5,7 +5,7 @@
     "source_type": "git_hub",
     "git": {
       "git_repo_url": "https://github.com/IBM/customized-deployable-architecture",
-      "git_repo_folder": "/solutions/custom-apache-workload/fullstack/full.yaml",
+      "git_repo_folder": "/solutions/custom-apache/fullstack/full.yaml",
       "git_branch": "main"
     }
   },
