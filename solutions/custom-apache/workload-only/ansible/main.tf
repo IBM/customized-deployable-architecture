@@ -27,7 +27,7 @@ data "ibm_is_subnet" "subnet" {
 }
 
 data "ibm_is_ssh_key" "ssh-key" {
-  name = "${var.prefix}-ssh-key"
+  name = "${local.prefix}-ssh-key"
 }
 
 data "ibm_is_image" "image" {
@@ -35,7 +35,7 @@ data "ibm_is_image" "image" {
 }
 
 data "ibm_is_floating_ip" "jump-box-fip" {
-  name = "${var.prefix}-jump-box-1-fip"
+  name = "${local.prefix}-jump-box-1-fip"
 }
 
 module "slz_vsi" {
@@ -47,7 +47,7 @@ module "slz_vsi" {
   tags                       = []
   subnets                    = [{"name": local.subnet, "id": data.ibm_is_subnet.subnet.id, "zone":data.ibm_is_subnet.subnet.zone, "cidr": data.ibm_is_subnet.subnet.ipv4_cidr_block}]
   vpc_id                     = data.ibm_is_subnet.subnet.vpc
-  prefix                     = "${var.prefix}-apache-webserver"
+  prefix                     = "${local.prefix}-apache-webserver"
   machine_type               = "cx2-2x4"
   user_data                  = var.workLoadInitScript
   boot_volume_encryption_key = null
