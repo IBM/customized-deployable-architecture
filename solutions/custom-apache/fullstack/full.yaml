@@ -44,7 +44,7 @@ modules:
       catalog:
         catalog_id: 33eb1d96-dfb4-4d60-a21a-c376ed0c89c3
         offering_name: custom-deployable-arch
-        offering_version: 0.0.21
+        offering_version: 0.0.24
         offering_version_flavour_name: customedge
     settings:
       - name: TF_VERSION
@@ -61,6 +61,7 @@ modules:
         value: $blueprint.ssh_key
     outputs:
       - name: prefix
+      - name: schematics_workspace_id
   - module_type: terraform
     name: "custom-apache"
     source:
@@ -68,7 +69,7 @@ modules:
       catalog:
         catalog_id: 33eb1d96-dfb4-4d60-a21a-c376ed0c89c3
         offering_name: custom-apache
-        offering_version: 0.0.21
+        offering_version: 0.0.24
         offering_version_flavour_name: standard
     settings:
       - name: TF_VERSION
@@ -79,7 +80,7 @@ modules:
         value: $blueprint.ibmcloud_api_key
       - name: ssh_private_key
         description: Private SSH Key for SSH access via Jump Box to VSI. Must be the private key that pairs with the public key also used here
-        value: $blueprint.ssh_private_key  
-      - name: prefix
-        description: The IBM Cloud platform API key needed to deploy IAM enabled resources
-        value: $module.custom-deployable-arch.outputs.prefix
+        value: $blueprint.ssh_private_key
+      - name: prerequisite_workspace_id
+        value: $module.custom-deployable-arch.outputs.schematics_workspace_id
+        type: string
