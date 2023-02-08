@@ -17,7 +17,8 @@ data "ibm_schematics_output" "schematics_output" {
 }
 
 locals {
-  prefix = data.ibm_schematics_output.schematics_output.prefix
+  slz_output = jsondecode(data.ibm_schematics_output.schematics_output.output_json)
+  prefix = local.slz_output[0].prefix
   subnet = join("-", [local.prefix, local.vpc_type, "vsi-zone-1"])
 }
 
