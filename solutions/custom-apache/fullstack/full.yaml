@@ -82,5 +82,5 @@ modules:
         description: Private SSH Key for SSH access via Jump Box to VSI. Must be the private key that pairs with the public key also used here
         value: $blueprint.ssh_private_key
       - name: prerequisite_workspace_id
-        value: $module.custom-deployable-arch.outputs.schematics_workspace_id
-        type: string
+        description: The Schematics workspace id from the deploy of the custom-deployable-arch module
+        value: $module.custom-deployable-arch.schematics_workspace_id
