@@ -3,7 +3,7 @@
         {
             "name": "custom-deployable-arch",
             "label": "custom-deployable-arch",
-            "version": "0.0.21",
+            "version": "0.0.24",
             "flavors": [
                 {
                     "label": "CustomEdge",
