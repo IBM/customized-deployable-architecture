@@ -4,15 +4,18 @@
 # this function generates values that will be used as deployment values during the validation of the offering version.
 function generateValidationValues() {
     local validationValues=$1
+    local catalogName=$2
+    local offeringName=$3
+    local version=$4
+    local formatKind=$5
 
+    # generate an ssh key that can be used as a validation value. overwrite file if already there.
     # we only need to do this once.
-    FILE=$1
-    if [ -f "$FILE" ]; then
-        return
+    FILE="./id_rsa"
+    if [ ! -f "$FILE" ]; then
+        # generate an ssh key that can be used as a validation value.
+        ssh-keygen -f ./id_rsa -t rsa -N '' <<<y
     fi
-
-    # generate an ssh key that can be used as a validation value. overwrite file if already there. 
-    ssh-keygen -f ./id_rsa -t rsa -N '' <<<y
 
     SSH_KEY=$(cat ./id_rsa.pub)
     SSH_PRIVATE_KEY="$(cat ./id_rsa)"
@@ -21,9 +24,48 @@ function generateValidationValues() {
     SUFFIX="$(date +%m%d-%H-%M)"
     PREFIX="val-${SUFFIX}"
 
+    PREREQ_WORKSPACE_ID=$(getPrereqWorkspaceId "$catalogName" "$offeringName" "$version" "$formatKind")
+
     # format offering validation values into json format.  the json keys used here match the names of the defined deployment variables that are already 
     # defined on the offering.  Manually import one version, a one time step, to initially setup deployment variables and set other metadata using the UI.
-    jq -n --arg IBMCLOUD_API_KEY "$IBMCLOUD_API_KEY" --arg PREFIX "$PREFIX" --arg SSH_KEY "$SSH_KEY" --arg SSH_PRIVATE_KEY "$SSH_PRIVATE_KEY" '{ "ibmcloud_api_key": $IBMCLOUD_API_KEY, "prefix": $PREFIX, "ssh_key": $SSH_KEY, "ssh_private_key": $SSH_PRIVATE_KEY }' > "$validationValues"
+    jq -n --arg IBMCLOUD_API_KEY "$IBMCLOUD_API_KEY" --arg PREFIX "$PREFIX" --arg SSH_KEY "$SSH_KEY" --arg SSH_PRIVATE_KEY "$SSH_PRIVATE_KEY" --arg PREREQ_WORKSPACE_ID "$PREREQ_WORKSPACE_ID" '{ "ibmcloud_api_key": $IBMCLOUD_API_KEY, "prefix": $PREFIX, "ssh_key": $SSH_KEY, "ssh_private_key": $SSH_PRIVATE_KEY, "prerequisite_workspace_id": $PREREQ_WORKSPACE_ID }' > "$validationValues"
+
+}
+
+# 
+# this function determines if an offering version has a defined prerequisite/dependency.  if it does it determines the workspace id.
+# This assumes the dependency is the same version as this offering for now and that it is a terraform offering.
+# Return the workspaceId of the prerequisite/dependency.
+function getPrereqWorkspaceId() {
+    local catalogName=$1
+    local offeringName=$2
+    local version=$3
+    local formatKind=$4
+
+    local hasDependency=false
+    local prereqOfferingName=""
+    local validationState=""
+    local prereqWorkspaceId=""
+
+    # query the offering json and store in a file
+    ibmcloud catalog offering get --catalog "$catalogName" --offering "$offeringName" --output json > "offering.json"
+    # read the json and see if the "dependencies" key is present within the "solution_info" object.  Value is true or false.
+    hasDependency=$(jq -r --arg version "$version" --arg format_kind "$formatKind" '.kinds[] | select(.format_kind==$format_kind).versions[] | select(.version==$version).solution_info | has("dependencies")' < "offering.json")
+
+    if [ "$hasDependency" = "true" ]; then
+        prereqOfferingName=$(jq -r --arg version "$version" --arg format_kind "$formatKind" '.kinds[] | select(.format_kind==$format_kind).versions[] | select(.version==$version).solution_info.dependencies[].name' < "offering.json")
+
+        # query the prerequisite offering json and store in a file
+        ibmcloud catalog offering get --catalog "$catalogName" --offering "$prereqOfferingName" --output json > "prereq-offering.json"
+        # get the validation state of the prerequisite.  it needs to be 'valid'.
+        validationState=$(jq -r --arg version "$version" --arg format_kind "terraform" '.kinds[] | select(.format_kind==$format_kind).versions[] | select(.version==$version).validation.state' < "prereq-offering.json")
+
+        if [ "$validationState" = "valid" ]; then
+            prereqWorkspaceId=$(jq -r --arg version "$version" --arg format_kind "terraform" '.kinds[] | select(.format_kind==$format_kind).versions[] | select(.version==$version).validation.target.workspace_id' < "prereq-offering.json")
+        fi
+    fi 
+
+    echo "$prereqWorkspaceId"
 }
 
 #
@@ -75,18 +117,20 @@ function validateVersion() {
     local timeOut=10800         # 3 hours - sufficiently large.  will not run this long.    
 
     # generate values for the deployment variables defined for this version of the offering
-    generateValidationValues "${validationValues}"
+    generateValidationValues "$validationValues" "$catalogName" "$offeringName" "$version" "$formatKind"
+
+    # determine the catalog's version locator string for this version
     versionLocator=$(getVersionLocator "$catalogName" "$offeringName" "$version" "$formatKind")
     echo "the version locator is $versionLocator"
 
     # need to target a resource group - deployed resources will be in this resource group
-    ibmcloud target -g "${resourceGroup}"
+    ibmcloud target -g "$resourceGroup"
 
     # refresh our login token since validation can run a little while
     ibmcloud catalog netrc
 
     # invoke schematics service to validate the version.  this will wait for that operation to complete.
-    ibmcloud catalog offering version validate --vl "${versionLocator}" --override-values "${validationValues}" --timeout $timeOut || ret=$?    
+    ibmcloud catalog offering version validate --vl "$versionLocator" --override-values "$validationValues" --timeout $timeOut || ret=$?    
     
     # if the validate failed, try to run an apply operation again since clouds can have intermitant issues.
     if [[ ret -ne 0 ]]; then
@@ -95,7 +139,7 @@ function validateVersion() {
             else retryValidateBlueprint "$catalogName" "$offeringName" "$version"
         fi
         # determine if the offering version validated after the retry
-        validationStatus=$(ibmcloud catalog offering version validate-status -vl "${versionLocator}" --output json | jq -r '.state')
+        validationStatus=$(ibmcloud catalog offering version validate-status -vl "$versionLocator" --output json | jq -r '.state')
         if [ "$validationStatus" != valid ]; then
             echo "failed to validate after retry"
             exit 1
