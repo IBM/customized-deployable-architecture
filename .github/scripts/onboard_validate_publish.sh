@@ -47,21 +47,24 @@ function getPrereqWorkspaceId() {
     local validationState=""
     local prereqWorkspaceId=""
 
+    local offeringJsonFileName="offering.json"
+    local prereqJsonFileName="prereq-offering.json"
+
     # query the offering json and store in a file
-    ibmcloud catalog offering get --catalog "$catalogName" --offering "$offeringName" --output json > "offering.json"
+    ibmcloud catalog offering get --catalog "$catalogName" --offering "$offeringName" --output json > "$offeringJsonFileName"
     # read the json and see if the "dependencies" key is present within the "solution_info" object.  Value is true or false.
-    hasDependency=$(jq -r --arg version "$version" --arg format_kind "$formatKind" '.kinds[] | select(.format_kind==$format_kind).versions[] | select(.version==$version).solution_info | has("dependencies")' < "offering.json")
+    hasDependency=$(jq -r --arg version "$version" --arg format_kind "$formatKind" '.kinds[] | select(.format_kind==$format_kind).versions[] | select(.version==$version).solution_info | has("dependencies")' < "$offeringJsonFileName")
 
     if [ "$hasDependency" = "true" ]; then
-        prereqOfferingName=$(jq -r --arg version "$version" --arg format_kind "$formatKind" '.kinds[] | select(.format_kind==$format_kind).versions[] | select(.version==$version).solution_info.dependencies[].name' < "offering.json")
+        prereqOfferingName=$(jq -r --arg version "$version" --arg format_kind "$formatKind" '.kinds[] | select(.format_kind==$format_kind).versions[] | select(.version==$version).solution_info.dependencies[].name' < "$offeringJsonFileName")
 
         # query the prerequisite offering json and store in a file
-        ibmcloud catalog offering get --catalog "$catalogName" --offering "$prereqOfferingName" --output json > "prereq-offering.json"
+        ibmcloud catalog offering get --catalog "$catalogName" --offering "$prereqOfferingName" --output json > "$prereqJsonFileName"
         # get the validation state of the prerequisite.  it needs to be 'valid'.
-        validationState=$(jq -r --arg version "$version" --arg format_kind "terraform" '.kinds[] | select(.format_kind==$format_kind).versions[] | select(.version==$version).validation.state' < "prereq-offering.json")
+        validationState=$(jq -r --arg version "$version" --arg format_kind "terraform" '.kinds[] | select(.format_kind==$format_kind).versions[] | select(.version==$version).validation.state' < "$prereqJsonFileName")
 
         if [ "$validationState" = "valid" ]; then
-            prereqWorkspaceId=$(jq -r --arg version "$version" --arg format_kind "terraform" '.kinds[] | select(.format_kind==$format_kind).versions[] | select(.version==$version).validation.target.workspace_id' < "prereq-offering.json")
+            prereqWorkspaceId=$(jq -r --arg version "$version" --arg format_kind "terraform" '.kinds[] | select(.format_kind==$format_kind).versions[] | select(.version==$version).validation.target.workspace_id' < "$prereqJsonFileName")
         fi
     fi 
 
