@@ -39,7 +39,7 @@ jobs:
         run: |
           ./.github/scripts/installCloudCli.sh
 
-      - name: Upload, validate, scan and publish to cloud catalog
+      - name: Upload, validate, scan and publish custom-deployable-arch
         env: 
           IBMCLOUD_API_KEY: ${{ secrets.IBMCLOUD_API_KEY }}
           VERSION: ${{ github.event.release.tag_name }}
@@ -50,8 +50,17 @@ jobs:
           echo "--------------------------------------------------------------------"
           ./.github/scripts/onboard_validate_publish.sh "$CATALOG_NAME" "$OFFERING_NAME" "$VERSION" "$VARIATION" "$RESOURCE_GROUP" "terraform" "SCAN"
 
+      - name: Upload, validate, scan and publish custom-apache extension
+        env: 
+          IBMCLOUD_API_KEY: ${{ secrets.IBMCLOUD_API_KEY }}
+          VERSION: ${{ github.event.release.tag_name }}
+        run: | 
           ./.github/scripts/onboard_validate_publish.sh "$CATALOG_NAME" "$EXTENSION_OFFERING_NAME" "$VERSION" "$EXTENSION_VARIATION" "$RESOURCE_GROUP" "terraform" "SCAN"
 
+      - name: Cleanup deployed resources
+        env: 
+          VERSION: ${{ github.event.release.tag_name }}
+        run: |
           echo "--------------------------------------------------------------------"
           echo "cleanup all validation resources"
           echo "--------------------------------------------------------------------"
@@ -59,6 +68,11 @@ jobs:
 
           ./.github/scripts/cleanup.sh "$CATALOG_NAME" "$OFFERING_NAME" "$VERSION" "terraform"
 
+      - name: Upload, validate, scan and publish custom-apache fullstack
+        env: 
+          IBMCLOUD_API_KEY: ${{ secrets.IBMCLOUD_API_KEY }}
+          VERSION: ${{ github.event.release.tag_name }}
+        run: |
           echo "--------------------------------------------------------------------"
           echo "onboard blueprint version, validate, publish"
           echo "--------------------------------------------------------------------"
