@@ -3,7 +3,7 @@
         {
             "name": "custom-deployable-arch",
             "label": "custom-deployable-arch",
-            "version": "0.0.24",
+            "version": "0.0.25",
             "flavors": [
                 {
                     "label": "CustomEdge",
@@ -141,7 +141,7 @@
         {
             "name": "custom-apache",
             "label": "custom-apache",
-            "version": "0.0.24",
+            "version": "0.0.25",
             "flavors": [
                 {
                     "label": "Standard",
