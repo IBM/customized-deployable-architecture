@@ -1,4 +1,4 @@
-This Readme is to provide details regarding the git Action in this repo.  The action is used to automate the onboarind, validating and publishing to 
+This Readme is to provide details regarding the git Action in this repo.  The action is used to automate the onboarding, validating and publishing to 
 a catalog a version of the three offerings within this repo.  Additionally, the versions are scanned using the IBM CRA scanning functions.
 
 The action is initiated everytime a new release is created within the repo.  Since the repo contains three offerings, each release contains a new 
