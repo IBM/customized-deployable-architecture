@@ -3,21 +3,21 @@
         {
             "name": "custom-deployable-arch",
             "label": "custom-deployable-arch",
-            "version": "0.0.25",
+            "version": "0.0.26",
             "module_info": {
                 "works_with": [
                     {
                         "catalog_id": "33eb1d96-dfb4-4d60-a21a-c376ed0c89c3",
                         "name": "custom-apache",
                         "kind": "terraform",
-                        "version": "0.0.25",
+                        "version": "0.0.26",
                         "flavor": "Standard"
                     },
                     {
                         "catalog_id": "33eb1d96-dfb4-4d60-a21a-c376ed0c89c3",
                         "name": "custom-apache",
                         "kind": "blueprint",
-                        "version": "0.0.25",
+                        "version": "0.0.26",
                         "flavor": "Standard"
                     }
                 ]
@@ -159,14 +159,14 @@
         {
             "name": "custom-apache",
             "label": "custom-apache",
-            "version": "0.0.25",
+            "version": "0.0.26",
             "module_info": {
                 "works_with": [
                     {
                         "catalog_id": "33eb1d96-dfb4-4d60-a21a-c376ed0c89c3",
                         "name": "custom-deployable-arch",
                         "kind": "terraform",
-                        "version": "0.0.25",
+                        "version": "0.0.26",
                         "flavor": "Standard"
                     }
                 ]
