@@ -11,14 +11,14 @@
                         "name": "custom-apache",
                         "kind": "terraform",
                         "version": "0.0.26",
-                        "flavor": "Standard"
+                        "flavor": "standard"
                     },
                     {
                         "catalog_id": "33eb1d96-dfb4-4d60-a21a-c376ed0c89c3",
                         "name": "custom-apache",
                         "kind": "blueprint",
                         "version": "0.0.26",
-                        "flavor": "Standard"
+                        "flavor": "standard"
                     }
                 ]
             },
@@ -167,7 +167,7 @@
                         "name": "custom-deployable-arch",
                         "kind": "terraform",
                         "version": "0.0.26",
-                        "flavor": "Standard"
+                        "flavor": "customedge"
                     }
                 ]
             },
