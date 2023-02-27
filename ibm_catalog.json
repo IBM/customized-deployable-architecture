@@ -3,21 +3,21 @@
         {
             "name": "custom-deployable-arch",
             "label": "custom-deployable-arch",
-            "version": "0.0.26",
+            "version": "0.0.28",
             "module_info": {
                 "works_with": [
                     {
                         "catalog_id": "33eb1d96-dfb4-4d60-a21a-c376ed0c89c3",
                         "name": "custom-apache",
                         "kind": "terraform",
-                        "version": "0.0.26",
+                        "version": "0.0.28",
                         "flavor": "standard"
                     },
                     {
                         "catalog_id": "33eb1d96-dfb4-4d60-a21a-c376ed0c89c3",
                         "name": "custom-apache",
                         "kind": "blueprint",
-                        "version": "0.0.26",
+                        "version": "0.0.28",
                         "flavor": "standard"
                     }
                 ]
@@ -27,6 +27,7 @@
                     "label": "CustomEdge",
                     "name": "customedge",
                     "working_directory": "solutions/custom-deployable-arch",
+                    "usage_template": "module \"custom_arch\" {\n    source           = \"https://cm.globalcatalog.cloud.ibm.com/api/v1-beta/offering/source//solutions/custom-deployable-arch?archive=tgz&catalogID=${{catalogID}}&flavor=${{flavor}}&kind=${{kind}}&name=${{name}}&version=${{version}}\"\n    prefix           = var.prefix\n    ssh_key          = var.ssh_key\n    ibmcloud_api_key = var.ibmcloud_api_key\n}\n\n",
                     "compliance": {
                         "controls": [
                             {
@@ -159,14 +160,14 @@
         {
             "name": "custom-apache",
             "label": "custom-apache",
-            "version": "0.0.26",
+            "version": "0.0.28",
             "module_info": {
                 "works_with": [
                     {
                         "catalog_id": "33eb1d96-dfb4-4d60-a21a-c376ed0c89c3",
                         "name": "custom-deployable-arch",
                         "kind": "terraform",
-                        "version": "0.0.26",
+                        "version": "0.0.28",
                         "flavor": "customedge"
                     }
                 ]
@@ -176,6 +177,7 @@
                     "label": "Standard",
                     "name": "standard",
                     "working_directory": "solutions/custom-apache/workload-only/ansible",
+                    "usage_template": "module \"custom_apache\" {\n source                    = \"https://cm.globalcatalog.cloud.ibm.com/api/v1-beta/offering/source//solutions/custom-apache/workload-only/ansible?archive=tgz&catalogID=${{catalogID}}&flavor=${{flavor}}&kind=${{kind}}&name=${{name}}&version=${{version}}\"\n  ibmcloud_api_key          = var.ibmcloud_api_key\n  prerequisite_workspace_id = var.prerequisite_workspace_id\n  ssh_private_key          =var.ssh_private_key\n}\n\n",
                     "compliance": {
                         "controls": [
                             {
@@ -209,7 +211,7 @@
                             "catalog_id": "33eb1d96-dfb4-4d60-a21a-c376ed0c89c3",
                             "id": "cfd4c957-eb94-4230-8bf6-d522f0c18590",
                             "name": "custom-deployable-arch",
-                            "version": ">=0.0.23",
+                            "version": ">=0.0.27",
                             "flavors": [
                                 "customedge"
                             ]    
