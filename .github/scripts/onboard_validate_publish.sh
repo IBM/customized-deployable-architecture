@@ -79,11 +79,12 @@ function importVersionToCatalog() {
     local version=$3
     local variation=$4
     local formatKind=$5
+    local installType=$6
 
     local tarballURL="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/archive/refs/tags/${version}.tar.gz"
 
     # import the version into the catalog.  the offering must already exist in the catalog - just adding a version here.
-    ibmcloud catalog offering import-version --zipurl "$tarballURL" --target-version "$version" --catalog "$catalogName" --offering "$offeringName" --include-config --variation "$variation" --format-kind "$formatKind" || ret=$?
+    ibmcloud catalog offering import-version --zipurl "$tarballURL" --target-version "$version" --catalog "$catalogName" --offering "$offeringName" --include-config --variation "$variation" --format-kind "$formatKind" --install-type "$installType" || ret=$?
     if [[ ret -ne 0 ]]; then
         exit 1
     fi    
@@ -247,21 +248,23 @@ CATALOG_NAME=$1
 OFFERING_NAME=$2
 VERSION=$3
 VARIATION=$4
-RESOURCE_GROUP=$5
-FORMAT_KIND=$6
-CRA_SCAN=$7
+INSTALL_TYPE=$5
+RESOURCE_GROUP=$6
+FORMAT_KIND=$7
+CRA_SCAN=$8
 
 echo "CatalogName: $CATALOG_NAME"
 echo "OfferingName: $OFFERING_NAME"
 echo "Version: $VERSION"
 echo "Variation: $VARIATION"
+echo "InstallType: $INSTALL_TYPE"
 echo "ResourceGroup: $RESOURCE_GROUP"
 echo "FormatKind: $FORMAT_KIND"
 
 source ./.github/scripts/common-functions.sh
 
 # steps
-importVersionToCatalog "$CATALOG_NAME" "$OFFERING_NAME" "$VERSION" "$VARIATION" "$FORMAT_KIND"
+importVersionToCatalog "$CATALOG_NAME" "$OFFERING_NAME" "$VERSION" "$VARIATION" "$FORMAT_KIND" "$INSTALL_TYPE"
 validateVersion "$CATALOG_NAME" "$OFFERING_NAME" "$VERSION" "$FORMAT_KIND" "$RESOURCE_GROUP"
 scanVersion "$CATALOG_NAME" "$OFFERING_NAME" "$VERSION" "$FORMAT_KIND" "$CRA_SCAN"
 publishVersion "$CATALOG_NAME" "$OFFERING_NAME" "$VERSION" "$FORMAT_KIND"

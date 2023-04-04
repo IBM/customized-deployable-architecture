@@ -48,14 +48,14 @@ jobs:
           echo "--------------------------------------------------------------------"
           echo "onboard version, validate, scan, publish"
           echo "--------------------------------------------------------------------"
-          ./.github/scripts/onboard_validate_publish.sh "$CATALOG_NAME" "$OFFERING_NAME" "$VERSION" "$VARIATION" "$RESOURCE_GROUP" "terraform" "SCAN"
+          ./.github/scripts/onboard_validate_publish.sh "$CATALOG_NAME" "$OFFERING_NAME" "$VERSION" "$VARIATION" "fullstack" "$RESOURCE_GROUP" "terraform" "SCAN"
 
       - name: Upload, validate, scan and publish custom-apache extension
         env: 
           IBMCLOUD_API_KEY: ${{ secrets.IBMCLOUD_API_KEY }}
           VERSION: ${{ github.event.release.tag_name }}
         run: | 
-          ./.github/scripts/onboard_validate_publish.sh "$CATALOG_NAME" "$EXTENSION_OFFERING_NAME" "$VERSION" "$EXTENSION_VARIATION" "$RESOURCE_GROUP" "terraform" "SCAN"
+          ./.github/scripts/onboard_validate_publish.sh "$CATALOG_NAME" "$EXTENSION_OFFERING_NAME" "$VERSION" "$EXTENSION_VARIATION" "extension" "$RESOURCE_GROUP" "terraform" "SCAN"
 
       - name: Cleanup deployed resources
         env: 
@@ -76,7 +76,7 @@ jobs:
           echo "--------------------------------------------------------------------"
           echo "onboard blueprint version, validate, publish"
           echo "--------------------------------------------------------------------"
-          ./.github/scripts/onboard_validate_publish.sh "$CATALOG_NAME" "$EXTENSION_OFFERING_NAME" "$VERSION" "$BLUEPRINT_VARIATION" "$RESOURCE_GROUP" "blueprint" "NOSCAN"
+          ./.github/scripts/onboard_validate_publish.sh "$CATALOG_NAME" "$EXTENSION_OFFERING_NAME" "$VERSION" "$BLUEPRINT_VARIATION" "fullstack" "$RESOURCE_GROUP" "blueprint" "NOSCAN"
 
       - name: Cleanup deployed resources
         env:
