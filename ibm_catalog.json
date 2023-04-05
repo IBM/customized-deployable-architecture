@@ -3,7 +3,7 @@
         {
             "name": "custom-deployable-arch",
             "label": "custom-deployable-arch",
-            "version": "0.0.30",
+            "version": "0.0.31",
             "product_kind": "solution",
             "tags": ["network", "network_vpc"],
             "keywords": ["custom", "vpc", "secure"],
@@ -17,14 +17,14 @@
                         "catalog_id": "33eb1d96-dfb4-4d60-a21a-c376ed0c89c3",
                         "name": "custom-apache",
                         "kind": "terraform",
-                        "version": "0.0.30",
+                        "version": "0.0.31",
                         "flavor": "standard"
                     },
                     {
                         "catalog_id": "33eb1d96-dfb4-4d60-a21a-c376ed0c89c3",
                         "name": "custom-apache",
                         "kind": "blueprint",
-                        "version": "0.0.30",
+                        "version": "0.0.31",
                         "flavor": "standard"
                     }
                 ]
@@ -208,7 +208,7 @@
         {
             "name": "custom-apache",
             "label": "custom-apache",
-            "version": "0.0.30",
+            "version": "0.0.31",
             "product_kind": "solution",
             "tags": ["network", "network_vpc", "ConsumerProducts", "Technology"],
             "keywords": ["apache", "web server"],
@@ -222,7 +222,7 @@
                         "catalog_id": "33eb1d96-dfb4-4d60-a21a-c376ed0c89c3",
                         "name": "custom-deployable-arch",
                         "kind": "terraform",
-                        "version": "0.0.30",
+                        "version": "0.0.31",
                         "flavor": "customedge"
                     }
                 ]
