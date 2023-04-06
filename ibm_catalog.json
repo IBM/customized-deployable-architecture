@@ -67,28 +67,15 @@
                     },
                     "configuration": [
                         {
-                            "custom_config": {},
-                            "default_value": "__NOT_SET__",
-                            "description": "Public SSH Key for VSI creation. Must be a valid SSH key that does not already exist in the deployment region.",
-                            "hidden": false,
                             "key": "ssh_key",
-                            "required": true,
-                            "type": "string"
+                            "required": true
                         },
                         {
-                            "custom_config": {},
-                            "default_value": "__NOT_SET__",
-                            "description": "The IBM Cloud platform API key needed to deploy IAM enabled resources.",
-                            "hidden": false,
                             "key": "ibmcloud_api_key",
                             "required": true,
                             "type": "password"
                         },
                         {
-                            "custom_config": {},
-                            "default_value": "land-zone-vsi-qs",
-                            "description": "A unique identifier for resources. Must begin with a lowercase letter and end with a lowerccase letter or number. This prefix will be prepended to any resources provisioned by this template. Prefixes must be 16 or fewer characters.",
-                            "hidden": false,
                             "key": "prefix",
                             "required": true,
                             "type": "string"
@@ -265,13 +252,7 @@
                     },
                     "configuration": [
                         {
-                            "custom_config": {},
-                            "default_value": "{ \n    \"name\": \"httpd-sg\",\n    \"rules\": [\n      {\n        \"name\"      : \"httpd-port-80\",\n        \"direction\" : \"inbound\",\n        \"source\"    : \"0.0.0.0/0\",\n        \"tcp\": {\n            \"port_max\" : 80,\n            \"port_min\" : 80\n        }\n      },\n      {\n        \"name\"      : \"ssh-port-22\",\n        \"direction\" : \"inbound\",\n        \"source\"    : \"0.0.0.0/0\",\n        \"tcp\" : {\n            \"port_max\" : 22,\n            \"port_min\" : 22\n        }\n      },\n      {\n        \"name\"      : \"outbound-off\",\n        \"direction\" : \"outbound\",\n        \"source\"    : \"0.0.0.0/0\"\n      },\n      { \n        \"name\"      : \"httpd-port-443\",\n        \"direction\" : \"inbound\",\n        \"source\"    : \"0.0.0.0/0\",\n        \"tcp\": {\n            \"port_max\": 443,\n            \"port_min\": 443\n        }\n      }\n    ]\n  }",
-                            "description": "Security group created for VSI",
-                            "hidden": false,
-                            "key": "appSecurityRules",
-                            "required": false,
-                            "type": "object"
+                            "key": "appSecurityRules"
                         },
                         {
                             "custom_config": {
@@ -280,43 +261,23 @@
                                 "type": "multiline_secure_value"
                             },
                             "default_value": "<<-EOF\nINSERT YOUR KEY HERE\nEOF",
-                            "description": "Private SSH key (RSA format) that is paired with the public ssh key.  Will be used by Ansible to access the VSI. Entered data must be in [heredoc strings format](https://www.terraform.io/language/expressions/strings#heredoc-strings). The key is not uploaded or stored. For more information about SSH keys, see [SSH keys](https://cloud.ibm.com/docs/vpc?topic=vpc-ssh-keys).",
-                            "hidden": false,
                             "key": "ssh_private_key",
                             "required": true,
                             "type": "password"
                         },
                         {
-                            "custom_config": {},
-                            "default_value": "#!/bin/bash\nsudo apt-get update\nsudo apt-get --yes install ansible\n",
-                            "hidden": false,
-                            "key": "workLoadInitScript",
-                            "required": false,
-                            "type": "string"
+                            "key": "workLoadInitScript"
                         },
                         {
-                            "custom_config": {},
-                            "default_value": "ibm-ubuntu-20-04-4-minimal-amd64-2",
-                            "hidden": false,
-                            "key": "image",
-                            "required": false
+                            "key": "image"
                         },
                         {
-                            "custom_config": {},
-                            "default_value": "__NOT_SET__",
-                            "description": "The IBM Cloud platform API key needed to deploy IAM enabled resources.",
-                            "hidden": false,
                             "key": "ibmcloud_api_key",
                             "required": true,
                             "type": "password"
                         },
                         {
-                            "custom_config": {},
-                            "default_value": "us-east",
-                            "hidden": false,
-                            "key": "region",
-                            "required": false,
-                            "type": "string"
+                            "key": "region"
                         },
                         {
                             "custom_config": {
@@ -330,12 +291,8 @@
                                 "original_grouping": "deployment",
                                 "type": "schematics_workspace"
                             },
-                            "default_value": "__NOT_SET__",
-                            "description": "IBM Cloud Schematics workspace ID of an existing custom-deployable-arch.",
-                            "hidden": false,
                             "key": "prerequisite_workspace_id",
-                            "required": true,
-                            "type": "string"
+                            "required": true
                         }
                     ],
                     "dependencies": [
@@ -483,13 +440,8 @@
                     },
                     "configuration": [
                         {
-                            "custom_config": {},
-                            "default_value": "__NOT_SET__",
-                            "description": "Public SSH Key for VSI creation. Must be a valid SSH key that does not already exist in the deployment region",
-                            "hidden": false,
                             "key": "ssh_key",
-                            "required": true,
-                            "type": "string"
+                            "required": true
                         },
                         {
                             "custom_config": {
@@ -498,27 +450,16 @@
                                 "type": "multiline_secure_value"
                             },
                             "default_value": "<<-EOF\nINSERT YOUR KEY HERE\nEOF",
-                            "description": "Private SSH Key for SSH access via Jump Box to VSI. Must be the private key that pairs with the public key also used here",
-                            "display_name": "Multiline secure value",
-                            "hidden": false,
                             "key": "ssh_private_key",
                             "required": true,
                             "type": "password"
                         },
                         {
-                            "custom_config": {},
-                            "default_value": "__NOT_SET__",
-                            "description": "The IBM Cloud platform API key needed to deploy IAM enabled resources",
-                            "hidden": false,
                             "key": "ibmcloud_api_key",
                             "required": true,
                             "type": "password"
                         },
                         {
-                            "custom_config": {},
-                            "default_value": "apache-app",
-                            "description": "The prefix that you would like to append to your resources",
-                            "hidden": false,
                             "key": "prefix",
                             "required": true,
                             "type": "string"
