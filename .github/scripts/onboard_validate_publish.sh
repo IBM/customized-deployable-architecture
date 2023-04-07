@@ -84,7 +84,12 @@ function importVersionToCatalog() {
     local tarballURL="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/archive/refs/tags/${version}.tar.gz"
 
     # import the version into the catalog.  the offering must already exist in the catalog - just adding a version here.
-    ibmcloud catalog offering import-version --zipurl "$tarballURL" --target-version "$version" --catalog "$catalogName" --offering "$offeringName" --include-config --variation "$variation" --format-kind "$formatKind" --install-type "$installType" || ret=$?
+    if [ "$installType" = "fullstack" ] || [ "$installType" = "extension" ]; then
+        ibmcloud catalog offering import-version --zipurl "$tarballURL" --target-version "$version" --catalog "$catalogName" --offering "$offeringName" --include-config --variation "$variation" --format-kind "$formatKind" --install-type "$installType" || ret=$?
+    else
+        ibmcloud catalog offering import-version --zipurl "$tarballURL" --target-version "$version" --catalog "$catalogName" --offering "$offeringName" --include-config --variation "$variation" --format-kind "$formatKind" || ret=$?
+    fi
+    
     if [[ ret -ne 0 ]]; then
         exit 1
     fi    

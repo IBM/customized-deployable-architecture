@@ -19,11 +19,14 @@ jobs:
     env:
       CATALOG_NAME: Demo
       OFFERING_NAME: custom-deployable-arch
-      VARIATION: customedge
+      OFFERING_VARIATION_LABEL: customedge
       RESOURCE_GROUP: default
-      EXTENSION_OFFERING_NAME: custom-apache
-      EXTENSION_VARIATION: Standard
-      BLUEPRINT_VARIATION: Standard
+      WORKLOAD_OFFERING_NAME: custom-apache
+      WORKLOAD_VARIATION_LABEL: Standard
+      EXTENSION_INSTALL_TYPE: extension
+      FULLSTACK_INSTALL_TYPE: fullstack
+      FORMAT_KIND_TERRAFORM: terraform
+      FORMAT_KIND_BLUEPRINT: blueprint
       # Note that IBMCLOUD_API_KEY is a secret environment variable configured on the project
 
     # Steps represent a sequence of tasks that will be executed as part of the job
@@ -48,14 +51,14 @@ jobs:
           echo "--------------------------------------------------------------------"
           echo "onboard version, validate, scan, publish"
           echo "--------------------------------------------------------------------"
-          ./.github/scripts/onboard_validate_publish.sh "$CATALOG_NAME" "$OFFERING_NAME" "$VERSION" "$VARIATION" "fullstack" "$RESOURCE_GROUP" "terraform" "SCAN"
+          ./.github/scripts/onboard_validate_publish.sh "$CATALOG_NAME" "$OFFERING_NAME" "$VERSION" "$OFFERING_VARIATION_LABEL" "$FULLSTACK_INSTALL_TYPE" "$RESOURCE_GROUP" "$FORMAT_KIND_TERRAFORM" "SCAN"
 
       - name: Upload, validate, scan and publish custom-apache extension
         env: 
           IBMCLOUD_API_KEY: ${{ secrets.IBMCLOUD_API_KEY }}
           VERSION: ${{ github.event.release.tag_name }}
         run: | 
-          ./.github/scripts/onboard_validate_publish.sh "$CATALOG_NAME" "$EXTENSION_OFFERING_NAME" "$VERSION" "$EXTENSION_VARIATION" "extension" "$RESOURCE_GROUP" "terraform" "SCAN"
+          ./.github/scripts/onboard_validate_publish.sh "$CATALOG_NAME" "$WORKLOAD_OFFERING_NAME" "$VERSION" "$WORKLOAD_VARIATION_LABEL" "$EXTENSION_INSTALL_TYPE" "$RESOURCE_GROUP" "$FORMAT_KIND_TERRAFORM" "SCAN"
 
       - name: Cleanup deployed resources
         env: 
@@ -64,9 +67,9 @@ jobs:
           echo "--------------------------------------------------------------------"
           echo "cleanup validation resources"
           echo "--------------------------------------------------------------------"
-          ./.github/scripts/cleanup.sh "$CATALOG_NAME" "$EXTENSION_OFFERING_NAME" "$VERSION" "terraform"
+          ./.github/scripts/cleanup.sh "$CATALOG_NAME" "$WORKLOAD_OFFERING_NAME" "$VERSION" "$FORMAT_KIND_TERRAFORM"
 
-          ./.github/scripts/cleanup.sh "$CATALOG_NAME" "$OFFERING_NAME" "$VERSION" "terraform"
+          ./.github/scripts/cleanup.sh "$CATALOG_NAME" "$OFFERING_NAME" "$VERSION" "$FORMAT_KIND_TERRAFORM"
 
       - name: Upload, validate, scan and publish custom-apache fullstack
         env: 
@@ -76,7 +79,7 @@ jobs:
           echo "--------------------------------------------------------------------"
           echo "onboard blueprint version, validate, publish"
           echo "--------------------------------------------------------------------"
-          ./.github/scripts/onboard_validate_publish.sh "$CATALOG_NAME" "$EXTENSION_OFFERING_NAME" "$VERSION" "$BLUEPRINT_VARIATION" "fullstack" "$RESOURCE_GROUP" "blueprint" "NOSCAN"
+          ./.github/scripts/onboard_validate_publish.sh "$CATALOG_NAME" "$WORKLOAD_OFFERING_NAME" "$VERSION" "$WORKLOAD_VARIATION_LABEL" "$FULLSTACK_INSTALL_TYPE" "$RESOURCE_GROUP" "$FORMAT_KIND_BLUEPRINT" "NOSCAN"
 
       - name: Cleanup deployed resources
         env:
@@ -85,4 +88,4 @@ jobs:
           echo "--------------------------------------------------------------------"
           echo "cleanup blueprint validation resources"
           echo "--------------------------------------------------------------------"
-          ./.github/scripts/cleanup.sh "$CATALOG_NAME" "$EXTENSION_OFFERING_NAME" "$VERSION" "blueprint"
+          ./.github/scripts/cleanup.sh "$CATALOG_NAME" "$WORKLOAD_OFFERING_NAME" "$VERSION" "$FORMAT_KIND_BLUEPRINT"
