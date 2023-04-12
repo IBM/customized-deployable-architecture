@@ -1,8 +1,8 @@
 {
     "products": [
         {
-            "name": "Test SLZ",
-            "label": "test-slz",
+            "name": "test-slz",
+            "label": "Test SLZ",
             "version": "0.0.33",
             "product_kind": "solution",
             "tags": ["network", "network_vpc"],
