@@ -1,7 +1,7 @@
 {
     "products": [
         {
-            "name": "test-slz",
+            "name": "deploy-arch-ibm-gm-test-slz",
             "label": "Test SLZ",
             "version": "0.0.33",
             "product_kind": "solution",
