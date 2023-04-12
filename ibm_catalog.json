@@ -1,8 +1,8 @@
 {
     "products": [
         {
-            "name": "custom-deployable-arch",
-            "label": "custom-deployable-arch",
+            "name": "Test SLZ",
+            "label": "test-slz",
             "version": "0.0.33",
             "product_kind": "solution",
             "tags": ["network", "network_vpc"],
@@ -14,8 +14,8 @@
             "support_details": "This is a demonstration and no official support is given.",
             "flavors": [
                 {
-                    "label": "CustomEdge",
-                    "name": "customedge",
+                    "label": "Basic SLZ",
+                    "name": "basicslz",
                     "install_type": "fullstack",
                     "working_directory": "solutions/custom-deployable-arch",
                     "usage_template": "module \"custom_arch\" {\n    source           = \"https://cm.globalcatalog.cloud.ibm.com/api/v1-beta/offering/source//${{workingDirectory}}?archive=tgz&catalogID=${{catalogID}}&flavor=${{flavor}}&kind=${{kind}}&name=${{name}}&version=${{version}}\"\n    prefix           = var.prefix\n    ssh_key          = var.ssh_key\n    ibmcloud_api_key = var.ibmcloud_api_key\n}\n\n",
@@ -24,7 +24,7 @@
                         "profiles": [
                             {
                                 "profile_name": "IBM Cloud for Financial Services",
-                                "profile_version": "1.0.0"
+                                "profile_version": "1.1.0"
                             }
                         ],
                         "controls": [
