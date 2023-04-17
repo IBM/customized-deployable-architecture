@@ -21,22 +21,18 @@
                     "usage_template": "module \"custom_arch\" {\n    source           = \"https://cm.globalcatalog.cloud.ibm.com/api/v1-beta/offering/source//${{workingDirectory}}?archive=tgz&catalogID=${{catalogID}}&flavor=${{flavor}}&kind=${{kind}}&name=${{name}}&version=${{version}}\"\n    prefix           = var.prefix\n    ssh_key          = var.ssh_key\n    ibmcloud_api_key = var.ibmcloud_api_key\n}\n\n",
                     "compliance": {
                         "authority": "scc-v3",
-                        "profiles": [
+                        "controls": [ 
                             {
-                                "profile_name": "IBM Cloud for Financial Services",
-                                "profile_version": "1.1.0"
-                            }
-                        ],
-                        "controls": [
-                            {
-                                "profile_name": "IBM Cloud for Financial Services",
-                                "profile_version": "1.1.0",
-                                "control_name": "CM-7(a)" 
-                            },
-                            {
-                                "profile_name": "IBM Cloud for Financial Services",
-                                "profile_version": "1.1.0",
-                                "control_name": "CM-7(b)" 
+                                 "profile": {
+                                    "name": "IBM Cloud for Financial Services",
+                                    "version": "1.1.0"
+                                },
+                                "names": [
+                                    "SC-7(a)",
+                                    "SC-7(a)",
+                                    "CM-7(a)",
+                                    "CM-7(b)"
+                                ]
                             }
                         ]
                     },
