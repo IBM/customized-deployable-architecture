@@ -16,6 +16,8 @@ jobs:
   onboard-publish-release:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
+    # run if the release tag does not contain 'test' or 'stable'
+    if: "!contains(github.event.release.tag_name, 'test') && !contains(github.event.release.tag_name, 'stable')"
     env:
       CATALOG_NAME: Demo
       OFFERING_NAME: custom-deployable-arch
