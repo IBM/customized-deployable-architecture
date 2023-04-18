@@ -91,3 +91,17 @@ jobs:
           echo "cleanup blueprint validation resources"
           echo "--------------------------------------------------------------------"
           ./.github/scripts/cleanup.sh "$CATALOG_NAME" "$WORKLOAD_OFFERING_NAME" "$VERSION" "$FORMAT_KIND_BLUEPRINT"
+
+      # Now that everything has been onboarded fully, create a 'stable' release which is useful for linking and predictability.
+      - name: Create stable release
+        id: create_release
+        uses: igorrs/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          tag_name: ${{ github.ref }}-stable
+          release_name: ${{ github.ref }}-stable
+          body: |
+            This release is for linking from documentation as it is tagged with "stable".  It is not automatically onboarded.
+          draft: false
+          prerelease: true    
