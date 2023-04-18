@@ -10,19 +10,24 @@
    "enable_transit_gateway": false,
    "key_management": {
       "name": "slz-kms",
-      "resource_group": "Default"
+      "resource_group": "slz-service-rg"
    },
    "network_cidr": "10.0.0.0/8",
    "resource_groups": [
       {
-         "create": false,
-         "name": "Default",
-         "use_prefix": false
-      }
+         "create": true,
+         "name": "slz-service-rg",
+         "use_prefix": true
+      },
+      {
+         "create": true,
+         "name": "slz-workload-rg",
+         "use_prefix": true
+       }
    ],
    "security_groups": [],
    "transit_gateway_connections": [],
-   "transit_gateway_resource_group": "Default",
+   "transit_gateway_resource_group": "slz-service-rg",
    "virtual_private_endpoints": [],
    "vpcs": [
       {
@@ -31,7 +36,7 @@
          "network_acls": [
             {
                "add_cluster_rules": false,
-               "name": "management-acl",
+               "name": "workload-acl",
                "rules": [
                   {
                      "name": "allow-all-inbound",
@@ -50,12 +55,12 @@
                ]
             }
          ],
-         "prefix": "management",
-         "resource_group": "Default",
+         "prefix": "workload",
+         "resource_group": "slz-workload-rg",
          "subnets": {
             "zone-1": [
                {
-                  "acl_name": "management-acl",
+                  "acl_name": "workload-acl",
                   "cidr": "10.10.10.0/24",
                   "name": "vsi-zone-1",
                   "public_gateway": false
@@ -76,10 +81,10 @@
       {
          "image_name": "ibm-ubuntu-22-04-1-minimal-amd64-4",
          "machine_type": "cx2-4x8",
-         "name": "simple-vsi",
-         "resource_group": "Default",
+         "name": "jump-box",
+         "resource_group": "slz-workload-rg",
          "security_group": {
-            "name": "management",
+            "name": "workload",
             "rules": [
                {
                   "name": "allow-all-inbound",
@@ -99,9 +104,9 @@
          "subnet_names": [
             "vsi-zone-1"
          ],
-         "vpc_name": "management",
+         "vpc_name": "workload",
          "vsi_per_subnet": 1,
-         "enable_floating_ip": false
+         "enable_floating_ip": true
       }
    ]
 }
