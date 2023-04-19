@@ -3,7 +3,7 @@
         {
             "name": "custom-deployable-arch",
             "label": "custom-deployable-arch",
-            "version": "0.0.34",
+            "version": "0.0.35",
             "product_kind": "solution",
             "tags": ["network", "network_vpc"],
             "keywords": ["custom", "vpc", "secure"],
@@ -17,14 +17,14 @@
                         "catalog_id": "33eb1d96-dfb4-4d60-a21a-c376ed0c89c3",
                         "name": "custom-apache",
                         "kind": "terraform",
-                        "version": "0.0.34",
+                        "version": "0.0.35",
                         "flavor": "standard"
                     },
                     {
                         "catalog_id": "33eb1d96-dfb4-4d60-a21a-c376ed0c89c3",
                         "name": "custom-apache",
                         "kind": "blueprint",
-                        "version": "0.0.34",
+                        "version": "0.0.35",
                         "flavor": "standard"
                     }
                 ]
@@ -35,7 +35,7 @@
                     "label": "CustomEdge",
                     "name": "customedge",
                     "install_type": "fullstack",
-                    "working_directory": "solutions/custom-deployable-arch",
+                    "working_directory": "solutions/custom-deployable-arch/customedge",
                     "usage_template": "module \"custom_arch\" {\n    source           = \"https://cm.globalcatalog.cloud.ibm.com/api/v1-beta/offering/source//${{workingDirectory}}?archive=tgz&catalogID=${{catalogID}}&flavor=${{flavor}}&kind=${{kind}}&name=${{name}}&version=${{version}}\"\n    prefix           = var.prefix\n    ssh_key          = var.ssh_key\n    ibmcloud_api_key = var.ibmcloud_api_key\n}\n\n",
                     "compliance": {
                         "controls": [
@@ -185,7 +185,132 @@
                                     "url": "https://raw.githubusercontent.com/IBM/customized-deployable-architecture/main/images/custom-slz.svg",
                                     "metadata": []
                                 },
-                                "description": "Custom Edge variation of Secure infrastructure on VPC for regulated industries requires at least 2 CPUs and 4 GB of memory.\n\nSecure infrastructure on VPC for regulated industries is implemented with virtual servers. It utilizes two separate Virtual Private Clouds (VPC), a Management VPC and a Workload VPC, to manage the environment and the deployed workload. Each VPC is a multi-zoned, multi-subnet implementation that keeps your workloads secure.\n\nVirtual Private Endpoints connect the VPCs to each other and to IBM Cloud services, including Key Protect, IAM, Container Registry, Object Storage, and any additional services. IBM Cloud services are configured for storage and key management.\n\nIBM Cloud Flow Logs for VPC enable the collection, storage, and presentation of information about the Internet Protocol (IP) traffic that is going to and from network interfaces within your VPC. In addition, Activity Tracker logs events from enabled services. IBM Cloud Flow Logs for VPC and Activity Tracker are included in this configuration. Additional security services can be added such as Hyper Connect Crypto Service."
+                                "description": "Custom Edge variation of VSI on VPC landing zone requires at least 2 CPUs and 4 GB of memory.\n\nVSI on VPC landing zone is implemented with virtual servers. It utilizes two separate Virtual Private Clouds (VPC), a Management VPC and a Workload VPC, to manage the environment and the deployed workload. Each VPC is a multi-zoned, multi-subnet implementation that keeps your workloads secure.\n\nVirtual Private Endpoints connect the VPCs to each other and to IBM Cloud services, including Key Protect, IAM, Container Registry, Object Storage, and any additional services. IBM Cloud services are configured for storage and key management.\n\nIBM Cloud Flow Logs for VPC enable the collection, storage, and presentation of information about the Internet Protocol (IP) traffic that is going to and from network interfaces within your VPC. In addition, Activity Tracker logs events from enabled services. IBM Cloud Flow Logs for VPC and Activity Tracker are included in this configuration. Additional security services can be added such as Hyper Connect Crypto Service."
+                            }
+                        ]
+                    }
+                },
+                {
+                    "label": "BabySLZ",
+                    "name": "babyslz",
+                    "install_type": "fullstack",
+                    "working_directory": "solutions/custom-deployable-arch/babyslz",
+                    "usage_template": "module \"custom_arch\" {\n    source           = \"https://cm.globalcatalog.cloud.ibm.com/api/v1-beta/offering/source//${{workingDirectory}}?archive=tgz&catalogID=${{catalogID}}&flavor=${{flavor}}&kind=${{kind}}&name=${{name}}&version=${{version}}\"\n    prefix           = var.prefix\n    ssh_key          = var.ssh_key\n    ibmcloud_api_key = var.ibmcloud_api_key\n}\n\n",
+                    "compliance": {
+                        "controls": [
+                            {
+                                "profile_name": "SLZ compliance v0.1.1",
+                                "control_id": "AC-2(c)"
+                            },
+                            {
+                                "profile_name": "SLZ compliance v0.1.1",
+                                "control_id": "AC-2(i)"
+                            },
+                            {
+                                "profile_name": "SLZ compliance v0.1.1",
+                                "control_id": "AC-6-0"
+                            },
+                            {
+                                "profile_name": "SLZ compliance v0.1.1",
+                                "control_id": "CM-2"
+                            },
+                            {
+                                "profile_name": "SLZ compliance v0.1.1",
+                                "control_id": "SC-12"
+                            },
+                            {
+                                "profile_name": "SLZ compliance v0.1.1",
+                                "control_id": "SC-36"
+                            }
+                        ]
+                    },
+                    "configuration": [
+                        {
+                            "key": "ssh_key",
+                            "required": true
+                        },
+                        {
+                            "key": "ibmcloud_api_key",
+                            "required": true,
+                            "type": "password"
+                        },
+                        {
+                            "key": "prefix",
+                            "required": true,
+                            "type": "string"
+                        }
+                    ],
+                    "outputs": [
+                        {
+                            "description": "ID of the IBM Cloud Schematics workspace. Returns null if not ran in Schematics",
+                            "key": "schematics_workspace_id"
+                        },
+                        {
+                            "description": "prefix used in this infrastructure",
+                            "key": "prefix"
+                        }
+                    ],
+                    "iam_permissions": [
+                        {
+                            "role_crns": [
+                                "crn:v1:bluemix:public:iam::::serviceRole:Manager"
+                            ],
+                            "service_name": "appid"
+                        },
+                        {
+                            "role_crns": [
+                                "crn:v1:bluemix:public:iam::::serviceRole:Manager"
+                            ],
+                            "service_name": "hs-crypto"
+                        },
+                        {
+                            "role_crns": [
+                                "crn:v1:bluemix:public:iam::::role:Administrator"
+                            ],
+                            "service_name": "iam-identity"
+                        },
+                        {
+                            "role_crns": [
+                                "crn:v1:bluemix:public:iam::::serviceRole:Manager"
+                            ],
+                            "service_name": "kms"
+                        },
+                        {
+                            "role_crns": [
+                                "crn:v1:bluemix:public:iam::::serviceRole:Manager",
+                                "crn:v1:bluemix:public:iam::::role:Administrator"
+                            ],
+                            "service_name": "is.vpc"
+                        }
+                    ],
+                    "architecture": {
+                        "descriptions": "",
+                        "features": [
+                            {
+                                "title": "Customized",
+                                "description": "Yes"
+                            },
+                            {
+                                "title": "Separate VPC for workloads",
+                                "description": "Yes"
+                            },
+                            {
+                                "title": "Increases security with Key Management",
+                                "description": "Yes"
+                            },
+                            {
+                                "title": "Uses Floating IP address for access through the public internet",
+                                "description": "Yes"
+                            }
+                        ],
+                        "diagrams": [
+                            {
+                                "diagram": {
+                                    "caption": "Baby SLZ variation",
+                                    "url": "https://raw.githubusercontent.com/IBM/customized-deployable-architecture/main/images/baby-slz.svg",
+                                    "metadata": []
+                                },
+                                "description": "Baby SLZ variation is a customization of VSI on VPC landing zone deployable architecture.  It illustrates a very minimal VPC with a single VSI configured with a floating point IP address.\nIt is useful for a quick, inexpensive deployment that may be used for development of extensions as well as enabling learning more about deployable architectures with a simple example."
                             }
                         ]
                     }
@@ -195,7 +320,7 @@
         {
             "name": "custom-apache",
             "label": "custom-apache",
-            "version": "0.0.34",
+            "version": "0.0.35",
             "product_kind": "solution",
             "tags": ["network", "network_vpc", "ConsumerProducts", "Technology"],
             "keywords": ["apache", "web server"],
@@ -209,7 +334,7 @@
                         "catalog_id": "33eb1d96-dfb4-4d60-a21a-c376ed0c89c3",
                         "name": "custom-deployable-arch",
                         "kind": "terraform",
-                        "version": "0.0.34",
+                        "version": "0.0.35",
                         "flavor": "customedge"
                     }
                 ]
@@ -300,9 +425,10 @@
                             "catalog_id": "33eb1d96-dfb4-4d60-a21a-c376ed0c89c3",
                             "id": "cfd4c957-eb94-4230-8bf6-d522f0c18590",
                             "name": "custom-deployable-arch",
-                            "version": ">=0.0.27",
+                            "version": ">=0.0.34",
                             "flavors": [
-                                "customedge"
+                                "customedge",
+                                "babyslz"
                             ]    
                         }
                     ],
