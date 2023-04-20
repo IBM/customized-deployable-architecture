@@ -2,8 +2,7 @@
     "products": [
         {
             "name": "deploy-arch-ibm-gm-test-slz",
-            "label": "Test SLZ",
-            "version": "0.0.33",
+            "label": "Baby SLZ",
             "product_kind": "solution",
             "tags": ["network", "network_vpc"],
             "keywords": ["custom", "vpc", "secure"],
@@ -14,8 +13,8 @@
             "support_details": "This is a demonstration and no official support is given.",
             "flavors": [
                 {
-                    "label": "Basic SLZ",
-                    "name": "basicslz",
+                    "label": "Baby SLZ",
+                    "name": "babyslz",
                     "install_type": "fullstack",
                     "working_directory": "solutions/custom-deployable-arch",
                     "usage_template": "module \"custom_arch\" {\n    source           = \"https://cm.globalcatalog.cloud.ibm.com/api/v1-beta/offering/source//${{workingDirectory}}?archive=tgz&catalogID=${{catalogID}}&flavor=${{flavor}}&kind=${{kind}}&name=${{name}}&version=${{version}}\"\n    prefix           = var.prefix\n    ssh_key          = var.ssh_key\n    ibmcloud_api_key = var.ibmcloud_api_key\n}\n\n",
