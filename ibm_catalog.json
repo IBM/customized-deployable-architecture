@@ -5,7 +5,7 @@
             "label": "custom-deployable-arch",
             "product_kind": "solution",
             "tags": ["network", "network_vpc"],
-            "keywords": ["custom", "vpc", "secure"],
+            "keywords": ["custom", "vpc", "secure", "baby"],
             "short_description": "Customized example for the landing zone solution using parameters and a json override.",
             "long_description": "This example is designed to illustrate how to customize a solution to fit your needs.  This particular customization is a simple o ne.  The value of the deployment region has been set to 'us-east' to show to to satisfy a potential custom requirement.",
             "offering_docs_url": "https://raw.githubusercontent.com/IBM/customized-deployable-architecture/main/README.md",
