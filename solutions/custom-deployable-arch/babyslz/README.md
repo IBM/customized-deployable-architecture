@@ -6,7 +6,7 @@ In addition, this repo provides:
    * A [blueprint](solutions/custom-apache/fullstack/full.yaml) that will provision both the custom infrastructure and the apache **Module** as a single blueprint
 
 
-![Custom topology](/images/custom-slz.svg)
+![Custom topology](/images/baby-slz.svg)
 
 
 ## This example shows how:  
