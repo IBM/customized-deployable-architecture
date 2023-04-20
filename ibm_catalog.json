@@ -3,7 +3,6 @@
         {
             "name": "custom-deployable-arch",
             "label": "custom-deployable-arch",
-            "version": "0.0.35",
             "product_kind": "solution",
             "tags": ["network", "network_vpc"],
             "keywords": ["custom", "vpc", "secure"],
@@ -17,14 +16,14 @@
                         "catalog_id": "33eb1d96-dfb4-4d60-a21a-c376ed0c89c3",
                         "name": "custom-apache",
                         "kind": "terraform",
-                        "version": "0.0.35",
+                        "version": "0.0.34",
                         "flavor": "standard"
                     },
                     {
                         "catalog_id": "33eb1d96-dfb4-4d60-a21a-c376ed0c89c3",
                         "name": "custom-apache",
                         "kind": "blueprint",
-                        "version": "0.0.35",
+                        "version": "0.0.34",
                         "flavor": "standard"
                     }
                 ]
@@ -320,7 +319,6 @@
         {
             "name": "custom-apache",
             "label": "custom-apache",
-            "version": "0.0.36",
             "product_kind": "solution",
             "tags": ["network", "network_vpc", "ConsumerProducts", "Technology"],
             "keywords": ["apache", "web server"],
@@ -334,7 +332,7 @@
                         "catalog_id": "33eb1d96-dfb4-4d60-a21a-c376ed0c89c3",
                         "name": "custom-deployable-arch",
                         "kind": "terraform",
-                        "version": "0.0.35",
+                        "version": "0.0.34",
                         "flavor": "customedge"
                     }
                 ]
@@ -410,7 +408,7 @@
                                     "catalogID": "33eb1d96-dfb4-4d60-a21a-c376ed0c89c3",
                                     "flavorConstraint": "customedge, babyslz",
                                     "offeringID": "cfd4c957-eb94-4230-8bf6-d522f0c18590",
-                                    "versionConstraint": ">=0.0.35"
+                                    "versionConstraint": ">=0.0.34"
                                 },
                                 "grouping": "deployment",
                                 "original_grouping": "deployment",
@@ -425,7 +423,7 @@
                             "catalog_id": "33eb1d96-dfb4-4d60-a21a-c376ed0c89c3",
                             "id": "cfd4c957-eb94-4230-8bf6-d522f0c18590",
                             "name": "custom-deployable-arch",
-                            "version": ">=0.0.35",
+                            "version": ">=0.0.34",
                             "flavors": [
                                 "customedge",
                                 "babyslz"
