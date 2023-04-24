@@ -22,8 +22,8 @@
                         "authority": "scc-v3",
                         "profiles":[
                             {
-                              "name": "IBM Cloud for Financial Services",
-                              "version": "1.1.0"
+                              "profile_name": "IBM Cloud for Financial Services",
+                              "profile_version": "1.1.0"
                             }
                         ]
                     },
