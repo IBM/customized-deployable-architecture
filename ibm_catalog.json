@@ -37,30 +37,20 @@
                     "working_directory": "solutions/custom-deployable-arch/customedge",
                     "usage_template": "module \"custom_arch\" {\n    source           = \"https://cm.globalcatalog.cloud.ibm.com/api/v1-beta/offering/source//${{workingDirectory}}?archive=tgz&catalogID=${{catalogID}}&flavor=${{flavor}}&kind=${{kind}}&name=${{name}}&version=${{version}}\"\n    prefix           = var.prefix\n    ssh_key          = var.ssh_key\n    ibmcloud_api_key = var.ibmcloud_api_key\n}\n\n",
                     "compliance": {
+                        "authority": "scc-v3",
                         "controls": [
                             {
-                                "profile_name": "SLZ compliance v0.1.1",
-                                "control_id": "AC-2(c)"
-                            },
-                            {
-                                "profile_name": "SLZ compliance v0.1.1",
-                                "control_id": "AC-2(i)"
-                            },
-                            {
-                                "profile_name": "SLZ compliance v0.1.1",
-                                "control_id": "AC-6-0"
-                            },
-                            {
-                                "profile_name": "SLZ compliance v0.1.1",
-                                "control_id": "CM-2"
-                            },
-                            {
-                                "profile_name": "SLZ compliance v0.1.1",
-                                "control_id": "SC-12"
-                            },
-                            {
-                                "profile_name": "SLZ compliance v0.1.1",
-                                "control_id": "SC-36"
+                                "profile": {
+                                    "name": "IBM Cloud for Financial Services",
+                                    "version": "1.2.0"
+                                },
+                                "names": [
+                                    "AC-2(a)",
+                                    "AC-6(0)",
+                                    "CM-2(0)",
+                                    "SC-12(0)",
+                                    "SC-28(0)"
+                                ]
                             }
                         ]
                     },
@@ -196,30 +186,20 @@
                     "working_directory": "solutions/custom-deployable-arch/babyslz",
                     "usage_template": "module \"custom_arch\" {\n    source           = \"https://cm.globalcatalog.cloud.ibm.com/api/v1-beta/offering/source//${{workingDirectory}}?archive=tgz&catalogID=${{catalogID}}&flavor=${{flavor}}&kind=${{kind}}&name=${{name}}&version=${{version}}\"\n    prefix           = var.prefix\n    ssh_key          = var.ssh_key\n    ibmcloud_api_key = var.ibmcloud_api_key\n}\n\n",
                     "compliance": {
+                        "authority": "scc-v3",
                         "controls": [
                             {
-                                "profile_name": "SLZ compliance v0.1.1",
-                                "control_id": "AC-2(c)"
-                            },
-                            {
-                                "profile_name": "SLZ compliance v0.1.1",
-                                "control_id": "AC-2(i)"
-                            },
-                            {
-                                "profile_name": "SLZ compliance v0.1.1",
-                                "control_id": "AC-6-0"
-                            },
-                            {
-                                "profile_name": "SLZ compliance v0.1.1",
-                                "control_id": "CM-2"
-                            },
-                            {
-                                "profile_name": "SLZ compliance v0.1.1",
-                                "control_id": "SC-12"
-                            },
-                            {
-                                "profile_name": "SLZ compliance v0.1.1",
-                                "control_id": "SC-36"
+                                "profile": {
+                                    "name": "IBM Cloud for Financial Services",
+                                    "version": "1.2.0"
+                                },
+                                "names": [
+                                    "AC-2(a)",
+                                    "AC-6(0)",
+                                    "CM-2(0)",
+                                    "SC-12(0)",
+                                    "SC-28(0)"
+                                ]
                             }
                         ]
                     },
@@ -255,12 +235,6 @@
                                 "crn:v1:bluemix:public:iam::::serviceRole:Manager"
                             ],
                             "service_name": "appid"
-                        },
-                        {
-                            "role_crns": [
-                                "crn:v1:bluemix:public:iam::::serviceRole:Manager"
-                            ],
-                            "service_name": "hs-crypto"
                         },
                         {
                             "role_crns": [
@@ -346,30 +320,20 @@
                     "working_directory": "solutions/custom-apache/workload-only/ansible",
                     "usage_template": "module \"custom_apache\" {\n source                    = \"https://cm.globalcatalog.cloud.ibm.com/api/v1-beta/offering/source//${{workingDirectory}}?archive=tgz&catalogID=${{catalogID}}&flavor=${{flavor}}&kind=${{kind}}&name=${{name}}&version=${{version}}\"\n  ibmcloud_api_key          = var.ibmcloud_api_key\n  prerequisite_workspace_id = var.prerequisite_workspace_id\n  ssh_private_key          =var.ssh_private_key\n}\n\n",
                     "compliance": {
+                        "authority": "scc-v3",
                         "controls": [
                             {
-                                "profile_name": "SLZ compliance v0.1.1",
-                                "control_id": "AC-2(c)"
-                            },
-                            {
-                                "profile_name": "SLZ compliance v0.1.1",
-                                "control_id": "AC-2(i)"
-                            },
-                            {
-                                "profile_name": "SLZ compliance v0.1.1",
-                                "control_id": "AC-6-0"
-                            },
-                            {
-                                "profile_name": "SLZ compliance v0.1.1",
-                                "control_id": "CM-2"
-                            },
-                            {
-                                "profile_name": "SLZ compliance v0.1.1",
-                                "control_id": "SC-12"
-                            },
-                            {
-                                "profile_name": "SLZ compliance v0.1.1",
-                                "control_id": "SC-36"
+                                "profile": {
+                                    "name": "IBM Cloud for Financial Services",
+                                    "version": "1.2.0"
+                                },
+                                "names": [
+                                    "AC-2(a)",
+                                    "AC-6(0)",
+                                    "CM-2(0)",
+                                    "SC-12(0)",
+                                    "SC-28(0)"
+                                ]
                             }
                         ]
                     },
@@ -423,7 +387,7 @@
                             "catalog_id": "33eb1d96-dfb4-4d60-a21a-c376ed0c89c3",
                             "id": "cfd4c957-eb94-4230-8bf6-d522f0c18590",
                             "name": "custom-deployable-arch",
-                            "version": ">=0.0.34",
+                            "version": ">=0.0.35",
                             "flavors": [
                                 "customedge",
                                 "babyslz"
@@ -535,30 +499,20 @@
                     "install_type": "fullstack",
                     "working_directory": "solutions/custom-apache/fullstack",
                     "compliance": {
+                        "authority": "scc-v3",
                         "controls": [
                             {
-                                "profile_name": "SLZ compliance v0.1.1",
-                                "control_id": "AC-2(c)"
-                            },
-                            {
-                                "profile_name": "SLZ compliance v0.1.1",
-                                "control_id": "AC-2(i)"
-                            },
-                            {
-                                "profile_name": "SLZ compliance v0.1.1",
-                                "control_id": "AC-6-0"
-                            },
-                            {
-                                "profile_name": "SLZ compliance v0.1.1",
-                                "control_id": "CM-2"
-                            },
-                            {
-                                "profile_name": "SLZ compliance v0.1.1",
-                                "control_id": "SC-12"
-                            },
-                            {
-                                "profile_name": "SLZ compliance v0.1.1",
-                                "control_id": "SC-36"
+                                "profile": {
+                                    "name": "IBM Cloud for Financial Services",
+                                    "version": "1.2.0"
+                                },
+                                "names": [
+                                    "AC-2(a)",
+                                    "AC-6(0)",
+                                    "CM-2(0)",
+                                    "SC-12(0)",
+                                    "SC-28(0)"
+                                ]
                             }
                         ]
                     },
