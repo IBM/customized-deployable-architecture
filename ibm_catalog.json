@@ -25,20 +25,6 @@
                               "name": "IBM Cloud for Financial Services",
                               "version": "1.1.0"
                             }
-                        ],
-                        "controls": [ 
-                            {
-                                 "profile": {
-                                    "name": "IBM Cloud for Financial Services",
-                                    "version": "1.1.0"
-                                },
-                                "names": [
-                                    "SC-7(a)",
-                                    "SC-7(b)",
-                                    "CM-7(a)",
-                                    "CM-7(b)"
-                                ]
-                            }
                         ]
                     },
                     "configuration": [
