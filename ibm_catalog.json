@@ -187,19 +187,10 @@
                     "usage_template": "module \"custom_arch\" {\n    source           = \"https://cm.globalcatalog.cloud.ibm.com/api/v1-beta/offering/source//${{workingDirectory}}?archive=tgz&catalogID=${{catalogID}}&flavor=${{flavor}}&kind=${{kind}}&name=${{name}}&version=${{version}}\"\n    prefix           = var.prefix\n    ssh_key          = var.ssh_key\n    ibmcloud_api_key = var.ibmcloud_api_key\n}\n\n",
                     "compliance": {
                         "authority": "scc-v3",
-                        "controls": [
+                        "profiles":[
                             {
-                                "profile": {
-                                    "name": "IBM Cloud for Financial Services",
-                                    "version": "1.2.0"
-                                },
-                                "names": [
-                                    "AC-2(a)",
-                                    "AC-6(0)",
-                                    "CM-2(0)",
-                                    "SC-12(0)",
-                                    "SC-28(0)"
-                                ]
+                              "profile_name": "IBM Cloud for Financial Services",
+                              "profile_version": "1.1.0"
                             }
                         ]
                     },
