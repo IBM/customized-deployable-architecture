@@ -95,7 +95,7 @@ jobs:
       # Now that everything has been onboarded fully, create a 'stable' release which is useful for linking and predictability.
       - name: Create stable release
         id: create_release
-        uses: igorrs/create-release@v1
+        uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ github.token }}
         with:
