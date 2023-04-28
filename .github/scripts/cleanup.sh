@@ -240,6 +240,9 @@ OFFERING_NAME=$2
 VERSION=$3
 FORMAT_KIND=$4
 
+# ensure we are still logged in
+ibmcloud login --apikey "$IBMCLOUD_API_KEY" --no-region
+
 echo "cleaning up workspaces, resources for: $OFFERING_NAME, version $VERSION, format kind $FORMAT_KIND"
 
 source ./.github/scripts/common-functions.sh

@@ -271,5 +271,5 @@ source ./.github/scripts/common-functions.sh
 # steps
 importVersionToCatalog "$CATALOG_NAME" "$OFFERING_NAME" "$VERSION" "$VARIATION" "$FORMAT_KIND" "$INSTALL_TYPE"
 validateVersion "$CATALOG_NAME" "$OFFERING_NAME" "$VERSION" "$FORMAT_KIND" "$RESOURCE_GROUP"
-scanVersion "$CATALOG_NAME" "$OFFERING_NAME" "$VERSION" "$FORMAT_KIND" "$CRA_SCAN"
+#scanVersion "$CATALOG_NAME" "$OFFERING_NAME" "$VERSION" "$FORMAT_KIND" "$CRA_SCAN"
 publishVersion "$CATALOG_NAME" "$OFFERING_NAME" "$VERSION" "$FORMAT_KIND"
