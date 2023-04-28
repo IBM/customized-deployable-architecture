@@ -80,6 +80,7 @@ function destroyWorkspaceResources() {
     local workspaceId
 
     # refresh token
+    ibmcloud iam oauth-tokens
     ibmcloud catalog utility netrc
 
     # get the schematics workspace id of the workspace that was used for the validation of this version
@@ -136,6 +137,7 @@ function destroyBlueprintResources() {
     local blueprintId
 
     # refresh token
+    ibmcloud iam oauth-tokens
     ibmcloud catalog utility netrc
 
     # get the schematics workspace id of the workspace that was used for the validation of this version
@@ -173,6 +175,8 @@ function deleteBlueprint() {
     local version="$3"
     local blueprintId
 
+    ibmcloud iam oauth-tokens
+
     # get the schematics workspace id of the workspace that was used for the validation of this version
     blueprintId=$(getBlueprintId "$catalogName" "$offeringName" "$version")
 
@@ -193,6 +197,8 @@ function deleteBlueprint() {
             exit 1
         fi
     done
+
+    ibmcloud iam oauth-tokens
 
     # this command submits a schematics job to delete the individual workspaces and the blueprint
     ibmcloud schematics blueprint delete --id "$blueprintId" --no-prompt

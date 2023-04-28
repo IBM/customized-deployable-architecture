@@ -136,6 +136,7 @@ function validateVersion() {
     ibmcloud target -g "$resourceGroup"
 
     # refresh our login token since validation can run a little while
+    ibmcloud iam oauth-tokens
     ibmcloud catalog netrc
 
     # invoke schematics service to validate the version.  this will wait for that operation to complete.
