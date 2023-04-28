@@ -64,6 +64,7 @@ jobs:
 
       - name: Cleanup deployed resources
         env: 
+          IBMCLOUD_API_KEY: ${{ secrets.IBMCLOUD_API_KEY }}
           VERSION: ${{ github.event.release.tag_name }}
         run: |
           echo "--------------------------------------------------------------------"
@@ -85,6 +86,7 @@ jobs:
 
       - name: Cleanup deployed resources
         env:
+          IBMCLOUD_API_KEY: ${{ secrets.IBMCLOUD_API_KEY }}
           VERSION: ${{ github.event.release.tag_name }}
         run: |  
           echo "--------------------------------------------------------------------"
