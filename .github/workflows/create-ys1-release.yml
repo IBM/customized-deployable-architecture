@@ -43,14 +43,14 @@ jobs:
       # Create a "-test" release and upload the tar file as an asset
       - name: Create test release
         id: create_release
-        uses: ncipollo/release-action@v1.12.0
+        uses: softprops/action-gh-release@v1
         env:
           GITHUB_TOKEN: ${{ github.token }}
         with:
-          tag: ${{ github.ref }}-test
+          tag_name: ${{ github.ref }}-test
           name: ${{ github.event.release.tag_name }}-test
           body: |
             This release is for testing purposes on ys1.  Use the ys1-catalog.tar.gz assest for onboarding.
           draft: false
           prerelease: true
-          artifacts: ys1-catalog.tar.gz
+          files: ys1-catalog.tar.gz
