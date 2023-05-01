@@ -21,7 +21,8 @@ jobs:
     env:
       CATALOG_NAME: Demo
       OFFERING_NAME: custom-deployable-arch
-      OFFERING_VARIATION_LABEL: customedge
+      OFFERING_VARIATION1_LABEL: CustomEdge
+      OFFERING_VARIATION2_LABEL: BabySLZ
       RESOURCE_GROUP: default
       WORKLOAD_OFFERING_NAME: custom-apache
       WORKLOAD_VARIATION_LABEL: Standard
@@ -44,7 +45,7 @@ jobs:
         run: |
           ./.github/scripts/installCloudCli.sh
 
-      - name: Upload, validate, scan and publish custom-deployable-arch
+      - name: Upload, validate, scan and publish custom-deployable-arch - CustomEdge variation
         env: 
           IBMCLOUD_API_KEY: ${{ secrets.IBMCLOUD_API_KEY }}
           VERSION: ${{ github.event.release.tag_name }}
@@ -53,7 +54,7 @@ jobs:
           echo "--------------------------------------------------------------------"
           echo "onboard version, validate, scan, publish"
           echo "--------------------------------------------------------------------"
-          ./.github/scripts/onboard_validate_publish.sh "$CATALOG_NAME" "$OFFERING_NAME" "$VERSION" "$OFFERING_VARIATION_LABEL" "$FULLSTACK_INSTALL_TYPE" "$RESOURCE_GROUP" "$FORMAT_KIND_TERRAFORM" "SCAN"
+          ./.github/scripts/onboard_validate_publish.sh "$CATALOG_NAME" "$OFFERING_NAME" "$VERSION" "$OFFERING_VARIATION1_LABEL" "$FULLSTACK_INSTALL_TYPE" "$RESOURCE_GROUP" "$FORMAT_KIND_TERRAFORM" "SCAN"
 
       - name: Upload, validate, scan and publish custom-apache extension
         env: 
@@ -70,9 +71,30 @@ jobs:
           echo "--------------------------------------------------------------------"
           echo "cleanup validation resources"
           echo "--------------------------------------------------------------------"
-          ./.github/scripts/cleanup.sh "$CATALOG_NAME" "$WORKLOAD_OFFERING_NAME" "$VERSION" "$FORMAT_KIND_TERRAFORM"
+          ./.github/scripts/cleanup.sh "$CATALOG_NAME" "$WORKLOAD_OFFERING_NAME" "$VERSION" "$WORKLOAD_VARIATION_LABEL" "$EXTENSION_INSTALL_TYPE" "$FORMAT_KIND_TERRAFORM"
 
-          ./.github/scripts/cleanup.sh "$CATALOG_NAME" "$OFFERING_NAME" "$VERSION" "$FORMAT_KIND_TERRAFORM"
+          ./.github/scripts/cleanup.sh "$CATALOG_NAME" "$OFFERING_NAME" "$VERSION" "$OFFERING_VARIATION1_LABEL" "$FULLSTACK_INSTALL_TYPE" "$FORMAT_KIND_TERRAFORM"
+
+      - name: Upload, validate, scan and publish custom-deployable-arch - BabySLZ variation
+        env: 
+          IBMCLOUD_API_KEY: ${{ secrets.IBMCLOUD_API_KEY }}
+          VERSION: ${{ github.event.release.tag_name }}
+        run: |
+
+          echo "--------------------------------------------------------------------"
+          echo "onboard version, validate, scan, publish"
+          echo "--------------------------------------------------------------------"
+          ./.github/scripts/onboard_validate_publish.sh "$CATALOG_NAME" "$OFFERING_NAME" "$VERSION" "$OFFERING_VARIATION2_LABEL" "$FULLSTACK_INSTALL_TYPE" "$RESOURCE_GROUP" "$FORMAT_KIND_TERRAFORM" "SCAN"
+
+      - name: Cleanup deployed resources
+        env: 
+          IBMCLOUD_API_KEY: ${{ secrets.IBMCLOUD_API_KEY }}
+          VERSION: ${{ github.event.release.tag_name }}
+        run: |
+          echo "--------------------------------------------------------------------"
+          echo "cleanup validation resources"
+          echo "--------------------------------------------------------------------"
+          ./.github/scripts/cleanup.sh "$CATALOG_NAME" "$OFFERING_NAME" "$VERSION" "$OFFERING_VARIATION2_LABEL" "$FULLSTACK_INSTALL_TYPE" "$FORMAT_KIND_TERRAFORM"     
 
       - name: Upload, validate, scan and publish custom-apache fullstack
         env: 
@@ -92,7 +114,7 @@ jobs:
           echo "--------------------------------------------------------------------"
           echo "cleanup blueprint validation resources"
           echo "--------------------------------------------------------------------"
-          ./.github/scripts/cleanup.sh "$CATALOG_NAME" "$WORKLOAD_OFFERING_NAME" "$VERSION" "$FORMAT_KIND_BLUEPRINT"
+          ./.github/scripts/cleanup.sh "$CATALOG_NAME" "$WORKLOAD_OFFERING_NAME" "$VERSION" "$WORKLOAD_VARIATION_LABEL" "$FULLSTACK_INSTALL_TYPE" "$FORMAT_KIND_BLUEPRINT"
 
       # Now that everything has been onboarded fully, create a 'stable' release which is useful for having a predictable link for docs.
       - name: Create stable release

@@ -8,10 +8,12 @@ function deleteWorkspace() {
     local catalogName="$1"
     local offeringName="$2"
     local version="$3"
+    local variationLabel="$4"
+    local installType="$5"
     local workspaceId
     local deleteStatus
     
-    workspaceId=$(getWorkspaceId "$catalogName" "$offeringName" "$version")
+    workspaceId=$(getWorkspaceId "$catalogName" "$offeringName" "$version" "$variationLabel" "$installType")
 
     deleteStatus=$(getWorkspaceStatus "$workspaceId")
 
@@ -77,6 +79,8 @@ function destroyWorkspaceResources() {
     local catalogName="$1"
     local offeringName="$2"
     local version="$3"
+    local variationLabel="$4"
+    local installType="$5"
     local workspaceId
 
     # refresh token
@@ -84,7 +88,7 @@ function destroyWorkspaceResources() {
     ibmcloud catalog utility netrc
 
     # get the schematics workspace id of the workspace that was used for the validation of this version
-    workspaceId=$(getWorkspaceId "$catalogName" "$offeringName" "$version")
+    workspaceId=$(getWorkspaceId "$catalogName" "$offeringName" "$version" "$variationLabel" "$installType")
 
     echo "workspace id: $workspaceId"
     workspaceStatus=$(getWorkspaceStatus "$workspaceId")
@@ -134,6 +138,8 @@ function destroyBlueprintResources() {
     local catalogName="$1"
     local offeringName="$2"
     local version="$3"
+    local variationLabel="$4"
+    local installType="$5"
     local blueprintId
 
     # refresh token
@@ -141,7 +147,7 @@ function destroyBlueprintResources() {
     ibmcloud catalog utility netrc
 
     # get the schematics workspace id of the workspace that was used for the validation of this version
-    blueprintId=$(getBlueprintId "$catalogName" "$offeringName" "$version")
+    blueprintId=$(getBlueprintId "$catalogName" "$offeringName" "$version" "$variationLabel" "$installType")
 
     echo "destroying blueprint resources for blueprint id: $blueprintId"
     blueprintStatus=$(getBlueprintStatus "$blueprintId")
@@ -173,12 +179,14 @@ function deleteBlueprint() {
     local catalogName="$1"
     local offeringName="$2"
     local version="$3"
+    local variationLabel="$4"
+    local installType="$5"
     local blueprintId
 
     ibmcloud iam oauth-tokens
 
     # get the schematics workspace id of the workspace that was used for the validation of this version
-    blueprintId=$(getBlueprintId "$catalogName" "$offeringName" "$version")
+    blueprintId=$(getBlueprintId "$catalogName" "$offeringName" "$version" "$variationLabel" "$installType")
 
     echo "deleting blueprint and workspaces for blueprint id: $blueprintId"
     blueprintStatus=$(getBlueprintStatus "$blueprintId")
@@ -215,11 +223,13 @@ function destroyResources() {
     local catalogName="$1"
     local offeringName="$2"
     local version="$3"
-    local formatKind="$4"
+    local variationLabel="$4"
+    local installType="$5"
+    local formatKind="$6"
 
     if [ "$formatKind" = "terraform" ]
-        then destroyWorkspaceResources "$catalogName" "$offeringName" "$version"
-        else destroyBlueprintResources "$catalogName" "$offeringName" "$version" 
+        then destroyWorkspaceResources "$catalogName" "$offeringName" "$version" "$variationLabel" "$installType"
+        else destroyBlueprintResources "$catalogName" "$offeringName" "$version" "$variationLabel" "$installType"
     fi
 }
 
@@ -229,11 +239,13 @@ function deleteWorkspaces() {
     local catalogName="$1"
     local offeringName="$2"
     local version="$3"
-    local formatKind="$4"
+    local variationLabel="$4"
+    local installType="$5"
+    local formatKind="$6"
 
     if [ "$formatKind" = "terraform" ]
-        then deleteWorkspace "$catalogName" "$offeringName" "$version" 
-        else deleteBlueprint "$catalogName" "$offeringName" "$version"
+        then deleteWorkspace "$catalogName" "$offeringName" "$version" "$variationLabel" "$installType"
+        else deleteBlueprint "$catalogName" "$offeringName" "$version" "$variationLabel" "$installType"
     fi    
 }
 
@@ -241,17 +253,19 @@ function deleteWorkspaces() {
 #  main
 # ------------------------------------------------------------------------------------
 
-CATALOG_NAME=$1
-OFFERING_NAME=$2
-VERSION=$3
-FORMAT_KIND=$4
+CATALOG_NAME="$1"
+OFFERING_NAME="$2"
+VERSION="$3"
+VARIATION_LABEL="$4"
+INSTALL_TYPE="$5"
+FORMAT_KIND="$6"
 
 # ensure we are still logged in
 ibmcloud login --apikey "$IBMCLOUD_API_KEY" --no-region
 
-echo "cleaning up workspaces, resources for: $OFFERING_NAME, version $VERSION, format kind $FORMAT_KIND"
+echo "cleaning up workspaces, resources for: $OFFERING_NAME, version $VERSION, install type $INSTALL_TYPE format kind $FORMAT_KIND"
 
 source ./.github/scripts/common-functions.sh
 
-destroyResources "$CATALOG_NAME" "$OFFERING_NAME" "$VERSION" "$FORMAT_KIND"
-deleteWorkspaces "$CATALOG_NAME" "$OFFERING_NAME" "$VERSION" "$FORMAT_KIND"
+destroyResources "$CATALOG_NAME" "$OFFERING_NAME" "$VERSION" "$VARIATION_LABEL" "$INSTALL_TYPE" "$FORMAT_KIND"
+deleteWorkspaces "$CATALOG_NAME" "$OFFERING_NAME" "$VERSION" "$VARIATION_LABEL" "$INSTALL_TYPE" "$FORMAT_KIND"

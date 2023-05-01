@@ -7,8 +7,10 @@ function getWorkspaceId() {
     local catalogName="$1"
     local offeringName="$2"
     local version="$3"
+    local variationLabel="$4"
+    local installType="$5"
 
-    ibmcloud catalog offering get -c "$catalogName" -o "$offeringName" --output json | jq -r --arg version "$version" '.kinds[] | select(.format_kind=="terraform").versions[] | select(.version==$version).validation.target.workspace_id'
+    ibmcloud catalog offering get -c "$catalogName" -o "$offeringName" --output json | jq -r --arg version "$version" --arg variationLabel "$variationLabel" --arg installType "$installType" '.kinds[] | select(.format_kind=="terraform").versions[] | select(.version==$version) | select(.solution_info.install_type ==$installType) | select(.flavor.label==$variationLabel)  |.validation.target.workspace_id'
 }
 
 #
@@ -36,8 +38,10 @@ function getBlueprintId() {
     local catalogName="$1"
     local offeringName="$2"
     local version="$3"
+    local variationLabel="$4"
+    local installType="$5"
 
-    ibmcloud catalog offering get -c "$catalogName" -o "$offeringName" --output json | jq -r --arg version "$version" '.kinds[] | select(.format_kind=="blueprint").versions[] | select(.version==$version).validation.target.blueprint_id'
+    ibmcloud catalog offering get -c "$catalogName" -o "$offeringName" --output json | jq -r --arg version "$version" --arg variationLabel "$variationLabel" --arg installType "$installType" '.kinds[] | select(.format_kind=="blueprint").versions[] | select(.version==$version) | select(.solution_info.install_type ==$installType) | select(.flavor.label==$variationLabel) | .validation.target.blueprint_id'
 }
 
 #
