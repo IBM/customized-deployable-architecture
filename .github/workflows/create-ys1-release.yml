@@ -1,0 +1,56 @@
+# This workflow is to automate the creation of a release that is suitable for test purposes 
+# in the ys1 test environment.
+
+name: CI
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on a release create from the main branch
+  release:
+    types:
+      - published
+
+  # Allows running this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    # Skip running this workflow if the release's tag contains "test" or "stable" to avoid running when not desired.
+    if: "!contains(github.event.release.tag_name, 'test') && !contains(github.event.release.tag_name, 'stable')"
+
+    steps:
+      # Checks-out the repository under $GITHUB_WORKSPACE, so the workflow can access it
+      - uses: actions/checkout@v3
+
+      # Make changes needed for enabling on ys1
+      - name: Run script
+        run: |
+          ./.github/scripts/ys1/makeys1.sh
+
+      # Tar up the repo now that changes have been made
+      - name: Create release asset
+        run: |
+          echo Creating tarball file
+          pwd
+          ls 
+          tar -czvf ../ys1-catalog.tar.gz --exclude "./.git*" --exclude "\*.tar.gz" .
+          mv ../ys1-catalog.tar.gz .
+          pwd
+          ls 
+
+      # Create a "-test" release and upload the tar file as an asset
+      - name: Create test release
+        id: create_release
+        uses: ncipollo/release-action@v1.12.0
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          tag: ${{ github.ref }}-test
+          name: ${{ github.event.release.tag_name }}-test
+          body: |
+            This release is for testing purposes on ys1.  Use the ys1-catalog.tar.gz assest for onboarding.
+          draft: false
+          prerelease: true
+          artifacts: ys1-catalog.tar.gz
