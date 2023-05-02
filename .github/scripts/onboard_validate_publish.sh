@@ -32,6 +32,8 @@ function generateValidationValues() {
     # defined on the offering.  Manually import one version, a one time step, to initially setup deployment variables and set other metadata using the UI.
     jq -n --arg IBMCLOUD_API_KEY "$IBMCLOUD_API_KEY" --arg PREFIX "$PREFIX" --arg SSH_KEY "$SSH_KEY" --arg SSH_PRIVATE_KEY "$SSH_PRIVATE_KEY" --arg PREREQ_WORKSPACE_ID "$PREREQ_WORKSPACE_ID" '{ "ibmcloud_api_key": $IBMCLOUD_API_KEY, "prefix": $PREFIX, "ssh_key": $SSH_KEY, "ssh_private_key": $SSH_PRIVATE_KEY, "prerequisite_workspace_id": $PREREQ_WORKSPACE_ID }' > "$validationValues"
 
+    echo "Generated validation values are:"
+    jq < "$validationValues"
 }
 
 # 
@@ -134,7 +136,7 @@ function validateVersion() {
     local timeOut=10800         # 3 hours - sufficiently large.  will not run this long.    
 
     # generate values for the deployment variables defined for this version of the offering
-    generateValidationValues "$validationValues" "$catalogName" "$offeringName" "$version" "$formatKind"
+    generateValidationValues "$validationValues" "$catalogName" "$offeringName" "$version" "$variationLabel" "$installType" "$formatKind"
 
     # determine the catalog's version locator string for this version
     versionLocator=$(getVersionLocator "$catalogName" "$offeringName" "$version" "$variationLabel" "$installType" "$formatKind")
@@ -153,8 +155,8 @@ function validateVersion() {
     # if the validate failed, try to run an apply operation again since clouds can have intermitant issues.
     if [[ ret -ne 0 ]]; then
         if [ "$formatKind" = "terraform" ]
-            then retryValidateWorkspace "$catalogName" "$offeringName" "$version"
-            else retryValidateBlueprint "$catalogName" "$offeringName" "$version"
+            then retryValidateWorkspace "$catalogName" "$offeringName" "$version" "$variationLabel" "$installType"
+            else retryValidateBlueprint "$catalogName" "$offeringName" "$version" "$variationLabel" "$installType"
         fi
         # determine if the offering version validated after the retry
         validationStatus=$(ibmcloud catalog offering version validate-status -vl "$versionLocator" --output json | jq -r '.state')
