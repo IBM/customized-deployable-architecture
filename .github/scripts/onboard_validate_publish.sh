@@ -31,9 +31,7 @@ function generateValidationValues() {
     # format offering validation values into json format.  the json keys used here match the names of the defined deployment variables that are already 
     # defined on the offering.  Manually import one version, a one time step, to initially setup deployment variables and set other metadata using the UI.
     jq -n --arg IBMCLOUD_API_KEY "$IBMCLOUD_API_KEY" --arg PREFIX "$PREFIX" --arg SSH_KEY "$SSH_KEY" --arg SSH_PRIVATE_KEY "$SSH_PRIVATE_KEY" --arg PREREQ_WORKSPACE_ID "$PREREQ_WORKSPACE_ID" '{ "ibmcloud_api_key": $IBMCLOUD_API_KEY, "prefix": $PREFIX, "ssh_key": $SSH_KEY, "ssh_private_key": $SSH_PRIVATE_KEY, "prerequisite_workspace_id": $PREREQ_WORKSPACE_ID }' > "$validationValues"
-
-    echo "Generated validation values are:"
-    jq < "$validationValues"
+    
 }
 
 # 
