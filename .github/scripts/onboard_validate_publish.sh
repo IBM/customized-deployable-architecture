@@ -7,7 +7,9 @@ function generateValidationValues() {
     local catalogName=$2
     local offeringName=$3
     local version=$4
-    local formatKind=$5
+    local variationLabel=$5
+    local installType=$6
+    local formatKind=$7
 
     # generate an ssh key that can be used as a validation value. overwrite file if already there.
     # we only need to do this once.
@@ -24,7 +26,7 @@ function generateValidationValues() {
     SUFFIX="$(date +%m%d-%H-%M)"
     PREFIX="val-${SUFFIX}"
 
-    PREREQ_WORKSPACE_ID=$(getPrereqWorkspaceId "$catalogName" "$offeringName" "$version" "$formatKind")
+    PREREQ_WORKSPACE_ID=$(getPrereqWorkspaceId "$catalogName" "$offeringName" "$version" "$variationLabel" "$installType" "$formatKind")
 
     # format offering validation values into json format.  the json keys used here match the names of the defined deployment variables that are already 
     # defined on the offering.  Manually import one version, a one time step, to initially setup deployment variables and set other metadata using the UI.
@@ -40,7 +42,9 @@ function getPrereqWorkspaceId() {
     local catalogName=$1
     local offeringName=$2
     local version=$3
-    local formatKind=$4
+    local variationLabel=$4
+    local installType=$5
+    local formatKind=$6
 
     local hasDependency=false
     local prereqOfferingName=""
@@ -53,10 +57,10 @@ function getPrereqWorkspaceId() {
     # query the offering json and store in a file
     ibmcloud catalog offering get --catalog "$catalogName" --offering "$offeringName" --output json > "$offeringJsonFileName"
     # read the json and see if the "dependencies" key is present within the "solution_info" object.  Value is true or false.
-    hasDependency=$(jq -r --arg version "$version" --arg format_kind "$formatKind" '.kinds[] | select(.format_kind==$format_kind).versions[] | select(.version==$version).solution_info | has("dependencies")' < "$offeringJsonFileName")
+    hasDependency=$(jq -r --arg version "$version" --arg format_kind "$formatKind" --arg variationLabel "${variationLabel}" --arg installType "${installType}" '.kinds[] | select(.format_kind==$format_kind).versions[] | select(.version==$version) | select(.solution_info.install_type == $installType).solution_info | has("dependencies")' < "$offeringJsonFileName")
 
     if [ "$hasDependency" = "true" ]; then
-        prereqOfferingName=$(jq -r --arg version "$version" --arg format_kind "$formatKind" '.kinds[] | select(.format_kind==$format_kind).versions[] | select(.version==$version).solution_info.dependencies[].name' < "$offeringJsonFileName")
+        prereqOfferingName=$(jq -r --arg version "$version" --arg format_kind "$formatKind" --arg variationLabel "${variationLabel}" --arg installType "${installType}" '.kinds[] | select(.format_kind==$format_kind).versions[] | select(.version==$version) | select(.solution_info.install_type == $installType).solution_info.dependencies[].name' < "$offeringJsonFileName")
 
         # query the prerequisite offering json and store in a file
         ibmcloud catalog offering get --catalog "$catalogName" --offering "$prereqOfferingName" --output json > "$prereqJsonFileName"
@@ -101,12 +105,14 @@ function getVersionLocator() {
     local catalogName=$1
     local offeringName=$2
     local version=$3
-    local formatKind=$4
-    local versionLocator
+    local variationLabel=$4
+    local installType=$5
+    local formatKind=$6
+    local versionLocator=""
 
     # get the catalog version locator for an offering version
     ibmcloud catalog offering get --catalog "$catalogName" --offering "$offeringName" --output json > offering.json
-    versionLocator=$(jq -r --arg version "$version" --arg format_kind "$formatKind" '.kinds[] | select(.format_kind==$format_kind).versions[] | select(.version==$version).version_locator' < offering.json)
+    versionLocator=$(jq -r --arg version "${version}" --arg variationLabel "${variationLabel}" --arg installType "${installType}" --arg format_kind "$formatKind" '.kinds[] | select(.format_kind==$format_kind).versions[] | select(.version==$version) | select(.solution_info.install_type == $installType) | select(.flavor.label==$variationLabel).version_locator' < offering.json)
 
     echo "${versionLocator}"
 }
@@ -117,11 +123,13 @@ function validateVersion() {
     local catalogName=$1
     local offeringName=$2
     local version=$3
-    local formatKind=$4
-    local resourceGroup=$5
+    local variationLabel=$4
+    local installType=$5 
+    local formatKind=$6
+    local resourceGroup=$7
 
-    local versionLocator
-    local validationStatus
+    local versionLocator=""
+    local validationStatus=""
     local validationValues="validation-values.json"
     local timeOut=10800         # 3 hours - sufficiently large.  will not run this long.    
 
@@ -129,7 +137,7 @@ function validateVersion() {
     generateValidationValues "$validationValues" "$catalogName" "$offeringName" "$version" "$formatKind"
 
     # determine the catalog's version locator string for this version
-    versionLocator=$(getVersionLocator "$catalogName" "$offeringName" "$version" "$formatKind")
+    versionLocator=$(getVersionLocator "$catalogName" "$offeringName" "$version" "$variationLabel" "$installType" "$formatKind")
     echo "the version locator is $versionLocator"
 
     # need to target a resource group - deployed resources will be in this resource group
@@ -163,11 +171,13 @@ function retryValidateWorkspace() {
     local catalogName=$1
     local offeringName=$2
     local version=$3
+    local variationLabel=$4
+    local installType=$5
 
-    local validateStatus
-    local workspaceId
+    local validateStatus=""
+    local workspaceId=""
 
-    workspaceId=$(getWorkspaceId "$catalogName" "$offeringName" "$version")
+    workspaceId=$(getWorkspaceId "$catalogName" "$offeringName" "$version" "$variationLabel" "$installType")
     echo "retrying apply for workspace ${workspaceId}"
     ibmcloud schematics apply --id "${workspaceId}" --force 
 
@@ -190,11 +200,13 @@ function retryValidateBlueprint() {
     local catalogName=$1
     local offeringName=$2
     local version=$3
+    local variationLabel=$4
+    local installType=$5
 
-    local validateStatus
-    local blueprintId
+    local validateStatus=""
+    local blueprintId=""
 
-    blueprintId=$(getBlueprintId "$catalogName" "$offeringName" "$version")
+    blueprintId=$(getBlueprintId "$catalogName" "$offeringName" "$version" "$variationLabel" "$installType")
     echo "retrying apply for blueprint ${blueprintId}"
     ibmcloud schematics blueprint apply -i "${blueprintId}"
 
@@ -217,12 +229,14 @@ function scanVersion() {
     local catalogName=$1
     local offeringName=$2
     local version=$3
-    local formatKind=$4
-    local scanFlag=$5
+    local variationLabel=$4
+    local installType=$5
+    local formatKind=$6
+    local scanFlag=$7
 
-    local versionLocator
+    local versionLocator=""
 
-    versionLocator=$(getVersionLocator "$catalogName" "$offeringName" "$version" "$formatKind")
+    versionLocator=$(getVersionLocator "$catalogName" "$offeringName" "$version" "$variationLabel" "$installType" "$formatKind")
 
     if [ "$scanFlag" = SCAN ]; then
         ibmcloud catalog offering version cra --vl "${versionLocator}"
@@ -237,11 +251,13 @@ function publishVersion() {
     local catalogName=$1
     local offeringName=$2
     local version=$3
-    local formatKind=$4
+    local variationLabel=$4
+    local installType=$5 
+    local formatKind=$6
 
-    local versionLocator
+    local versionLocator=""
 
-    versionLocator=$(getVersionLocator "$catalogName" "$offeringName" "$version" "$formatKind")
+    versionLocator=$(getVersionLocator "$catalogName" "$offeringName" "$version" "$variationLabel" "$installType" "$formatKind")
     ibmcloud catalog offering ready --vl "${versionLocator}"
 }
 
@@ -271,6 +287,6 @@ source ./.github/scripts/common-functions.sh
 
 # steps
 importVersionToCatalog "$CATALOG_NAME" "$OFFERING_NAME" "$VERSION" "$VARIATION" "$FORMAT_KIND" "$INSTALL_TYPE"
-validateVersion "$CATALOG_NAME" "$OFFERING_NAME" "$VERSION" "$FORMAT_KIND" "$RESOURCE_GROUP"
-#scanVersion "$CATALOG_NAME" "$OFFERING_NAME" "$VERSION" "$FORMAT_KIND" "$CRA_SCAN"
-publishVersion "$CATALOG_NAME" "$OFFERING_NAME" "$VERSION" "$FORMAT_KIND"
+validateVersion "$CATALOG_NAME" "$OFFERING_NAME" "$VERSION" "$VARIATION" "$INSTALL_TYPE" "$FORMAT_KIND" "$RESOURCE_GROUP"
+#scanVersion "$CATALOG_NAME" "$OFFERING_NAME" "$VERSION" "$VARIATION" "$INSTALL_TYPE" "$FORMAT_KIND" "$CRA_SCAN"
+publishVersion "$CATALOG_NAME" "$OFFERING_NAME" "$VERSION" "$VARIATION" "$INSTALL_TYPE" "$FORMAT_KIND"
