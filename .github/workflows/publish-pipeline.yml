@@ -115,17 +115,3 @@ jobs:
           echo "cleanup blueprint validation resources"
           echo "--------------------------------------------------------------------"
           ./.github/scripts/cleanup.sh "$CATALOG_NAME" "$WORKLOAD_OFFERING_NAME" "$VERSION" "$WORKLOAD_VARIATION_LABEL" "$FULLSTACK_INSTALL_TYPE" "$FORMAT_KIND_BLUEPRINT"
-
-      # Now that everything has been onboarded fully, create a 'stable' release which is useful for having a predictable link for docs.
-      - name: Create stable release
-        id: create_release
-        uses: softprops/action-gh-release@v1
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
-        with:
-          tag_name: ${{ github.ref }}-stable
-          name: ${{ github.event.release.tag_name }}-stable
-          body: |
-            This release is for linking from documentation as it is tagged with "stable".  It is not automatically onboarded.
-          draft: false
-          prerelease: true  
