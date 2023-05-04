@@ -5,6 +5,8 @@ In addition, this repo provides:
    * A [module](../custom-apache/workload-only/ansible/main.tf) that extends the custom infrastrucutre with a VSI running an apache server
    * A [blueprint](../custom-apache/fullstack/full.yaml) that will provision both the custom infrastructure and the apache **Module** as a single blueprint
 
+For more information about customizing, see [Customizing an IBM Cloud deployable architecture](
+https://cloud.ibm.com/docs/secure-enterprise?topic=secure-enterprise-customize-from-catalog).
 
 ![Custom topology](/images/custom-slz.svg)
 
