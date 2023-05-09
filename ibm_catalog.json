@@ -31,159 +31,10 @@
             "support_details": "This is a demonstration and no official support is given.",
             "flavors": [
                 {
-                    "label": "CustomEdge",
-                    "name": "customedge",
-                    "install_type": "fullstack",
-                    "working_directory": "solutions/custom-deployable-arch/customedge",
-                    "usage_template": "module \"custom_arch\" {\n    source           = \"https://cm.globalcatalog.cloud.ibm.com/api/v1-beta/offering/source//${{workingDirectory}}?archive=tgz&catalogID=${{catalogID}}&flavor=${{flavor}}&kind=${{kind}}&name=${{name}}&version=${{version}}\"\n    prefix           = var.prefix\n    ssh_key          = var.ssh_key\n    ibmcloud_api_key = var.ibmcloud_api_key\n}\n\n",
-                    "compliance": {
-                        "authority": "scc-v3",
-                        "controls": [
-                            {
-                                "profile": {
-                                    "name": "IBM Cloud for Financial Services",
-                                    "version": "1.2.0"
-                                },
-                                "names": [
-                                    "AC-2(a)",
-                                    "AC-6(0)",
-                                    "CM-2(0)",
-                                    "SC-12(0)",
-                                    "SC-28(0)"
-                                ]
-                            }
-                        ]
-                    },
-                    "configuration": [
-                        {
-                            "key": "ssh_key",
-                            "required": true
-                        },
-                        {
-                            "key": "ibmcloud_api_key",
-                            "required": true,
-                            "type": "password"
-                        },
-                        {
-                            "key": "prefix",
-                            "required": true,
-                            "type": "string"
-                        }
-                    ],
-                    "outputs": [
-                        {
-                            "description": "ID of the IBM Cloud Schematics workspace. Returns null if not ran in Schematics",
-                            "key": "schematics_workspace_id"
-                        },
-                        {
-                            "description": "prefix used in this infrastructure",
-                            "key": "prefix"
-                        }
-                    ],
-                    "iam_permissions": [
-                        {
-                            "role_crns": [
-                                "crn:v1:bluemix:public:iam::::serviceRole:Manager"
-                            ],
-                            "service_name": "appid"
-                        },
-                        {
-                            "role_crns": [
-                                "crn:v1:bluemix:public:iam::::serviceRole:Manager"
-                            ],
-                            "service_name": "cloud-object-storage"
-                        },
-                        {
-                            "role_crns": [
-                                "crn:v1:bluemix:public:iam::::serviceRole:Manager"
-                            ],
-                            "service_name": "hs-crypto"
-                        },
-                        {
-                            "role_crns": [
-                                "crn:v1:bluemix:public:iam::::role:Administrator"
-                            ],
-                            "service_name": "iam-identity"
-                        },
-                        {
-                            "role_crns": [
-                                "crn:v1:bluemix:public:iam::::serviceRole:Manager"
-                            ],
-                            "service_name": "kms"
-                        },
-                        {
-                            "role_crns": [
-                                "crn:v1:bluemix:public:iam::::serviceRole:Manager",
-                                "crn:v1:bluemix:public:iam::::role:Administrator"
-                            ],
-                            "service_name": "is.vpc"
-                        }
-                    ],
-                    "architecture": {
-                        "descriptions": "",
-                        "features": [
-                            {
-                                "title": "Customized",
-                                "description": "Yes"
-                            },
-                            {
-                                "title": "Separate VPC for management",
-                                "description": "Yes"
-                            },
-                            {
-                                "title": "Separate VPC for workloads",
-                                "description": "Yes"
-                            },
-                            {
-                                "title": "Virtual Server Instances for every subnet",
-                                "description": "Yes"
-                            },
-                            {
-                                "title": "Increases security with Key Management",
-                                "description": "Yes"
-                            },
-                            {
-                                "title": "Reduces failure events by using multizone regions",
-                                "description": "No"
-                            },
-                            {
-                                "title": "Collects and stores Internet Protocol (IP) traffic information with Activity Tracker and Flow Logs",
-                                "description": "No"
-                            },
-                            {
-                                "title": "Securely connects to multiple networks with a site-to-site virtual private network",
-                                "description": "No"
-                            },
-                            {
-                                "title": "Simplifies risk management and demonstrates regulatory compliance with Financial Services",
-                                "description": "No"
-                            },
-                            {
-                                "title": "Uses an edge VPC for secure access through the public internet",
-                                "description": "No"
-                            },
-                            {
-                                "title": "Uses Floating IP address for access through the public internet",
-                                "description": "Yes"
-                            }
-                        ],
-                        "diagrams": [
-                            {
-                                "diagram": {
-                                    "caption": "Custom Edge variation",
-                                    "url": "https://raw.githubusercontent.com/IBM/customized-deployable-architecture/main/images/custom-slz.svg",
-                                    "metadata": []
-                                },
-                                "description": "Custom Edge variation of VSI on VPC landing zone requires at least 2 CPUs and 4 GB of memory.\n\nVSI on VPC landing zone is implemented with virtual servers. It utilizes two separate Virtual Private Clouds (VPC), a Management VPC and a Workload VPC, to manage the environment and the deployed workload. Each VPC is a multi-zoned, multi-subnet implementation that keeps your workloads secure.\n\nVirtual Private Endpoints connect the VPCs to each other and to IBM Cloud services, including Key Protect, IAM, Container Registry, Object Storage, and any additional services. IBM Cloud services are configured for storage and key management.\n\nIBM Cloud Flow Logs for VPC enable the collection, storage, and presentation of information about the Internet Protocol (IP) traffic that is going to and from network interfaces within your VPC. In addition, Activity Tracker logs events from enabled services. IBM Cloud Flow Logs for VPC and Activity Tracker are included in this configuration. Additional security services can be added such as Hyper Connect Crypto Service."
-                            }
-                        ]
-                    }
-                },
-                {
                     "label": "BabySLZ",
                     "name": "babyslz",
                     "install_type": "fullstack",
-                    "working_directory": "solutions/custom-deployable-arch/babyslz",
+                    "working_directory": "solutions/custom-slz",
                     "usage_template": "module \"custom_arch\" {\n    source           = \"https://cm.globalcatalog.cloud.ibm.com/api/v1-beta/offering/source//${{workingDirectory}}?archive=tgz&catalogID=${{catalogID}}&flavor=${{flavor}}&kind=${{kind}}&name=${{name}}&version=${{version}}\"\n    prefix           = var.prefix\n    ssh_key          = var.ssh_key\n    ibmcloud_api_key = var.ibmcloud_api_key\n}\n\n",
                     "compliance": {
                         "authority": "scc-v3",
@@ -317,7 +168,7 @@
                     "label": "Standard",
                     "name": "standard",
                     "install_type": "extension",
-                    "working_directory": "solutions/custom-apache/workload-only/ansible",
+                    "working_directory": "solutions/apache-workload/extension",
                     "usage_template": "module \"custom_apache\" {\n source                    = \"https://cm.globalcatalog.cloud.ibm.com/api/v1-beta/offering/source//${{workingDirectory}}?archive=tgz&catalogID=${{catalogID}}&flavor=${{flavor}}&kind=${{kind}}&name=${{name}}&version=${{version}}\"\n  ibmcloud_api_key          = var.ibmcloud_api_key\n  prerequisite_workspace_id = var.prerequisite_workspace_id\n  ssh_private_key          =var.ssh_private_key\n}\n\n",
                     "compliance": {
                         "authority": "scc-v3",
@@ -497,7 +348,7 @@
                     "label": "Standard",
                     "name": "standard",
                     "install_type": "fullstack",
-                    "working_directory": "solutions/custom-apache/fullstack",
+                    "working_directory": "solutions/apache-workload/blueprint",
                     "compliance": {
                         "authority": "scc-v3",
                         "controls": [
