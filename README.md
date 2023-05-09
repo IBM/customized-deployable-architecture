@@ -8,7 +8,7 @@ In addition, this repo provides:
 For more information about customizing, see [Customizing an IBM Cloud deployable architecture](
 https://cloud.ibm.com/docs/secure-enterprise?topic=secure-enterprise-customize-from-catalog).
 
-![Custom topology](/images/custom-slz.svg)
+![Custom topology](/images/baby-slz.svg)
 
 
 ## This example shows how:  
