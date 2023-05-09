@@ -2,8 +2,8 @@
 
 This repo provides an example customizing the public IBM [VSI on VPC landing zone](https://cloud.ibm.com/catalog/architecture/deploy-arch-ibm-slz-vsi-ef663980-4c71-4fac-af4f-4a510a9bcf68-global) deployable architecture by [enforcing a set of values](https://github.com/IBM/customized-deployable-architecture/blob/d108f371d346129373a456164b54172616281165/solutions/custom-slz/main.tf#LL10C4-L10C22) and providing a [json override](https://github.com/IBM/customized-deployable-architecture/blob/main/solutions/custom-slz/override.json) file for modifying the deployment architecture pattern with out the need to modify the actual code.  
 In addition, this repo provides: 
-   * A [module](../apache-workload/extension/main.tf) that extends the custom infrastrucutre with a VSI running an apache server
-   * A [blueprint](../apache-workload/blueprint/full.yaml) that will provision both the custom infrastructure and the apache **Module** as a single blueprint.  This is BETA.
+   * A [module](./solutions/apache-workload/extension/main.tf) that extends the custom infrastrucutre with a VSI running an apache server
+   * A [blueprint](./solutions/apache-workload/blueprint/full.yaml) that will provision both the custom infrastructure and the apache **Module** as a single blueprint.  This is BETA.
 
 For more information about customizing, see [Customizing an IBM Cloud deployable architecture](
 https://cloud.ibm.com/docs/secure-enterprise?topic=secure-enterprise-customize-from-catalog).
