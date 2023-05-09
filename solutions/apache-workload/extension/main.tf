@@ -2,23 +2,30 @@ locals {
 
   vpc_type = "workload"
 
-  location = regex("^[a-z/-]+", var.prerequisite_workspace_id)
+  # Determine where the workspace is for the prerequisite deployment.  The location is the first part of the
+  # pre-requisite workspace's id string.  The workspace id is not provided when running as a full stack so check for a null value.
+  location = var.prerequisite_workspace_id != "" ? regex("^[a-z/-]+", var.prerequisite_workspace_id ) : ""
 }
 
 data "ibm_schematics_workspace" "schematics_workspace" {
+  # only query the resource if a workspace id was given (extension)
+  count  = var.prerequisite_workspace_id == "" ? 0 : 1
   workspace_id = var.prerequisite_workspace_id
   location     = local.location
 }
 
 data "ibm_schematics_output" "schematics_output" {
+  # only query the resource if a workspace id was given (extension)
+  count  = var.prerequisite_workspace_id == "" ? 0 : 1
   workspace_id = var.prerequisite_workspace_id
   location     = local.location
-  template_id  = data.ibm_schematics_workspace.schematics_workspace.runtime_data[0].id
+  template_id  = data.ibm_schematics_workspace.schematics_workspace[0].runtime_data[0].id
 }
 
 locals {
-  slz_output = jsondecode(data.ibm_schematics_output.schematics_output.output_json)
-  prefix = local.slz_output[0].prefix.value
+  slz_output = var.prerequisite_workspace_id != "" ? jsondecode(data.ibm_schematics_output.schematics_output[0].output_json) : null
+  # prefix will either come from the prerequisite's workspace (extension) or it will come from a variable (fullstack).
+  prefix = var.prerequisite_workspace_id != "" ? local.slz_output[0].prefix.value : var.prefix
   subnet = join("-", ["${local.prefix}", local.vpc_type, "vsi-zone-1"])
 }
 
