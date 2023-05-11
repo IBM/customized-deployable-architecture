@@ -43,3 +43,39 @@ variable "ssh_private_key" {
   type        = string
   sensitive   = true
 }
+
+variable "vpc_id" {
+  description = "The id of the VPC where the virtual server is to be created."
+  type = string
+  default = null
+}
+
+variable "subnet_id" {
+  description = "The id of the subnet within the VPC where the virtual server is to be created."
+  type = string
+  default = null
+}
+
+variable "resource_group_id" {
+  description = "The id of the resource group where the virtual server is to be created."
+  type = string
+  default = null
+}
+
+variable "ssh_key_id" {
+  description = "The id of the public ssh key that pairs with the private ssh key deployed with the jump box."
+  type = string
+  default = null
+}
+
+variable "fp_vsi_floating_ip_address" {
+  description = "The floating point IP address of the jump box."
+  type = string
+  default = null
+}
+
+# variable "fp_vsi_ipv4_address" {
+#   description = "The IP address of the jump box on the internal network."
+#   type = string
+#   default = null
+# }
