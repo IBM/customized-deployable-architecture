@@ -57,7 +57,7 @@ locals {
   fp_vsi_floating_ip_address = var.fp_vsi_floating_ip_address != "" ? var.fp_vsi_floating_ip_address : data.ibm_is_floating_ip.jump-box-fip[0].address
 }
 
-data "ibm_is_subnet" "bySubnetid" {
+data "ibm_is_subnet" "by-subnet-id" {
   identifier = local.subnet_id
 }
 
@@ -68,7 +68,7 @@ module "slz_vsi" {
   create_security_group      = true
   security_group             = var.appSecurityRules
   tags                       = []
-  subnets                    = [{"name": local.subnet_name, "id": local.subnet_id, "zone":data.ibm_is_subnet.bySubnetid.zone, "cidr": data.ibm_is_subnet.bySubnetid.ipv4_cidr_block}]
+  subnets                    = [{"name": local.subnet_name, "id": local.subnet_id, "zone":data.ibm_is_subnet.by-subnet-id.zone, "cidr": data.ibm_is_subnet.by-subnet-id.ipv4_cidr_block}]
   vpc_id                     = local.vpc_id
   prefix                     = join("-", [local.prefix, "apache-webserver"])
   machine_type               = "cx2-2x4"
