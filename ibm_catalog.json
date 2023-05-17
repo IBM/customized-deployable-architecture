@@ -1,8 +1,8 @@
 {
     "products": [
         {
-            "name": "custom-deployable-arch",
-            "label": "custom-deployable-arch",
+            "name": "Test SLZ",
+            "label": "deploy-arch-ibm-gm-test-slz",
             "product_kind": "solution",
             "tags": ["network", "network_vpc"],
             "keywords": ["custom", "vpc", "secure", "baby"],
