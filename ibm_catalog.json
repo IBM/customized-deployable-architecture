@@ -138,6 +138,115 @@
                             }
                         ]
                     }
+                },
+                {
+                    "label": "Second Baby SLZ",
+                    "name": "secondbabyslz",
+                    "install_type": "fullstack",
+                    "working_directory": "solutions/custom-slz",
+                    "usage_template": "module \"custom_arch\" {\n    source           = \"https://cm.globalcatalog.cloud.ibm.com/api/v1-beta/offering/source//${{workingDirectory}}?archive=tgz&catalogID=${{catalogID}}&flavor=${{flavor}}&kind=${{kind}}&name=${{name}}&version=${{version}}\"\n    prefix           = var.prefix\n    ssh_key          = var.ssh_key\n    ibmcloud_api_key = var.ibmcloud_api_key\n}\n\n",
+                    "compliance": {
+                        "authority": "scc-v3",
+                        "controls": [
+                            {
+                                "profile": {
+                                    "name": "IBM Cloud for Financial Services",
+                                    "version": "1.2.0"
+                                },
+                                "names": [
+                                    "AC-2(a)",
+                                    "AC-6(0)",
+                                    "CM-2(0)",
+                                    "SC-12(0)",
+                                    "SC-28(0)"
+                                ]
+                            }
+                        ]
+                    },
+                    "configuration": [
+                        {
+                            "key": "ssh_key",
+                            "required": true
+                        },
+                        {
+                            "key": "ibmcloud_api_key",
+                            "required": true,
+                            "type": "password"
+                        },
+                        {
+                            "key": "prefix",
+                            "required": true,
+                            "type": "string"
+                        }
+                    ],
+                    "outputs": [
+                        {
+                            "description": "ID of the IBM Cloud Schematics workspace. Returns null if not ran in Schematics",
+                            "key": "schematics_workspace_id"
+                        },
+                        {
+                            "description": "prefix used in this infrastructure",
+                            "key": "prefix"
+                        }
+                    ],
+                    "iam_permissions": [
+                        {
+                            "role_crns": [
+                                "crn:v1:bluemix:public:iam::::serviceRole:Manager"
+                            ],
+                            "service_name": "appid"
+                        },
+                        {
+                            "role_crns": [
+                                "crn:v1:bluemix:public:iam::::role:Administrator"
+                            ],
+                            "service_name": "iam-identity"
+                        },
+                        {
+                            "role_crns": [
+                                "crn:v1:bluemix:public:iam::::serviceRole:Manager"
+                            ],
+                            "service_name": "kms"
+                        },
+                        {
+                            "role_crns": [
+                                "crn:v1:bluemix:public:iam::::serviceRole:Manager",
+                                "crn:v1:bluemix:public:iam::::role:Administrator"
+                            ],
+                            "service_name": "is.vpc"
+                        }
+                    ],
+                    "architecture": {
+                        "descriptions": "",
+                        "features": [
+                            {
+                                "title": "Customized",
+                                "description": "Yes"
+                            },
+                            {
+                                "title": "Separate VPC for workloads",
+                                "description": "Yes"
+                            },
+                            {
+                                "title": "Increases security with Key Management",
+                                "description": "Yes"
+                            },
+                            {
+                                "title": "Uses Floating IP address for access through the public internet",
+                                "description": "Yes"
+                            }
+                        ],
+                        "diagrams": [
+                            {
+                                "diagram": {
+                                    "caption": "Baby SLZ variation",
+                                    "url": "https://raw.githubusercontent.com/IBM/customized-deployable-architecture/main/images/baby-slz.svg",
+                                    "metadata": []
+                                },
+                                "description": "Baby SLZ variation is a customization of VSI on VPC landing zone deployable architecture.  It illustrates a very minimal VPC with a single VSI configured with a floating point IP address.\nIt is useful for a quick, inexpensive deployment that may be used for development of extensions as well as enabling learning more about deployable architectures with a simple example."
+                            }
+                        ]
+                    }
                 }
             ]
         },
