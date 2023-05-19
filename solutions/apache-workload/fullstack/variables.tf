@@ -28,7 +28,7 @@ variable "region" {
 }
 
 variable "prerequisite_workspace_id" {
-  description = "IBM Cloud Schematics workspace ID of an existing custom-deployable-arch."
+  description = "IBM Cloud Schematics workspace ID of an existing custom-slz."
   type        = string
   default     = ""
 }
@@ -40,11 +40,11 @@ variable "ssh_private_key" {
 }
 
 variable "ssh_key" {
-  description = "Public SSH Key for VSI creation. Must be a valid SSH key that does not already exist in the deployment region."
+  description = "Public SSH Key for VSI creation.  This key should pair with the ssh_private_key value."
   type        = string
 }
 
 variable "prefix" {
-  description = "A string to use a prefix to the names of deployed resources."
+  description = "A string to use as a prefix to the names of deployed resources."
   type        = string
 }
