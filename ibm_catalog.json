@@ -16,14 +16,7 @@
                         "catalog_id": "33eb1d96-dfb4-4d60-a21a-c376ed0c89c3",
                         "name": "custom-apache",
                         "kind": "terraform",
-                        "version": "0.0.34",
-                        "flavor": "standard"
-                    },
-                    {
-                        "catalog_id": "33eb1d96-dfb4-4d60-a21a-c376ed0c89c3",
-                        "name": "custom-apache",
-                        "kind": "blueprint",
-                        "version": "0.0.34",
+                        "version": "0.0.52",
                         "flavor": "standard"
                     }
                 ]
@@ -157,8 +150,8 @@
                         "catalog_id": "33eb1d96-dfb4-4d60-a21a-c376ed0c89c3",
                         "name": "custom-deployable-arch",
                         "kind": "terraform",
-                        "version": "0.0.34",
-                        "flavor": "customedge"
+                        "version": "0.0.52",
+                        "flavor": "babyslz"
                     }
                 ]
             },
@@ -238,9 +231,8 @@
                             "catalog_id": "33eb1d96-dfb4-4d60-a21a-c376ed0c89c3",
                             "id": "cfd4c957-eb94-4230-8bf6-d522f0c18590",
                             "name": "custom-deployable-arch",
-                            "version": ">=0.0.35",
+                            "version": ">=0.0.52",
                             "flavors": [
-                                "customedge",
                                 "babyslz"
                             ]    
                         }
