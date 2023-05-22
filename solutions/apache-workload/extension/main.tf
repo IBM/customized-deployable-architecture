@@ -8,14 +8,14 @@ locals {
 }
 
 data "ibm_schematics_workspace" "schematics_workspace" {
-  # only query the resource if a workspace id was given (extension)
+  # only query the resource if a workspace id was given.  means this is running as an extension.
   count  = var.prerequisite_workspace_id == "" ? 0 : 1
   workspace_id = var.prerequisite_workspace_id
   location     = local.location
 }
 
 data "ibm_schematics_output" "schematics_output" {
-  # only query the resource if a workspace id was given (extension)
+  # only query the resource if a workspace id was given.  means this is running as an extension.
   count  = var.prerequisite_workspace_id == "" ? 0 : 1
   workspace_id = var.prerequisite_workspace_id
   location     = local.location
