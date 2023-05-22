@@ -1,0 +1,107 @@
+{
+    "atracker": {
+       "collector_bucket_name": "",
+       "receive_global_events": false,
+       "resource_group": "",
+       "add_route": false
+    },
+    "clusters": [],
+    "cos": [],
+    "enable_transit_gateway": false,
+    "key_management": {
+       "name": "slz-kms",
+       "resource_group": "Default"
+    },
+    "network_cidr": "10.0.0.0/8",
+    "resource_groups": [
+       {
+          "create": false,
+          "name": "Default",
+          "use_prefix": false
+       }
+    ],
+    "security_groups": [],
+    "transit_gateway_connections": [],
+    "transit_gateway_resource_group": "Default",
+    "virtual_private_endpoints": [],
+    "vpcs": [
+       {
+          "flow_logs_bucket_name": null,
+          "use_manual_address_prefixes": true,
+          "network_acls": [
+             {
+                "add_cluster_rules": false,
+                "name": "workload-acl",
+                "rules": [
+                   {
+                      "name": "allow-all-inbound",
+                      "action": "allow",
+                      "direction": "inbound",
+                      "source": "0.0.0.0/0",
+                      "destination": "0.0.0.0/0"
+                   },
+                   {
+                      "action": "allow",
+                      "destination": "0.0.0.0/0",
+                      "direction": "outbound",
+                      "name": "allow-ibm-inbound",
+                      "source": "0.0.0.0/0"
+                   }
+                ]
+             }
+          ],
+          "prefix": "workload",
+          "resource_group": "Default",
+          "subnets": {
+             "zone-1": [
+                {
+                   "acl_name": "workload-acl",
+                   "cidr": "10.10.10.0/24",
+                   "name": "vsi-zone-1",
+                   "public_gateway": false
+                }
+             ],
+             "zone-2": [],
+             "zone-3": []
+          },
+          "use_public_gateways": {
+             "zone-1": false,
+             "zone-2": false,
+             "zone-3": false
+          }
+       }
+    ],
+    "vpn_gateways": [],
+    "vsi": [
+       {
+          "image_name": "ibm-ubuntu-22-04-1-minimal-amd64-4",
+          "machine_type": "cx2-4x8",
+          "name": "jump-box",
+          "resource_group": "Default",
+          "security_group": {
+             "name": "workload",
+             "rules": [
+                {
+                   "name": "allow-all-inbound",
+                   "direction": "inbound",
+                   "source": "0.0.0.0/0"
+                },
+                {
+                   "direction": "outbound",
+                   "name": "allow-all-outbound",
+                   "source": "0.0.0.0/0"
+                }
+             ]
+          },
+          "ssh_keys": [
+             "ssh-key"
+          ],
+          "subnet_names": [
+             "vsi-zone-1"
+          ],
+          "vpc_name": "workload",
+          "vsi_per_subnet": 1,
+          "enable_floating_ip": true
+       }
+    ]
+ }

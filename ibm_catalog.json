@@ -7,7 +7,7 @@
             "tags": ["network", "network_vpc"],
             "keywords": ["custom", "vpc", "secure", "baby"],
             "short_description": "Customized example for the landing zone solution using parameters and a json override.",
-            "long_description": "This example is designed to illustrate how to customize a solution to fit your needs.  This particular customization is a simple o ne.  The value of the deployment region has been set to 'us-east' to show to to satisfy a potential custom requirement.",
+            "long_description": "This example is designed to illustrate how to customize a solution to fit your needs.  This particular customization is a simple one.  The value of the deployment region has been set to 'us-east' to show to to satisfy a potential custom requirement.",
             "offering_docs_url": "https://raw.githubusercontent.com/IBM/customized-deployable-architecture/main/README.md",
             "offering_icon_url": "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjwhLS0gU3ZnIFZlY3RvciBJY29ucyA6IGh0dHA6Ly93d3cub25saW5ld2ViZm9udHMuY29tL2ljb24gLS0+DQo8IURPQ1RZUEUgc3ZnIFBVQkxJQyAiLS8vVzNDLy9EVEQgU1ZHIDEuMS8vRU4iICJodHRwOi8vd3d3LnczLm9yZy9HcmFwaGljcy9TVkcvMS4xL0RURC9zdmcxMS5kdGQiPg0KPHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHg9IjBweCIgeT0iMHB4IiB2aWV3Qm94PSIwIDAgMTAwMCAxMDAwIiBlbmFibGUtYmFja2dyb3VuZD0ibmV3IDAgMCAxMDAwIDEwMDAiIHhtbDpzcGFjZT0icHJlc2VydmUiPg0KPG1ldGFkYXRhPiBTdmcgVmVjdG9yIEljb25zIDogaHR0cDovL3d3dy5vbmxpbmV3ZWJmb250cy5jb20vaWNvbiA8L21ldGFkYXRhPg0KPGc+PHBhdGggZD0iTTQyMSwzNzYuOGMtNi4yLTE4LjUtMTIuMy0zMC44LTE4LjUtNDkuM2wzMC44LTEyLjNjNi4yLDE4LjUsMTIuMywzMC44LDE4LjUsNDMuMWM2LjIsMCw2LjIsMCwxMi4zLDBjMzcsMCw2MS42LDMwLjgsNjEuNiw2MS42djYuMmM0OS4zLDE4LjUsOTguNSwzNywxNDcuOCw0OS4zYzYuMiwwLDEyLjMsMCwxMi4zLDYuMmMxMi4zLTI0LjYsMzctNDMuMSw2Ny43LTQzLjFjMCwwLDAsMCw2LjIsMGM2LjItMzAuOCwxMi4zLTU1LjQsMTguNS04MGMtNi4yLDAtMTIuMywwLTEyLjMsMGMtMTIuMywwLTE4LjUsMC0zMC44LDBjMC02LjItNDkuMy0xODQuNy0yNDAuMi0xODQuN2MtMTIuMywwLTMwLjgsMC00My4xLDBjLTk4LjUsMTguNS0xNTMuOSw2MS42LTE3OC42LDEwNC43QzMyMi40LDMxNS4zLDM3MS43LDM1Mi4yLDQyMSwzNzYuOEw0MjEsMzc2LjhMNDIxLDM3Ni44eiBNMzY1LjUsMjIyLjlsMzAuOC02LjJjNi4yLDE4LjUsMTIuMywzMC44LDE4LjUsNDkuM0wzODQsMjc4LjNDMzc3LjgsMjU5LjgsMzcxLjcsMjQxLjMsMzY1LjUsMjIyLjlMMzY1LjUsMjIyLjl6IE02MDUuNyw3MDkuM2MwLTMwLjgsMjQuNi00OS4zLDQ5LjMtNDkuM2M2LjIsMCw2LjIsMCwxMi4zLDBjMTguNS0zMC44LDMwLjgtNTUuNCw0My4xLTg2LjJjLTE4LjUtMTIuMy0zMC44LTM3LTMwLjgtNjEuNmMtNi4yLDAtMTIuMywwLTE4LjUtNi4yYy00OS4zLTEyLjMtOTguNS0zMC44LTE1My45LTQ5LjNjLTYuMiwxOC41LTI0LjYsMjQuNi00My4xLDI0LjZjLTM3LDAtNjEuNi0zMC44LTYxLjYtNjEuNmMwLTYuMiwwLTEyLjMsMC0xMi4zYy00OS4zLTMwLjgtOTIuMy02MS42LTE0MS42LTk4LjVjLTE4LjUsNTUuNC0xMi4zLDk4LjUtMTIuMywxMDQuN2MwLDAtMjAzLjIsMTIuMy0yMzQsMTYwLjFjLTM3LDE4NC43LDE2MC4xLDI1Mi41LDIyNy44LDI1Mi41SDUzOGMzMC44LTI0LjYsNTUuNC01NS40LDczLjktODYuMkM2MTEuOSw3MzQsNjA1LjcsNzIxLjcsNjA1LjcsNzA5LjNMNjA1LjcsNzA5LjN6IE01MzEuOCw1NjcuN2MtMTIuMy0xMi4zLTI0LjYtMzAuOC0zMC44LTQzLjFsMjQuNi0xOC41YzYuMiwxMi4zLDE4LjUsMzAuOCwzMC44LDQzLjFMNTMxLjgsNTY3Ljd6IE01NjIuNiw2MTAuOGwyNC42LTE4LjVjMTIuMywxMi4zLDE4LjUsMzAuOCwzMC44LDQzLjFsLTI0LjYsMTguNUM1ODEsNjQxLjYsNTY4LjcsNjI5LjMsNTYyLjYsNjEwLjh6IE05ODcuNSw1NTUuNGMtNDMuMSwwLTEwNC43LTYuMi0xNjYuMy0xMi4zYy0xMi4zLDI0LjYtMzcsNDMuMS02Ny43LDQzLjFoLTYuMmMtMTIuMywzMC44LTMwLjgsNjEuNi00My4xLDkyLjNjNi4yLDYuMiwxMi4zLDE4LjUsMTIuMywzMC44YzAsMzAuOC0yNC42LDQ5LjMtNDkuMyw0OS4zYy02LjIsMC0xMi4zLDAtMTIuMywwYy0xOC41LDI0LjYtMzcsNDMuMS01NS40LDY3LjdoMTQ3LjhjNi4yLDAsMTYwLjEsMCwyMzQtMTQxLjZDOTg3LjUsNjQxLjYsOTkzLjYsNTk4LjUsOTg3LjUsNTU1LjRMOTg3LjUsNTU1LjR6IE03MzUsODIwLjJjLTEyLjMtMTIuMy0yNC42LTI0LjYtMzctMzdsMjQuNi0yNC42YzEyLjMsMTIuMywyNC42LDI0LjYsMzcsMzdMNzM1LDgyMC4yeiBNODI3LjMsNTEyLjNjNjEuNiw2LjIsMTEwLjgsMTIuMywxNTMuOSwxMi4zYy0xOC41LTgwLTgwLTE0MS42LTE3Mi40LTE2MC4xYy02LjIsMjQuNi0xMi4zLDU1LjQtMTguNSw4Ni4yQzgwOC45LDQ2Myw4MjEuMiw0ODEuNSw4MjcuMyw1MTIuM0w4MjcuMyw1MTIuM3oiLz48L2c+DQo8L3N2Zz4=",
             "module_info": {
@@ -16,14 +16,7 @@
                         "catalog_id": "33eb1d96-dfb4-4d60-a21a-c376ed0c89c3",
                         "name": "custom-apache",
                         "kind": "terraform",
-                        "version": "0.0.34",
-                        "flavor": "standard"
-                    },
-                    {
-                        "catalog_id": "33eb1d96-dfb4-4d60-a21a-c376ed0c89c3",
-                        "name": "custom-apache",
-                        "kind": "blueprint",
-                        "version": "0.0.34",
+                        "version": "0.0.52",
                         "flavor": "standard"
                     }
                 ]
@@ -157,8 +150,8 @@
                         "catalog_id": "33eb1d96-dfb4-4d60-a21a-c376ed0c89c3",
                         "name": "custom-deployable-arch",
                         "kind": "terraform",
-                        "version": "0.0.34",
-                        "flavor": "customedge"
+                        "version": "0.0.52",
+                        "flavor": "babyslz"
                     }
                 ]
             },
@@ -238,9 +231,8 @@
                             "catalog_id": "33eb1d96-dfb4-4d60-a21a-c376ed0c89c3",
                             "id": "cfd4c957-eb94-4230-8bf6-d522f0c18590",
                             "name": "custom-deployable-arch",
-                            "version": ">=0.0.35",
+                            "version": ">=0.0.52",
                             "flavors": [
-                                "customedge",
                                 "babyslz"
                             ]    
                         }
@@ -348,7 +340,8 @@
                     "label": "Standard",
                     "name": "standard",
                     "install_type": "fullstack",
-                    "working_directory": "solutions/apache-workload/blueprint",
+                    "working_directory": "solutions/apache-workload/fullstack",
+                    "usage_template": "module \"custom_apache\" {\n source                    = \"https://cm.globalcatalog.cloud.ibm.com/api/v1-beta/offering/source//${{workingDirectory}}?archive=tgz&catalogID=${{catalogID}}&flavor=${{flavor}}&kind=${{kind}}&name=${{name}}&version=${{version}}\"\n  ibmcloud_api_key          = var.ibmcloud_api_key\n  ssh_key = var.ssh_key\n  ssh_private_key          = var.ssh_private_key\n   prefix = var.prefix\n}\n\n",
                     "compliance": {
                         "authority": "scc-v3",
                         "controls": [

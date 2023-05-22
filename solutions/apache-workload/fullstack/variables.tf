@@ -1,4 +1,3 @@
-
 # initialize the VSI to be an Ansible managed node by installing python
 variable "workLoadInitScript" {
   type    = string
@@ -29,13 +28,9 @@ variable "region" {
 }
 
 variable "prerequisite_workspace_id" {
-  description = "IBM Cloud Schematics workspace ID of an existing custom-deployable-arch."
+  description = "IBM Cloud Schematics workspace ID of an existing custom-slz."
   type        = string
-}
-
-variable "prefix" {
-  description = "Prefix string for resources created."
-  default = ""
+  default     = ""
 }
 
 variable "ssh_private_key" {
@@ -44,32 +39,12 @@ variable "ssh_private_key" {
   sensitive   = true
 }
 
-variable "vpc_id" {
-  description = "The id of the VPC where the virtual server is to be created."
-  type = string
-  default = ""
+variable "ssh_key" {
+  description = "Public SSH Key for VSI creation.  This key should pair with the ssh_private_key value."
+  type        = string
 }
 
-variable "subnet_id" {
-  description = "The id of the subnet within the VPC where the virtual server is to be created."
-  type = string
-  default = ""
-}
-
-variable "resource_group_id" {
-  description = "The id of the resource group where the virtual server is to be created."
-  type = string
-  default = ""
-}
-
-variable "ssh_key_id" {
-  description = "The id of the public ssh key that pairs with the private ssh key deployed with the jump box."
-  type = string
-  default = ""
-}
-
-variable "fp_vsi_floating_ip_address" {
-  description = "The floating point IP address of the jump box."
-  type = string
-  default = ""
+variable "prefix" {
+  description = "A string to use as a prefix to the names of deployed resources."
+  type        = string
 }
