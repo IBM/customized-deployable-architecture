@@ -1,7 +1,7 @@
 #
 #
 module "custom_slz" {
-    source           = "https://cm.globalcatalog.cloud.ibm.com/api/v1-beta/offering/source//solutions/custom-slz?archive=tgz&catalogID=33eb1d96-dfb4-4d60-a21a-c376ed0c89c3&flavor=babyslz&kind=terraform&name=custom-deployable-arch&version=^0.0.51"
+    source           = "https://cm.globalcatalog.test.cloud.ibm.com/api/v1-beta/offering/source//solutions/custom-slz?archive=tgz&catalogID=f418eaf7-602a-472d-9e9f-ab75a7c193ab&flavor=babyslz&kind=terraform&name=custom-deployable-arch&version=^0.0.51"
     prefix           = var.prefix
     ssh_key          = var.ssh_key
     ibmcloud_api_key = var.ibmcloud_api_key
@@ -38,7 +38,7 @@ locals {
 }
 
 module "custom_apache" {
-  source                     = "https://cm.globalcatalog.cloud.ibm.com/api/v1-beta/offering/source//solutions/apache-workload/extension?archive=tgz&catalogID=33eb1d96-dfb4-4d60-a21a-c376ed0c89c3&flavor=standard&kind=terraform&name=custom-apache&version=^0.0.51"
+  source                     = "https://cm.globalcatalog.test.cloud.ibm.com/api/v1-beta/offering/source//solutions/apache-workload/extension?archive=tgz&catalogID=f418eaf7-602a-472d-9e9f-ab75a7c193ab&flavor=standard&kind=terraform&name=custom-apache&version=^0.0.51"
   ### directly use this as an extension by supplying just these four values.
   ibmcloud_api_key           = var.ibmcloud_api_key
   prerequisite_workspace_id  = var.prerequisite_workspace_id
