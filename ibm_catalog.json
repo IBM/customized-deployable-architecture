@@ -215,7 +215,7 @@
                                 "config_constraints": {
                                     "catalogID": "f418eaf7-602a-472d-9e9f-ab75a7c193ab",
                                     "flavorConstraint": "babyslz",
-                                    "offeringID": "efe42800-fdba-46b7-b62c-2f25c35202e7",
+                                    "offeringID": "58825778-876b-482e-832c-4599de632c49",
                                     "versionConstraint": ">=0.0.52"
                                 },
                                 "grouping": "deployment",
@@ -229,7 +229,7 @@
                     "dependencies": [
                         {
                             "catalog_id": "f418eaf7-602a-472d-9e9f-ab75a7c193ab",
-                            "id": "efe42800-fdba-46b7-b62c-2f25c35202e7",
+                            "id": "58825778-876b-482e-832c-4599de632c49",
                             "name": "custom-deployable-arch",
                             "version": ">=0.0.52",
                             "flavors": [
