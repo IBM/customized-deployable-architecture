@@ -2,11 +2,7 @@
 # initialize the VSI to be an Ansible managed node by installing python
 variable "workLoadInitScript" {
   type    = string
-  default = <<EOF
-#!/bin/bash
-sudo apt-get update
-sudo apt-get --yes install ansible
-EOF
+  default = null
 }
 
 # the OS image to install on the VSI

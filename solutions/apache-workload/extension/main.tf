@@ -99,6 +99,8 @@ resource "null_resource" "execute_ansible" {
   provisioner "remote-exec" {
     inline = [
       "sleep 150",
+      "apt-get update",
+      "apt-get --yes install ansible",
       "ansible-playbook --connection=local -i 'localhost,' /root/install-apache.yml",
     ]
   }
