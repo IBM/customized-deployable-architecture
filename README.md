@@ -24,4 +24,4 @@ Catalog tiles:
 * custom-deployable-arch is a generic deployable architecture for the network landscape.
 * custom-apache is a deployable architecture as a workload which runs a secure apache server.
 
-The Apache tile will hold both a terraform and a blueprint.  The blueprint is used to deploy both the app infra and the base deployable architecture.  The terraform template is use in the case that you want the apache server to run on an existing Secure Infra deployment.
+The Apache workload tile has both an extension and a fullstack implemenation as variations of the deployable architecture.
