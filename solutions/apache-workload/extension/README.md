@@ -7,5 +7,3 @@ is *Apache web server*.
 Ansible is used here to illustrate application provisioning.  There are additional methods such as using a cloud init script during the 
 initialization of the virtual server for example which could be suited for simple scenarios.  Ansible is easier to debug which is jsut one of
 its many benefits.
-
-
