@@ -16,7 +16,7 @@ This tutorial customizes the [VSI on VPC landing zone](https://cloud.ibm.com/cat
 
 ## Creating a custom tile
 
-The [tutorial movie](https://ibm.ent.box.com/file/1229039637937?s=kbsg9pqzxt2ry7m8ktztvrs6lvm3frr0) go through the following steps that are required to create a custom tile base on a deployable architecture in the catalog.  This tutorial is uses the UI primarily.  In the general case, publishing and updating private catalog is driven from a (development) pipeline using the catalog CLI/API which you can see in the [automating version catalog publication](../automating%20version%20catalog%20publication/README.md) tutorial.
+The [tutorial movie](https://ibm.ent.box.com/file/1229039637937?s=kbsg9pqzxt2ry7m8ktztvrs6lvm3frr0) go through the following steps that are required to create a custom tile base on a deployable architecture already in the catalog.  This tutorial is uses the UI primarily.  In the general case, publishing and updating private catalog is driven from a (development) pipeline using the catalog CLI/API which you can see in the [automating version catalog publication](../automating%20version%20catalog%20publication/README.md) tutorial.
 
 1. Download the customization bundle from the catalog tile (3:38)
 2. Customizing the bundle (4:20)

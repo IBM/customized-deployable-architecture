@@ -1,3 +1,3 @@
-# Deployable Architecture Overview
+# Automating version catalog publication
 
 // TODO
