@@ -1,7 +1,7 @@
 # Basic Deployable Architecture Customization
 
 
-This tutorial customizes the [VSI on VPC landing zone](https://cloud.ibm.com/catalog/architecture/deploy-arch-ibm-slz-vsi-ef663980-4c71-4fac-af4f-4a510a9bcf68-global) [Deployable Aarchitecgure](https://www.ibm.com/cloud/blog/turn-your-terraform-templates-into-deployable-architectures) (DA) but restricting it to four required configurational properties.  It is doing so by creating a new (custom/private) catalog tile as following:
+This tutorial customizes the [VSI on VPC landing zone](https://cloud.ibm.com/catalog/architecture/deploy-arch-ibm-slz-vsi-ef663980-4c71-4fac-af4f-4a510a9bcf68-global) [Deployable Aarchitecgure](https://www.ibm.com/cloud/blog/turn-your-terraform-templates-into-deployable-architectures) (DA) by restricting its configuration to only expose four required configurational properties.  It is doing so by creating a new (custom/private) catalog tile that is re-uses the IBM DA as following:
 
 ## Customized Configuration
 
@@ -16,11 +16,15 @@ This tutorial customizes the [VSI on VPC landing zone](https://cloud.ibm.com/cat
 
 ## Creating a custom tile
 
-The [tutorial movie](https://ibm.ent.box.com/file/1229039637937?s=kbsg9pqzxt2ry7m8ktztvrs6lvm3frr0) go through the following steps that are required to create a custom tile base on a deployable architecture in the catalog:  
+The [tutorial movie](https://ibm.ent.box.com/file/1229039637937?s=kbsg9pqzxt2ry7m8ktztvrs6lvm3frr0) go through the following steps that are required to create a custom tile base on a deployable architecture in the catalog.  This tutorial is uses the UI primarily.  In the general case, publishing and updating private catalog is driven from a (development) pipeline using the catalog CLI/API which you can see in the [automating version catalog publication](../automating%20version%20catalog%20publication/README.md) tutorial.
 
 1. Download the customization bundle from the catalog tile (3:38)
 2. Customizing the bundle (4:20)
 3. Customizing recap (11:05)
 4. Publishing to Git / Creating a release (12:38)
 5. Importing to the catalog (14:46)
+
+## Artifacts
+
+You can download the .tgz that was used in this tutorial [here](./basic-tutorial.tgz).
 
