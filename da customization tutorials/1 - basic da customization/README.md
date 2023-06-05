@@ -1,11 +1,13 @@
 # Basic Deployable Architecture Customization
 
 
-This tutorial customizes the [VSI on VPC landing zone](https://cloud.ibm.com/catalog/architecture/deploy-arch-ibm-slz-vsi-ef663980-4c71-4fac-af4f-4a510a9bcf68-global) [Deployable Aarchitecgure](https://www.ibm.com/cloud/blog/turn-your-terraform-templates-into-deployable-architectures) (DA) by restricting its configuration to only expose four required configurational properties.  It is doing so by creating a new (custom/private) catalog tile that is re-uses the IBM DA as following:
+This tutorial customizes the [VSI on VPC landing zone](https://cloud.ibm.com/catalog/architecture/deploy-arch-ibm-slz-vsi-ef663980-4c71-4fac-af4f-4a510a9bcf68-global) [Deployable Architecture](https://www.ibm.com/cloud/blog/turn-your-terraform-templates-into-deployable-architectures) (DA) by restricting its configuration to only expose four required configurational properties.  It is doing so by creating a new (custom/private) catalog tile that based (wrapping) the IBM published _VSI on VPC landing zone_ DA as following:
 
 ## Customized Configuration
 
-| VSI on VPC landing zone property | Customized Tile property|
+IBM tile, vs. Customized tile properties:
+
+| VSI on VPC landing zone | Customized Tile |
 |--|--|
 |region | Same as the base DA, but restricted to north america regions (e.g, `us-south` and `us-east`)|
 |ibmcloud_api_key| No change|
@@ -13,6 +15,7 @@ This tutorial customizes the [VSI on VPC landing zone](https://cloud.ibm.com/cat
 |existing-ssh_key| An optional configuration in the base DA, but a required one in the customized tile
 |ssh_public_key  | A required configuring in the base DA - not available in the custom DA
 |vsi_instance_profile| An optional configuration in the original DA, hard coded to `bx2d-4x16` an not available in the customized DA
+| optional properties | no optional properties |
 
 ## Creating a custom tile
 
