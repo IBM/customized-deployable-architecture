@@ -1,3 +1,3 @@
 # Deployable Architecture Overview
 
-// TODO
+// TODO  What is a DA, how is it being used and lifecycled
