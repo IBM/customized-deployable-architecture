@@ -1,4 +1,4 @@
-# Extending a DA 
+# Extending a deployable architecture
 
 This tutorial customizes an existing deployable architecture with an extension that deploys a virtual server that is running an Apache webserver.  This is to illustrate deploying a simple workload(Apache webserver) into an existing 
 landscape.  
@@ -18,6 +18,14 @@ Much of the information mentioned so far has already been given to the Custom SL
 enable extensions by recording information for later use by using the terraform output directive.  Output values are then emitted and saved in the IBM Cloud Schematics workspace.  The extension is implemented with 
 code that reads the workspace and retrieves the values.  With this technique, the two parts are deployed separately and as long as the workspace from the deployment of the Custom SLZ deployable architecture is still 
 accessible, then this works.  In a different tutorial additional methods will be illustrated.
+
+![](reading-workspace-output.png)
+
+
+Its important to note that the developer of the base deployable architecture has used the terraform output directive to emitt any potentially useful, non-sensitive data values.  This would include any of its own 
+input parameters such as a prefix value or a name value, for example, but would also include information about the resources it has created.  Specifically what is needed are the id values assigned by the IBM Cloud. 
+Id values are particularily useful as they are typically needed as input values in order to provision additional resources.  For example an ssh key id, not the name of the key, is needed when provisioning
+a virtual server image.  Having the provisioned resources' id values in the accessible output means we can retrieve almost all of the data in one operation rather than several resource read operations via the terraform provider.
 
 # Utilizing output from the dependent landscape
 
