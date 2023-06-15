@@ -14,7 +14,7 @@ module "custom_slz" {
 #
 
 locals {
-  # lets deploy the workload on the "workload" vpc in the base layer.
+  # lets deploy the workload on the "workload" vpc in the base layer. 
   vpc_type = "workload"
 
   # construct the name of the targeted vpc and then find it in the output 
@@ -39,12 +39,12 @@ locals {
 
 module "custom_apache" {
   source                     = "https://cm.globalcatalog.cloud.ibm.com/api/v1-beta/offering/source//solutions/apache-workload/extension?archive=tgz&catalogID=33eb1d96-dfb4-4d60-a21a-c376ed0c89c3&flavor=standard&kind=terraform&name=custom-apache&version=^0.0.51&installType=extension"
-  ### directly use this as an extension by supplying just these four values.
+  ### directly use this as an extension by supplying just these values.
   ibmcloud_api_key           = var.ibmcloud_api_key
   prerequisite_workspace_id  = var.prerequisite_workspace_id
   ssh_private_key            = var.ssh_private_key
+  ### or provide all of these, above 3 and these below, values when using this within a fullstack terrform.
   prefix                     = var.prefix
-  ### additionally provide these values when using this within a fullstack terrform.
   vpc_id                     = local.vpc_id
   subnet_id                  = local.subnet_id
   resource_group_id          = local.resource_group_id
