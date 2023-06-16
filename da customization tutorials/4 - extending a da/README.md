@@ -212,7 +212,7 @@ about that deployable architecture.  Deployable architectures need to written in
 that are used are also documented.  
 
 #
-Outputs:
+Example outputs from Custom SLZ deployable architecture:
 
 ```
  workspace_outputs = [
