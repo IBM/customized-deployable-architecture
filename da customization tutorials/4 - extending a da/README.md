@@ -6,6 +6,7 @@ landscape.
 Key points of this scenario are as follows:
 1.  a deployable architecture is deployed as a dependency.  It provides a basis for additional building blocks to be deployed.
 2.  an "extension" deployable architecture deploys a workload onto the dependent landscape.
+3.  the extension illustrates how a technology like Ansible might be used in conjunction with terraform to deploy an application, in this case Apache webserver.
 
 Illustrated here are simple practices for developing the deployable architectures that will allow an extension to leverage a dependency.
 
@@ -67,6 +68,150 @@ resource_group_data.value <-- which is a list and we want the first entry
 values((workspace_outputs[0].resource_group_data).value)[0]
 ```
 
+# Writing the terraform code
+
+Time to write some code.  The general flow of this extension is this:
+1.  connect to the Schematics workspace used to deploy the Custom SLZ and read the outputs
+2.  retrieve values from the output
+    1. prefix - so that we can name our resources with the same naming convention.
+    2. subnet name within the target VPC where the webserver will be deployed.
+    3. ssh key id of the public ssh key created by Custom SLZ - will need ssh enabled for Ansible.
+    4. resource group id of the resource group used by the Custom SLZ so that our resources will be in the same group.
+    5. floating ip address created by the Custom SLZ - this is our gateway into the VPC.
+3.  query certain existing resources created by Custom SLZ to get additional information
+4.  using the IBM terraform VSI module deploy a virtual server.
+5.  use Ansible to deploy the Apache webserver package onto the virtual server.   
+
+### Connect to Schematics workspace
+
+As shown above, to connect to the a Schematics workspace the workspace id is needed and the Schematics service location where the workspace resides.  The location is part of the workspace id so it may be 
+derived from it such as 
+
+`location = regex("^[a-z/-]+", var.prerequisite_workspace_id )`
+
+The location value in conjunction with the workspace id are used to query the resource type `ibm_schematics_workspace`.  Use the workspace query to obtain the workspace outputs in json form as shown in the detail above.
+
+### Retrieve values from the output
+
+Refer to the methods illustrated above for getting values from the `workspace_outputs` local variable.  Specifically to obtain the values `prefix, subnet_name, ssh_key_id, resource_group_id, fp_vsi_floating_ip_address` the 
+folllowing does this.
+
+```
+locals {
+  # access the output from the workspace which is in json format so decode the json.  This will then allow us to retrieve specific values.
+  workspace_outputs = jsondecode(data.ibm_schematics_output.schematics_output.output_json)
+  workspace_output = local.workspace_outputs[0]
+
+  # refer to the structure of the output below to better understand how these values are retrieved.
+  prefix      = local.workspace_output.prefix.value
+  subnet_name = (local.workspace_output.subnet_data.value)[0].name
+  ssh_key_id  = (local.workspace_output.ssh_key_data.value)[0].id
+  resource_group_id = values((local.workspace_output.resource_group_data).value)[0]
+  fp_vsi_floating_ip_address = (local.workspace_output.fip_vsi.value)[0].floating_ip
+}
+```
+
+The above relies on the fact that our Custom SLZ does not create more than one subnet, ssh_key_id, resource group or floating ip address which means that we can predict where the entries in the arrays are that we 
+interested in.   This is specifically to keep this tutorial as simple as possible.  In further tutorials more methods and techniques will be used to locate specific information within output.
+
+### Query certain existing resources created by Custom SLZ to get additional information
+
+We are collecting up all the information needed in order to deploy a virtual server image for the Apache webserver.  There are three more resources that are of interest.  We need the image id of OS image that will 
+be initialized on the virtual server and we need ids for the subnet and VPC.  These will be used a little later.
+
+```
+data "ibm_is_subnet" "subnet" {
+  name = local.subnet_name
+}
+
+# access the image resource that will be deployed as the OS on the virtual server
+data "ibm_is_image" "image" {
+  name = var.image
+}
+
+# retrieve the subnet id and the vpc id from the deployed resources 
+locals {
+  subnet_id         = data.ibm_is_subnet.subnet.id
+  vpc_id            = data.ibm_is_subnet.subnet.vpc
+}
+
+data "ibm_is_subnet" "by-subnet-id" {
+  identifier = local.subnet_id
+}
+```
+
+### Using the IBM terraform VSI module deploy a virtual server
+
+Deploy a new virtual server within the Custom SLZ landscape, within in a specific VPC, using the same naming convention, accessible with a known ssh key, using a particular OS image, etc.  You 
+can see the use of the information determined above in the deployment below.
+
+```
+module "slz_vsi" {
+  source                     = "git::https://github.com/terraform-ibm-modules/terraform-ibm-landing-zone-vsi.git?ref=v2.0.0"
+  resource_group_id          = local.resource_group_id
+  image_id                   = data.ibm_is_image.image.id
+  create_security_group      = true
+  security_group             = var.appSecurityRules
+  tags                       = []
+  subnets                    = [{"name": local.subnet_name, "id": local.subnet_id, "zone":data.ibm_is_subnet.by-subnet-id.zone, "cidr": data.ibm_is_subnet.by-subnet-id.ipv4_cidr_block}]
+  vpc_id                     = local.vpc_id
+  prefix                     = join("-", [local.prefix, "apache-webserver"])
+  machine_type               = "cx2-2x4"
+  user_data                  = var.workLoadInitScript
+  boot_volume_encryption_key = null
+  vsi_per_subnet             = 1
+  ssh_key_ids                = [local.ssh_key_id]
+}
+```
+
+
+### Use Ansible to deploy the Apache webserver package onto the virtual server
+
+Much more may be stated regarding the use of Ansible with terraform.  A simple example is presented in this tutorial to show one way Ansible could be used.  An Ansible playbook is included 
+that directs the install of Apache.  The Ansible command line is installed on the virtual server by server init script.  Reference the `variables.tf` file for specifics.
+
+Additional reading for integration of Ansible and Terraform may be found in [this blog entry](https://www.ibm.com/blog/end-to-end-application-provisioning-with-ansible-and-terraform/) as well as 
+references to more examples contained within it.
+
+This tutorial uses terraform's null resource concept.  Note the `depends_on` directive so that terraform properly sequences this deployment *after* the virtual server has completed.  The `connection` 
+block defines the ssh connnection and utilizes the gateway created by the Custom SLZ deployment.  The `file` provisioner causes the Ansible playbook file to be transfered to the virtual server.  The 
+`remote-exec` provisioner executes the Ansible command line to complete the deployment of Apache webserver.
+
+```
+resource "null_resource" "execute_ansible" {
+  depends_on = [module.slz_vsi]
+    
+  connection {
+    type         = "ssh"
+    user         = "root"
+    bastion_host = local.fp_vsi_floating_ip_address
+    host         = module.slz_vsi.list[0].ipv4_address
+    private_key  = var.ssh_private_key
+    agent        = false
+    timeout      = "15m"
+  }
+
+  provisioner "file" {
+    source      = "${path.module}/playbook/install-apache.yml"
+    destination = "/root/install-apache.yml"
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "sleep 150",
+      "ansible-playbook --connection=local -i 'localhost,' /root/install-apache.yml",
+    ]
+  }
+}
+```
+
+## Put it all together
+
+The `main.tf` brings all of the pieces above together into a terraform template.  This extension was developed with the Custom SLZ deployable architecture as the target and utilizies information 
+about that deployable architecture.  Deployable architectures need to written in a way that allows them to be extended.  That means they have documented outputs and any internal naming conventions 
+that are used are also documented.  
+
+#
 Outputs:
 
 ```
