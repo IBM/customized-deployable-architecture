@@ -31,7 +31,8 @@ a virtual server image.  Having the provisioned resources' id values in the acce
 # Utilizing output from the dependent landscape
 
 Below is an example of the full set of output values that are emitted from the deployment of the dependent base layer.  The output is decoded json.  To get the output from an IBM Schematics 
-workspace utilize the `ibm_schematics_workspace` and the `ibm_schematics_output` resources.
+workspace utilize the `ibm_schematics_workspace` and the `ibm_schematics_output` resources.  The workspace to be read is a string value and is specified at deploy time by the deployment 
+varialbe `prerequisite_workspace_id` and is defined in the `variables.tf` file.
 
 ```
 data "ibm_schematics_workspace" "schematics_workspace" {
