@@ -37,6 +37,8 @@ are being executed within the same terraform template then no workspace is there
 extension to be usable both as an extension deploying into an existing landscape and as a component of a fullstack.  This means the extension needs to know when to attempt to 
 read from an existing workspace and when not.
 
+When the extension is being used as a standalone extension, its very simple to use in that very few inputs are needed.  This makes it easy to consume.  Preserving this is important.
+
 ### Changes needed
 
 First, lets examine how to implement the extension such that it is able to determine when to read values from an existing workspace and when not to do that.  Recall the extension variable named 
