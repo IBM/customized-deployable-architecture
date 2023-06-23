@@ -5,9 +5,9 @@ In this set of tutorials, we will show how to extend a deployable architecture, 
 The Custom SLZ deployable architecture is a good example of a deployable architecture that would be extended in someway since it creates a landscape with necessary resources from 
 which to build a bigger solution.  For this scenario, the extension will be that we are deploying a workload into the landscape that was deployed by Custom SLZ.  The 
 workload chosen is an Apache webserver which will be installed using Ansible.  So to do this the extension will deploy a virtual server into the virtual private cloud, created 
-by Custom SLZ, and then on that virtual server it will deploy the Apache webserver application.  The end result looks like this.
+by Custom SLZ, and then on that virtual server it will deploy the Apache webserver application.  Here is the two part deployment process.
 
-![](../../images/baby-slz.svg)
+![](./daPlusExtension.drawio.png)
 
 When extending a deployable architecture, we develop another deployable architecture.  Deployable architectures that are designed to extend come in two types, extension and 
 fullstack.  Extension types have at least one dependency on another deployable architecture and cannot be deployed unless that dependency has already been deployed.  Fullstack 
