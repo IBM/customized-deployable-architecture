@@ -234,7 +234,8 @@
                             "version": ">=0.0.52",
                             "flavors": [
                                 "babyslz"
-                            ]    
+                            ],
+                            "install_type": "fullstack"    
                         }
                     ],
                     "iam_permissions": [
