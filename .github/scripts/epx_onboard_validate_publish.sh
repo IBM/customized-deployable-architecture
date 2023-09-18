@@ -1,7 +1,5 @@
 #! /bin/bash
 
-set -x
-
 function onboardVersionToCatalog() {
     local tarBall=$1
     local version=$2
@@ -72,7 +70,14 @@ function validateProjectConfig() {
     echo "project configuration id is: $configId"
    
     # update the project's config with values to use for validate/deploy.  Authorization method and value on the config is already set by catalog from the trusted profile setting on the catalog/project link up.
+    echo "updating project configuration with values for validation"
     ibmcloud project config-update --project-id "$projectId"  --id "$configId" --input='[{"name": "prefix", "value":"epx-validate"}, {"name": "ssh_key", "value": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCxsNM3xgeyU5pANw4r8qgiOMHktfj3z0/OSeIjscx2uCS4/loB/mRpG0+pgDctp1i+0AIh3wFPFUtdqzrR7otC1wo0Tmky6DT4E9yOoSO1nC413L2wDHyBtwp8mk+DhARXzeRdDvP0NtL+Rj1qy7OOAnZ0/Utu07dME8wEtOIotlGPZQmJvf78znV9eX9UU8A/J+IaC+0tK4W4Wt8irIc9kKm+3tcQsnpxmDgkApmwMjOcCH6yaONu1pYKAhBIzwkOTJl/VrEFeduPSdmL7ENtpITB0AZ99doYTucmQ73Axt728foXAFW8WX4uROc9df9Qyev40bxSzlAOGHvtEVwpNOqx6oAr1Kok811OITcuGtuUTDuPVXJyqBmWq2p9tMFrIFRN28lE5Ax3HYFinRaQ+X6rM1pIeHBA/ESS52lO5xpPl4k0laKWVeG42Ch8xi3ZjPk5Mg+AYMt9u9jtQ2KyZvV+zIO+jwlGXkiMSBWgm+7SnsJnRf+q2xg9cpXKjB0= kbiegert@Keiths-MacBook-Pro-2.local"}]'
+    
+    if [[ $? -eq 1 ]]; then
+        echo "error attempting to update the project configuration with configuration values for validation."
+        exit 1
+    fi
+    echo "project configuration updated"
 
     # validate via projects.  this only starts the job.  need to poll to get status
     ibmcloud project --project-id "$projectId" --id "$configId" config-check
@@ -80,6 +85,7 @@ function validateProjectConfig() {
         echo "error attempting to validate the project configuration."
         exit 1
     fi
+    echo "started project configuration validate/check"
 
     # wait and poll until state is "pipeline_failed" for now.  fails due to SCC.  look for state when SCC passes also
     attempts=0
@@ -105,11 +111,12 @@ function installProjectConfig() {
     fi
 
     # run a projects deploy
-    ibmcloud project --project-id "$projectId" --id "$configId" config-install
+    ibmcloud project --project-id "$projectId" --id "$configId" config-install 
     if [[ $? -eq 1 ]]; then
         echo "error attempting to install the project configuration."
         exit 1
     fi
+    echo "project configuration deploy started"
 
     # wait and poll until state is "installed"
     attempts=0
