@@ -1,5 +1,7 @@
 #! /bin/bash
 
+set -x
+
 function onboardVersionToCatalog() {
     local tarBall=$1
     local version=$2
@@ -8,12 +10,42 @@ function onboardVersionToCatalog() {
     local variationLabel=$5
     local formatKind=$6
     local installType=$7
+    versionLocator=$8
 
-    # onboard to catalog
-    ibmcloud catalog offering import-version --zipurl "$tarBall" --target-version "$version" --catalog "$catalogName" --offering "$offeringName" --variation-label "$variationLabel" --format-kind "$formatKind" --install-type "$installType" 
+    # onboard to an existing catalog with an existing offering - just import a version
+    if [[ "$installType" == "module" ]]; then
+        ibmcloud catalog offering import-version --zipurl "$tarBall" --target-version "$version" --catalog "$catalogName" --offering "$offeringName" --variation-label "$variationLabel" --format-kind "$formatKind"
+    else
+        ibmcloud catalog offering import-version --zipurl "$tarBall" --target-version "$version" --catalog "$catalogName" --offering "$offeringName" --variation-label "$variationLabel" --format-kind "$formatKind" --install-type "$installType" 
+    fi
+
     if [[ $? -eq 1 ]]; then
         echo "error importing version to catalog."
         exit 1
+    fi
+
+    # determine the catalog's version locator string for this version
+    getVersionLocator "$catalogName" "$offeringName" "$version" "$variationLabel" "$installType" "$formatKind" "$versionLocator"
+    echo "the version locator is $versionLocator"
+}
+
+# 
+# this function querys the catalog and retrieves the version locator for a version.
+function getVersionLocator() {
+    local catalogName=$1
+    local offeringName=$2
+    local version=$3
+    local variationLabel=$4
+    local installType=$5
+    local formatKind=$6
+    versionLocator=$7
+
+    # get the catalog version locator for an offering version
+    ibmcloud catalog offering get --catalog "$catalogName" --offering "$offeringName" --output json > offering.json
+    if [[ $installType != "module" ]]; then
+        versionLocator=$(jq -r --arg version "${version}" --arg variationLabel "${variationLabel}" --arg installType "${installType}" --arg format_kind "$formatKind" '.kinds[] | select(.format_kind==$format_kind).versions[] | select(.version==$version) | select(.solution_info.install_type == $installType) | select(.flavor.label==$variationLabel).version_locator' < offering.json)
+    else
+        versionLocator=$(jq -r --arg version "${version}" --arg variationLabel "${variationLabel}" --arg format_kind "$formatKind" '.kinds[] | select(.format_kind==$format_kind).versions[] | select(.version==$version) | select(.flavor.label==$variationLabel).version_locator' < offering.json)
     fi
 }
 
@@ -22,6 +54,7 @@ function getProjectConfigurationId() {
     local offeringName=$2
     local version=$3
     configId=$4
+    local versionLocator=$5
 
     # make sure that the projects service has created a project configuration for this version.  check for no configurations.
     attempts=0
@@ -38,10 +71,7 @@ function getProjectConfigurationId() {
         exit 1
     fi
 
-    # catalog/project configs are created and named as "offering name + version" then dots and spaces are translated to dashes
-    configname=$(getConfigName "$offeringName" "$version")
-
-    configId=$(ibmcloud project --project-id "$projectId" configs --output json | jq -r --arg configname "$configname" '.configs[] | select(.definition.name==$configname).id')
+    configId=$(ibmcloud project --project-id "$projectId" configs --output json | jq -r --arg versionLocator "$versionLocator" '.configs[] | select(.definition.locator_id==$versionLocator).id')
 
     if [[ $configId == "" ]]; then
         echo "project configuration with name $configname not found as expected.  exiting"
@@ -49,29 +79,25 @@ function getProjectConfigurationId() {
     fi
 }
 
-function getConfigName() {
-    local offeringName=$1
-    local version=$2
-
-    configname=$(echo "${offeringName}""-""${version}" | tr '.' '-' | tr ' ' '-')
-    echo "$configname"
-}
-
 function validateProjectConfig() {
     local projectId=$1
     local offeringName=$2
     local version=$3
-    configId=$4
+    local versionLocator=$4
+    configId=$5
 
     # because we are using ys1 right now
     export PROJECT_URL=https://projects.api.test.cloud.ibm.com
 
-    getProjectConfigurationId "$projectId" "$offeringName" "$version" "$configId"
+    getProjectConfigurationId "$projectId" "$offeringName" "$version" "$configId" "$versionLocator"
     echo "project configuration id is: $configId"
    
     # update the project's config with values to use for validate/deploy.  Authorization method and value on the config is already set by catalog from the trusted profile setting on the catalog/project link up.
     echo "updating project configuration with values for validation"
-    ibmcloud project config-update --project-id "$projectId"  --id "$configId" --input='[{"name": "prefix", "value":"epx-validate"}, {"name": "ssh_key", "value": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCxsNM3xgeyU5pANw4r8qgiOMHktfj3z0/OSeIjscx2uCS4/loB/mRpG0+pgDctp1i+0AIh3wFPFUtdqzrR7otC1wo0Tmky6DT4E9yOoSO1nC413L2wDHyBtwp8mk+DhARXzeRdDvP0NtL+Rj1qy7OOAnZ0/Utu07dME8wEtOIotlGPZQmJvf78znV9eX9UU8A/J+IaC+0tK4W4Wt8irIc9kKm+3tcQsnpxmDgkApmwMjOcCH6yaONu1pYKAhBIzwkOTJl/VrEFeduPSdmL7ENtpITB0AZ99doYTucmQ73Axt728foXAFW8WX4uROc9df9Qyev40bxSzlAOGHvtEVwpNOqx6oAr1Kok811OITcuGtuUTDuPVXJyqBmWq2p9tMFrIFRN28lE5Ax3HYFinRaQ+X6rM1pIeHBA/ESS52lO5xpPl4k0laKWVeG42Ch8xi3ZjPk5Mg+AYMt9u9jtQ2KyZvV+zIO+jwlGXkiMSBWgm+7SnsJnRf+q2xg9cpXKjB0= kbiegert@Keiths-MacBook-Pro-2.local"}]'
+
+    # these values are specific to the offering version 
+    #ibmcloud project config-update --project-id "$projectId"  --id "$configId" --input='[{"name": "prefix", "value":"epx-validate"}, {"name": "ssh_key", "value": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCxsNM3xgeyU5pANw4r8qgiOMHktfj3z0/OSeIjscx2uCS4/loB/mRpG0+pgDctp1i+0AIh3wFPFUtdqzrR7otC1wo0Tmky6DT4E9yOoSO1nC413L2wDHyBtwp8mk+DhARXzeRdDvP0NtL+Rj1qy7OOAnZ0/Utu07dME8wEtOIotlGPZQmJvf78znV9eX9UU8A/J+IaC+0tK4W4Wt8irIc9kKm+3tcQsnpxmDgkApmwMjOcCH6yaONu1pYKAhBIzwkOTJl/VrEFeduPSdmL7ENtpITB0AZ99doYTucmQ73Axt728foXAFW8WX4uROc9df9Qyev40bxSzlAOGHvtEVwpNOqx6oAr1Kok811OITcuGtuUTDuPVXJyqBmWq2p9tMFrIFRN28lE5Ax3HYFinRaQ+X6rM1pIeHBA/ESS52lO5xpPl4k0laKWVeG42Ch8xi3ZjPk5Mg+AYMt9u9jtQ2KyZvV+zIO+jwlGXkiMSBWgm+7SnsJnRf+q2xg9cpXKjB0= kbiegert@Keiths-MacBook-Pro-2.local"}]'
+    ibmcloud project config-update --project-id "$projectId"  --id "$configId" --input='[{"name": "prefix", "value":"epx-validate"}, {"name": "region", "value": "us-south"}, {"name": "resource_group", "value": "Default"}]'
     
     if [[ $? -eq 1 ]]; then
         echo "error attempting to update the project configuration with configuration values for validation."
@@ -193,19 +219,20 @@ function cleanUpResources() {
 # installType=$7
 # tarBall=$8
 
-projectId="c99bc801-4cfc-45af-b626-bb6ffd6d2d30"
+projectId="37673d53-de57-4041-911d-13585772e820"
 catalogName="Keith Test"
-offeringName="custom-deployable-arch"
-version="0.0.56"
-variationLabel="BabySLZ"
+offeringName="terraform-ibm-cos"
+version="0.0.4"
+variationLabel="Basic"
 formatKind="terraform"
-installType="fullstack"
-tarBall="https://github.com/IBM/customized-deployable-architecture/archive/refs/tags/0.0.56-epx.tar.gz"
+installType="module"
+tarBall="https://github.com/kbiegert/terraform-ibm-cos/archive/refs/tags/0.0.4.tar.gz"
 
 configId=""
+versionLocator=""
 
-onboardVersionToCatalog "$tarBall" "$version" "$catalogName" "$offeringName" "$variationLabel" "$formatKind" "$installType"
-validateProjectConfig "$projectId" "$offeringName" "$version" "$configId" 
+onboardVersionToCatalog "$tarBall" "$version" "$catalogName" "$offeringName" "$variationLabel" "$formatKind" "$installType" "$versionLocator"
+validateProjectConfig "$projectId" "$offeringName" "$version" "$versionLocator" "$configId"
 installProjectConfig "$projectId" "$configId"
 publishVersion "$projectId" "$offeringName" "$version"
 cleanUpResources "$projectId" "$configId"
