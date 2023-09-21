@@ -12,6 +12,11 @@ function onboardVersionToCatalog() {
     local installType=$7
     versionLocator=$8
 
+    # if executing from a github action then the url does not need to be given to this script.  it can be determined.
+    if [[ "$tarBall" == "" ]]; then
+        tarBall="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/archive/refs/tags/${version}.tar.gz"
+    fi
+
     # onboard to an existing catalog with an existing offering - just import a version
     if [[ "$installType" == "module" ]]; then
         ibmcloud catalog offering import-version --zipurl "$tarBall" --target-version "$version" --catalog "$catalogName" --offering "$offeringName" --variation-label "$variationLabel" --format-kind "$formatKind"
@@ -53,8 +58,8 @@ function getProjectConfigurationId() {
     local projectId=$1
     local offeringName=$2
     local version=$3
-    configId=$4
-    local versionLocator=$5
+    local versionLocator=$4
+    configId=$5
 
     # make sure that the projects service has created a project configuration for this version.  check for no configurations.
     attempts=0
@@ -79,25 +84,61 @@ function getProjectConfigurationId() {
     fi
 }
 
+function getProjectIdFromName() {
+    local projectName=$1
+    projectId=$2
+
+    projectId=$(ibmcloud project list --output json | jq -r --arg projectname "$projectName" '.projects[] | select(.definition.name==$projectname).id')
+}
+
+function generateValidationValues() {
+    inputString=$1
+    region="us-south"
+    resourceGroup="Default"
+
+    # generate an ssh key that can be used as a validation value. overwrite file if already there.
+    # we only need to do this once.
+    # FILE="./id_rsa"
+    # if [ ! -f "$FILE" ]; then
+    #     # generate an ssh key that can be used as a validation value.
+    #     ssh-keygen -f ./id_rsa -t rsa -N '' <<<y
+    # fi
+
+    # SSH_KEY=$(cat ./id_rsa.pub)
+
+    # use a unique prefix string value 
+    SUFFIX="$(date +%m%d-%H-%M)"
+    PREFIX="epx-${SUFFIX}"
+
+    # construct a json string and substitute values for the deployment parameters for this offering version.  
+    inputString="--input="$(jq -n --arg prefix "$PREFIX" --arg region "$region" --arg resourceGroup "$resourceGroup" '[{"name": "prefix", "value":$prefix}, {"name": "region", "value": $region}, {"name": "resource_group", "value": $resourceGroup}]')
+}    
+
 function validateProjectConfig() {
     local projectId=$1
     local offeringName=$2
     local version=$3
     local versionLocator=$4
     configId=$5
-
+    
     # because we are using ys1 right now
     export PROJECT_URL=https://projects.api.test.cloud.ibm.com
 
-    getProjectConfigurationId "$projectId" "$offeringName" "$version" "$configId" "$versionLocator"
+    getProjectConfigurationId "$projectId" "$offeringName" "$version" "$versionLocator" "$configId"
     echo "project configuration id is: $configId"
    
     # update the project's config with values to use for validate/deploy.  Authorization method and value on the config is already set by catalog from the trusted profile setting on the catalog/project link up.
     echo "updating project configuration with values for validation"
 
+    # generate/retrieve validation deployment values for this offering version
+    inputString=""
+    generateValidationValues "$inputString" 
+
     # these values are specific to the offering version 
     #ibmcloud project config-update --project-id "$projectId"  --id "$configId" --input='[{"name": "prefix", "value":"epx-validate"}, {"name": "ssh_key", "value": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCxsNM3xgeyU5pANw4r8qgiOMHktfj3z0/OSeIjscx2uCS4/loB/mRpG0+pgDctp1i+0AIh3wFPFUtdqzrR7otC1wo0Tmky6DT4E9yOoSO1nC413L2wDHyBtwp8mk+DhARXzeRdDvP0NtL+Rj1qy7OOAnZ0/Utu07dME8wEtOIotlGPZQmJvf78znV9eX9UU8A/J+IaC+0tK4W4Wt8irIc9kKm+3tcQsnpxmDgkApmwMjOcCH6yaONu1pYKAhBIzwkOTJl/VrEFeduPSdmL7ENtpITB0AZ99doYTucmQ73Axt728foXAFW8WX4uROc9df9Qyev40bxSzlAOGHvtEVwpNOqx6oAr1Kok811OITcuGtuUTDuPVXJyqBmWq2p9tMFrIFRN28lE5Ax3HYFinRaQ+X6rM1pIeHBA/ESS52lO5xpPl4k0laKWVeG42Ch8xi3ZjPk5Mg+AYMt9u9jtQ2KyZvV+zIO+jwlGXkiMSBWgm+7SnsJnRf+q2xg9cpXKjB0= kbiegert@Keiths-MacBook-Pro-2.local"}]'
-    ibmcloud project config-update --project-id "$projectId"  --id "$configId" --input='[{"name": "prefix", "value":"epx-validate"}, {"name": "region", "value": "us-south"}, {"name": "resource_group", "value": "Default"}]'
+    #ibmcloud project config-update --project-id "$projectId"  --id "$configId" --input='[{"name": "prefix", "value":"epx-validate"}, {"name": "region", "value": "us-south"}, {"name": "resource_group", "value": "Default"}]'
+    ibmcloud project config-update --project-id "$projectId"  --id "$configId" "$inputString"
+
     
     if [[ $? -eq 1 ]]; then
         echo "error attempting to update the project configuration with configuration values for validation."
@@ -210,7 +251,7 @@ function cleanUpResources() {
 #  main
 # ------------------------------------------------------------------------------------
 
-# projectId=$1
+# projectName=$1
 # catalogName=$2
 # offeringName=$3
 # version=$4
@@ -219,7 +260,7 @@ function cleanUpResources() {
 # installType=$7
 # tarBall=$8
 
-projectId="37673d53-de57-4041-911d-13585772e820"
+projectName="kb-test-module-project"
 catalogName="Keith Test"
 offeringName="terraform-ibm-cos"
 version="0.0.4"
@@ -228,9 +269,14 @@ formatKind="terraform"
 installType="module"
 tarBall="https://github.com/kbiegert/terraform-ibm-cos/archive/refs/tags/0.0.4.tar.gz"
 
+# these values will be determined and set
 configId=""
 versionLocator=""
+projectId=""
 
+getProjectIdFromName "$projectName" "$projectId"
+
+# steps 
 onboardVersionToCatalog "$tarBall" "$version" "$catalogName" "$offeringName" "$variationLabel" "$formatKind" "$installType" "$versionLocator"
 validateProjectConfig "$projectId" "$offeringName" "$version" "$versionLocator" "$configId"
 installProjectConfig "$projectId" "$configId"
