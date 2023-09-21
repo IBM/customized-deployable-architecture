@@ -21,15 +21,12 @@ jobs:
     runs-on: ubuntu-latest
     env:
       CATALOG_NAME: Demo
+      PROJECT_NAME: SETUP-SETUP-SETUP
       OFFERING_NAME: custom-deployable-arch
       OFFERING_VARIATION_LABEL: BabySLZ
-      RESOURCE_GROUP: default
-      WORKLOAD_OFFERING_NAME: custom-apache
-      WORKLOAD_VARIATION_LABEL: Standard
-      EXTENSION_INSTALL_TYPE: extension
       FULLSTACK_INSTALL_TYPE: fullstack
+      MODULE_INSTALL_TYPE: module
       FORMAT_KIND_TERRAFORM: terraform
-      FORMAT_KIND_BLUEPRINT: blueprint
       # Note that IBMCLOUD_API_KEY is a secret environment variable configured on the project
 
     # Steps represent a sequence of tasks that will be executed as part of the job
@@ -54,4 +51,4 @@ jobs:
           echo "--------------------------------------------------------------------"
           echo "onboard version, validate, scan, publish"
           echo "--------------------------------------------------------------------"
-          ./.github/scripts/epx_onboard_validate_publish.sh "$CATALOG_NAME" "$OFFERING_NAME" "$VERSION" "$OFFERING_VARIATION_LABEL" "$FULLSTACK_INSTALL_TYPE" "$RESOURCE_GROUP" "$FORMAT_KIND_TERRAFORM" "SCAN"    
+          ./.github/scripts/epx_onboard_validate_publish.sh "$PROJECT_NAME" "$CATALOG_NAME" "$OFFERING_NAME" "$VERSION" "$OFFERING_VARIATION_LABEL" "$FORMAT_KIND_TERRAFORM" "$FULLSTACK_INSTALL_TYPE" ""   
