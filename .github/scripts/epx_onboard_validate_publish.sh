@@ -2,6 +2,11 @@
 
 set -x
 
+#
+# the setup or pre-requisites for this script are that a catalog and project already exist.  They are also alreay linked by adding an account 
+# context to the catalog identifying the project and an api key as the authorization mechanism.
+#
+
 function onboardVersionToCatalog() {
     local tarBall=$1
     local version=$2
@@ -238,26 +243,14 @@ function cleanUpResources() {
 #  main
 # ------------------------------------------------------------------------------------
 
-# projectName=$1
-# catalogName=$2
-# offeringName=$3
-# version=$4
-# variationLabel=$5
-# formatKind=$6
-# installType=$7
-# tarBall=$8
-
-projectName="kb-test-module-project"
-catalogName="Keith Test"
-offeringName="terraform-ibm-cos"
-version="0.0.4"
-variationLabel="Replication"
-formatKind="terraform"
-installType="module"
-tarBall="https://github.com/kbiegert/terraform-ibm-cos/archive/refs/tags/0.0.4.tar.gz"
-
-# because we are using ys1 right now
-export PROJECT_URL=https://projects.api.test.cloud.ibm.com
+projectName=$1
+catalogName=$2
+offeringName=$3
+version=$4
+variationLabel=$5
+formatKind=$6
+installType=$7
+tarBall=$8
 
 # these values will be determined and set
 configId=""
