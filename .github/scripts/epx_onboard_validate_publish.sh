@@ -89,6 +89,7 @@ function getProjectIdFromName() {
     projectId=$2
 
     projectId=$(ibmcloud project list --output json | jq -r --arg projectname "$projectName" '.projects[] | select(.definition.name==$projectname).id')
+    echo "Project id is: $projectId for project named $projectName"
 }
 
 function generateValidationValues() {
@@ -120,9 +121,6 @@ function validateProjectConfig() {
     local version=$3
     local versionLocator=$4
     configId=$5
-    
-    # because we are using ys1 right now
-    export PROJECT_URL=https://projects.api.test.cloud.ibm.com
 
     getProjectConfigurationId "$projectId" "$offeringName" "$version" "$versionLocator" "$configId"
     echo "project configuration id is: $configId"
@@ -199,22 +197,16 @@ function installProjectConfig() {
 }
 
 function publishVersion() {
-    local projectId=$1
-    local offeringName=$2
-    local version=$3
-
-    configname=$(getConfigName "$offeringName" "$version")
-
-    # get the catalog version locator for an offering version from the project config
-    vl=$(ibmcloud project --project-id "$projectId" configs --output json | jq -r --arg configname "$configname" '.configs[] | select(.definition.name==$configname).definition.locator_id')
+    local versionLocator=$1
 
     # publish the new version
-    ibmcloud catalog offering ready --version-locator "$vl"
+    ibmcloud catalog offering ready --version-locator "$versionLocator"
 }
 
 function cleanUpResources() {
     local projectId=$1
     local configId=$2
+    local vl=$3
 
     # cleanup 
     ibmcloud project --project-id "$projectId" --id "$configId" config-uninstall
@@ -242,11 +234,6 @@ function cleanUpResources() {
 }
 
 
-# Notes:
-#     - delete version from catalog initiates delete config at project
-#     - project default settings are to delete everything if the project is deleted, this includes workspace and resources
-
-
 # ------------------------------------------------------------------------------------
 #  main
 # ------------------------------------------------------------------------------------
@@ -264,10 +251,13 @@ projectName="kb-test-module-project"
 catalogName="Keith Test"
 offeringName="terraform-ibm-cos"
 version="0.0.4"
-variationLabel="Basic"
+variationLabel="Replication"
 formatKind="terraform"
 installType="module"
 tarBall="https://github.com/kbiegert/terraform-ibm-cos/archive/refs/tags/0.0.4.tar.gz"
+
+# because we are using ys1 right now
+export PROJECT_URL=https://projects.api.test.cloud.ibm.com
 
 # these values will be determined and set
 configId=""
@@ -280,5 +270,5 @@ getProjectIdFromName "$projectName" "$projectId"
 onboardVersionToCatalog "$tarBall" "$version" "$catalogName" "$offeringName" "$variationLabel" "$formatKind" "$installType" "$versionLocator"
 validateProjectConfig "$projectId" "$offeringName" "$version" "$versionLocator" "$configId"
 installProjectConfig "$projectId" "$configId"
-publishVersion "$projectId" "$offeringName" "$version"
-cleanUpResources "$projectId" "$configId"
+publishVersion "$versionLocator"
+cleanUpResources "$projectId" "$configId" "$versionLocator"
