@@ -1,7 +1,5 @@
 #! /bin/bash
 
-set -x
-
 #
 # the setup or pre-requisites for this script are that a catalog and project already exist.  They are also alreay linked by adding an account 
 # context to the catalog identifying the project and an api key as the authorization mechanism.
