@@ -1,0 +1,54 @@
+# Preconditions:
+# - catalog already exists
+# - project alreaay exists
+# - catalog and project are linked via a trusted profile and trust relationships and service to service access
+#
+
+name: project-ci-pipeline
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on the publish of a release. Its assumed that the release has an associated tag.
+  release:
+    types:
+      - published
+       
+  workflow_dispatch: 
+jobs:
+  # This workflow contains a single job called "onboard-publish-release"
+  onboard-publish-release:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    env:
+      CATALOG_NAME: Demo
+      PROJECT_NAME: SETUP-SETUP-SETUP
+      OFFERING_NAME: custom-deployable-arch
+      OFFERING_VARIATION_LABEL: BabySLZ
+      FULLSTACK_INSTALL_TYPE: fullstack
+      MODULE_INSTALL_TYPE: module
+      FORMAT_KIND_TERRAFORM: terraform
+      # Note that IBMCLOUD_API_KEY is a secret environment variable configured on the project
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access scripts, etc.
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.release.tag_name }}
+
+      - name: Install and setup IBMCLOUD Cli
+        env: 
+          IBMCLOUD_API_KEY: ${{ secrets.IBMCLOUD_API_KEY }}
+        run: |
+          ./.github/scripts/installCloudCli.sh
+
+      - name: Upload, validate, scan and publish custom-deployable-arch - Baby SLZ variation
+        env: 
+          IBMCLOUD_API_KEY: ${{ secrets.IBMCLOUD_API_KEY }}
+          VERSION: ${{ github.event.release.tag_name }}
+        run: |
+
+          echo "--------------------------------------------------------------------"
+          echo "onboard version, validate, scan, publish"
+          echo "--------------------------------------------------------------------"
+          ./.github/scripts/epx_onboard_validate_publish.sh "$PROJECT_NAME" "$CATALOG_NAME" "$OFFERING_NAME" "$VERSION" "$OFFERING_VARIATION_LABEL" "$FORMAT_KIND_TERRAFORM" "$FULLSTACK_INSTALL_TYPE" ""   
