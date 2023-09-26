@@ -51,4 +51,4 @@ jobs:
           echo "--------------------------------------------------------------------"
           echo "onboard version, validate, scan, publish"
           echo "--------------------------------------------------------------------"
-          ./.github/scripts/epx_onboard_validate_publish.sh "$PROJECT_NAME" "$CATALOG_NAME" "$OFFERING_NAME" "$VERSION" "$OFFERING_VARIATION_LABEL" "$FORMAT_KIND_TERRAFORM" "$FULLSTACK_INSTALL_TYPE" ""   
+          ./.github/scripts/epx_onboard_validate_publish.sh "$PROJECT_NAME" "$CATALOG_NAME" "$OFFERING_NAME" "$VERSION" "$OFFERING_VARIATION_LABEL" "$FORMAT_KIND_TERRAFORM" "" ""   
