@@ -19,9 +19,12 @@ function onboardVersionToCatalog() {
     if [[ "$tarBall" == "" ]]; then
         tarBall="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/archive/refs/tags/${version}.tar.gz"
     fi
+    # determine the offering's product kind in the catalog.
+    productKind=""
+    getProductKind "$catalogName" "$offeringName" "$productKind"   
 
-    # onboard to an existing catalog with an existing offering - just import a version
-    if [[ "$installType" == "module" ]]; then
+    # onboard to an existing catalog with an existing offering - just import a version.  module offerings do not have an installType
+    if [[ "$productKind" == "module" ]]; then
         ibmcloud catalog offering import-version --zipurl "$tarBall" --target-version "$version" --catalog "$catalogName" --offering "$offeringName" --variation-label "$variationLabel" --format-kind "$formatKind"
     else
         ibmcloud catalog offering import-version --zipurl "$tarBall" --target-version "$version" --catalog "$catalogName" --offering "$offeringName" --variation-label "$variationLabel" --format-kind "$formatKind" --install-type "$installType" 
@@ -35,6 +38,18 @@ function onboardVersionToCatalog() {
     # determine the catalog's version locator string for this version
     getVersionLocator "$catalogName" "$offeringName" "$version" "$variationLabel" "$installType" "$formatKind" "$versionLocator"
     echo "the version locator is $versionLocator"
+}
+
+
+function getProductKind() {
+    local catalogName=$1
+    local offeringName=$2
+    productKind=$3
+
+    # get the product kind
+    ibmcloud catalog offering get --catalog "$catalogName" --offering "$offeringName" --output json > offering.json
+    productKind=$(jq -r '.product_kind' < offering.json)
+
 }
 
 # 
