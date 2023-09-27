@@ -35,7 +35,7 @@
                             {
                                 "profile": {
                                     "name": "IBM Cloud for Financial Services",
-                                    "version": "1.2.0"
+                                    "version": "1.4.0"
                                 },
                                 "names": [
                                     "AC-2(a)",
@@ -169,7 +169,7 @@
                             {
                                 "profile": {
                                     "name": "IBM Cloud for Financial Services",
-                                    "version": "1.2.0"
+                                    "version": "1.4.0"
                                 },
                                 "names": [
                                     "AC-2(a)",
