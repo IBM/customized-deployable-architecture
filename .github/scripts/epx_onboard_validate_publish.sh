@@ -151,8 +151,6 @@ function validateProjectConfig() {
     generateValidationValues "$inputString" 
 
     # these values are specific to the offering version 
-    #ibmcloud project config-update --project-id "$projectId"  --id "$configId" --input='[{"name": "prefix", "value":"epx-validate"}, {"name": "ssh_key", "value": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCxsNM3xgeyU5pANw4r8qgiOMHktfj3z0/OSeIjscx2uCS4/loB/mRpG0+pgDctp1i+0AIh3wFPFUtdqzrR7otC1wo0Tmky6DT4E9yOoSO1nC413L2wDHyBtwp8mk+DhARXzeRdDvP0NtL+Rj1qy7OOAnZ0/Utu07dME8wEtOIotlGPZQmJvf78znV9eX9UU8A/J+IaC+0tK4W4Wt8irIc9kKm+3tcQsnpxmDgkApmwMjOcCH6yaONu1pYKAhBIzwkOTJl/VrEFeduPSdmL7ENtpITB0AZ99doYTucmQ73Axt728foXAFW8WX4uROc9df9Qyev40bxSzlAOGHvtEVwpNOqx6oAr1Kok811OITcuGtuUTDuPVXJyqBmWq2p9tMFrIFRN28lE5Ax3HYFinRaQ+X6rM1pIeHBA/ESS52lO5xpPl4k0laKWVeG42Ch8xi3ZjPk5Mg+AYMt9u9jtQ2KyZvV+zIO+jwlGXkiMSBWgm+7SnsJnRf+q2xg9cpXKjB0= kbiegert@Keiths-MacBook-Pro-2.local"}]'
-    #ibmcloud project config-update --project-id "$projectId"  --id "$configId" --input='[{"name": "prefix", "value":"epx-validate"}, {"name": "region", "value": "us-south"}, {"name": "resource_group", "value": "Default"}]'
     ibmcloud project config-update --project-id "$projectId"  --id "$configId" "$inputString"
 
     
