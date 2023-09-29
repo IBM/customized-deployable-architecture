@@ -21,11 +21,10 @@ jobs:
     runs-on: ubuntu-latest
     env:
       CATALOG_NAME: Demo
-      PROJECT_NAME: SETUP-SETUP-SETUP
+      PROJECT_NAME: EPX-DAs
       OFFERING_NAME: custom-deployable-arch
       OFFERING_VARIATION_LABEL: BabySLZ
       FULLSTACK_INSTALL_TYPE: fullstack
-      MODULE_INSTALL_TYPE: module
       FORMAT_KIND_TERRAFORM: terraform
       # Note that IBMCLOUD_API_KEY is a secret environment variable configured on the project
 
