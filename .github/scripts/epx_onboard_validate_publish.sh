@@ -199,6 +199,7 @@ function validateProjectConfig() {
 
 function installProjectConfig() {
     local projectId=$1
+    configId=$2
 
     # eventually do a force approve to get past failed SCC
     ibmcloud project --project-id "$projectId" --id "$configId" --comment "cli pipeline" force-approve
