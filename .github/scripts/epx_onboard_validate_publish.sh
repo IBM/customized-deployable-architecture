@@ -97,7 +97,7 @@ function getProjectConfigurationId() {
     configId=$(ibmcloud project --project-id "$projectId" configs --output json | jq -r --arg versionLocator "$versionLocator" '.configs[] | select(.definition.locator_id==$versionLocator).id')
 
     if [[ $configId == "" ]]; then
-        echo "project configuration with name $configname not found as expected.  exiting"
+        echo "a project configuration for $offeringName, $version, $versionLocator was not found as expected.  exiting"
         exit 1
     fi
 }
@@ -178,6 +178,23 @@ function validateProjectConfig() {
         echo "project config validation status: $state"
         attempts=$((attempts+1))
     done
+
+    # the config-check has finished and is showing a state of "pipeline_failed".  Make sure that the reason for the state
+    # is due to only the fail of the SCC/CRA step.
+    validateSuccess="false"
+    ibmcloud project --project-id "$projectId" --id "$configId" config-get --output json > version.json
+    if [[ $(jq -r '.last_validated.job.summary.plan_summary.failed' < version.json) == 0 ]]; then
+        if [[ $(jq -r '.last_validated.job.summary.plan_messages.error_messages | length' < version.json) == 0 ]]; then
+            if [[ $(jq -r '.last_validated.cra_logs.status' < version.json) == "failed" ]]; then
+                validateSuccess="true"
+            fi
+        fi
+    fi
+
+    if [[ $validateSuccess == "false" ]]; then
+        echo "the project configuration did not pass validation."
+        exit 1
+    fi
 }
 
 function installProjectConfig() {
