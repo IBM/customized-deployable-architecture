@@ -25,9 +25,9 @@ function onboardVersionToCatalog() {
 
     # onboard to an existing catalog with an existing offering - just import a version.  module offerings do not have an installType
     if [[ "$productKind" == "module" ]]; then
-        ibmcloud catalog offering import-version --zipurl "$tarBall" --target-version "$version" --catalog "$catalogName" --offering "$offeringName" --variation-label "$variationLabel" --format-kind "$formatKind"
+        ibmcloud catalog offering import-version --zipurl "$tarBall" --target-version "$version" --catalog "$catalogName" --offering "$offeringName" --variation-label "$variationLabel" --format-kind "$formatKind" --include-config
     else
-        ibmcloud catalog offering import-version --zipurl "$tarBall" --target-version "$version" --catalog "$catalogName" --offering "$offeringName" --variation-label "$variationLabel" --format-kind "$formatKind" --install-type "$installType" 
+        ibmcloud catalog offering import-version --zipurl "$tarBall" --target-version "$version" --catalog "$catalogName" --offering "$offeringName" --variation-label "$variationLabel" --format-kind "$formatKind" --install-type "$installType" --include-config
     fi
 
     if [[ $? -eq 1 ]]; then
@@ -129,6 +129,7 @@ function generateValidationValues() {
 
     # construct a json string and substitute values for the deployment parameters for this offering version.  
     inputString="--input="$(jq -n --arg prefix "$PREFIX" --arg sshkey "$SSH_KEY" '[{"name": "prefix", "value":$prefix}, {"name": "ssh_key", "value": $sshkey}]')
+
     echo "validation values are: $inputString"
 }    
 
