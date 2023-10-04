@@ -171,7 +171,7 @@ function validateProjectConfig() {
     attempts=0
     state=$(ibmcloud project --project-id "$projectId" --id "$configId" config-get --output json | jq -r '.pipeline_state')
     echo "project config validation status: $state"
-    while [[ $attempts -le 240 ]] && [[ "$state" != "pipeline_failed" ]]
+    while [[ $attempts -le 240 ]] && [[ "$state" != "pipeline_failed" ]] && [[ "$state" != "pipeline_passed" ]]
     do
         sleep 15
         state=$(ibmcloud project --project-id "$projectId" --id "$configId" config-get --output json | jq -r '.pipeline_state')
