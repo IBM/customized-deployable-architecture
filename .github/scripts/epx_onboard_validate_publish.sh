@@ -183,9 +183,9 @@ function validateProjectConfig() {
     # is due to only the fail of the SCC/CRA step.
     validateSuccess="false"
     ibmcloud project --project-id "$projectId" --id "$configId" config-get --output json > version.json
-    if [[ $(jq -r '.last_validated.job.summary.plan_summary.failed' < version.json) == 0 ]]; then
-        if [[ $(jq -r '.last_validated.job.summary.plan_messages.error_messages | length' < version.json) == 0 ]]; then
-            if [[ $(jq -r '.last_validated.cra_logs.status' < version.json) == "failed" ]]; then
+    if [[ $(jq -r '.job_summary.plan_summary.failed' < version.json) == 0 ]]; then
+        if [[ $(jq -r '.job_summary.plan_messages.error_messages | length' < version.json) == 0 ]]; then
+            if [[ $(jq -r '.cra_logs.status' < version.json) == "failed" ]]; then
                 validateSuccess="true"
             fi
         fi
