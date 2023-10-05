@@ -229,6 +229,19 @@ function installProjectConfig() {
     done
 }
 
+function validateInstallProjectConfig() {
+    local projectId=$1
+    local offeringName=$2
+    local version=$3
+    local versionLocator=$4
+    configId=$5
+
+    # do a Project config-check and wait for it to finish
+    validateProjectConfig "$projectId" "$offeringName" "$version" "$versionLocator" "$configId"
+    # do a Project config-install and wait for it to finish
+    installProjectConfig "$projectId" "$configId" 
+} 
+
 function publishVersion() {
     local versionLocator=$1
 
@@ -289,7 +302,8 @@ getProjectIdFromName "$projectName" "$projectId"
 
 # steps 
 onboardVersionToCatalog "$tarBall" "$version" "$catalogName" "$offeringName" "$variationLabel" "$formatKind" "$installType" "$versionLocator"
-validateProjectConfig "$projectId" "$offeringName" "$version" "$versionLocator" "$configId"
-installProjectConfig "$projectId" "$configId"
+validateInstallProjectConfig "$projectId" "$offeringName" "$version" "$versionLocator" "$configId"
+# validateProjectConfig "$projectId" "$offeringName" "$version" "$versionLocator" "$configId"
+# installProjectConfig "$projectId" "$configId"
 publishVersion "$versionLocator"
 cleanUpResources "$projectId" "$configId" "$versionLocator"
