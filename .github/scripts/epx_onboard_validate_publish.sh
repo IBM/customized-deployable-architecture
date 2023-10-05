@@ -303,7 +303,5 @@ getProjectIdFromName "$projectName" "$projectId"
 # steps 
 onboardVersionToCatalog "$tarBall" "$version" "$catalogName" "$offeringName" "$variationLabel" "$formatKind" "$installType" "$versionLocator"
 validateInstallProjectConfig "$projectId" "$offeringName" "$version" "$versionLocator" "$configId"
-# validateProjectConfig "$projectId" "$offeringName" "$version" "$versionLocator" "$configId"
-# installProjectConfig "$projectId" "$configId"
 publishVersion "$versionLocator"
 cleanUpResources "$projectId" "$configId" "$versionLocator"
