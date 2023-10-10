@@ -147,7 +147,6 @@ ACCESS_TOKEN=$(echo "${IAM_RESPONSE}" | jq -r '.access_token')
 ####################################################################################
 # STEP 1: Log CLI into catalog account
 ####################################################################################
-source common-functions.sh
 echo "Logging CLI into catalog account.."
 ibmcloud login --apikey "${CATALOG_API_KEY}" --no-region
 ibmcloud target -r us-south  # need to target a region to list images later
