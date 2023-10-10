@@ -44,6 +44,9 @@ jobs:
       - name: Upload, validate, scan and publish custom-deployable-arch - Baby SLZ variation
         env: 
           IBMCLOUD_API_KEY: ${{ secrets.IBMCLOUD_API_KEY }}
+          CATALOG_API_KEY: ${{ secrets.CATALOG_API_KEY }}
+          SCC_API_KEY: ${{ secrets.SCC_API_KEY }}
+          SCC_ACCOUNT_ID: ${{ secrets.SCC_ACCOUNT_ID }}
           VERSION: ${{ github.event.release.tag_name }}
         run: |
 
