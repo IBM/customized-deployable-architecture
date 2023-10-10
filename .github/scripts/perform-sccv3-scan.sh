@@ -127,6 +127,7 @@ fi
 
 # SCC API endpoint setup
 SCC_API_BASE_URL="https://$SCC_REGION.compliance.cloud.ibm.com/instances/$INSTANCE_ID/v3"
+echo "SCC_API_BASE_URL=$SCC_API_BASE_URL"
 
 # use api key to get an access token
 IAM_RESPONSE=$(curl -s --request POST \
@@ -159,6 +160,8 @@ PROFILE_JSON=$(curl --silent --location --request GET \
 "${SCC_API_BASE_URL}/profiles" \
 --header 'Content-Type: application/json' \
 --header 'Authorization: Bearer '"${ACCESS_TOKEN}")
+
+echo "PROFILE_JSON=$PROFILE_JSON"
 
 PROFILE_ID=$(echo "${PROFILE_JSON}" | jq -r --arg PROFILE_NAME "${PROFILE_NAME}" --arg PROFILE_VERSION "${PROFILE_VERSION}" '.profiles[] | select(.profile_name == $PROFILE_NAME and .profile_version == $PROFILE_VERSION) | {id}' | jq -r .id)
 if [[ -z "${PROFILE_ID}" ]]; then
