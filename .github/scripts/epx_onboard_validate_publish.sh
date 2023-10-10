@@ -303,5 +303,6 @@ getProjectIdFromName "$projectName" "$projectId"
 # steps 
 onboardVersionToCatalog "$tarBall" "$version" "$catalogName" "$offeringName" "$variationLabel" "$formatKind" "$installType" "$versionLocator"
 validateInstallProjectConfig "$projectId" "$offeringName" "$version" "$versionLocator" "$configId"
+./perform-sccv3-scan.sh --profile_name="IBM Cloud for Financial Services" --profile_version="1.4.0" --account_id="$SCC_ACCOUNT_ID" --instance_id="7dc34340-f645-4d94-a1ca-95aa074f90f2" --scc_region="us-south" --version_locator="$versionLocator"
 publishVersion "$versionLocator"
 cleanUpResources "$projectId" "$configId" "$versionLocator"
