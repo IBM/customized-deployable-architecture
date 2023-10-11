@@ -26,6 +26,8 @@ jobs:
       OFFERING_VARIATION_LABEL: BabySLZ
       FULLSTACK_INSTALL_TYPE: fullstack
       FORMAT_KIND_TERRAFORM: terraform
+      SCC_INSTANCE_ID: 7dc34340-f645-4d94-a1ca-95aa074f90f2
+      SCC_REGION: us-south
       # Note that IBMCLOUD_API_KEY is a secret environment variable configured on the project
 
     # Steps represent a sequence of tasks that will be executed as part of the job
@@ -53,4 +55,4 @@ jobs:
           echo "--------------------------------------------------------------------"
           echo "onboard version, validate, scan, publish"
           echo "--------------------------------------------------------------------"
-          ./.github/scripts/epx_onboard_validate_publish.sh "$PROJECT_NAME" "$CATALOG_NAME" "$OFFERING_NAME" "$VERSION" "$OFFERING_VARIATION_LABEL" "$FORMAT_KIND_TERRAFORM" "$FULLSTACK_INSTALL_TYPE" ""   
+          ./.github/scripts/epx_onboard_validate_publish.sh "$PROJECT_NAME" "$CATALOG_NAME" "$OFFERING_NAME" "$VERSION" "$OFFERING_VARIATION_LABEL" "$FORMAT_KIND_TERRAFORM" "$FULLSTACK_INSTALL_TYPE" "$SCC_INSTANCE_ID" "$SCC_REGION" ""   
