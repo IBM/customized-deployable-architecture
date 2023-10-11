@@ -249,6 +249,23 @@ function publishVersion() {
     ibmcloud catalog offering ready --version-locator "$versionLocator"
 }
 
+function runComplianceScan() {
+    local offeringName=$1
+    local variationLabel=$2
+    local versionLocator=$3
+    local sccInstanceId=$4
+    local sccRegion=$5
+
+    # from the ibm_catalog.json file determine the SCC profile name and version
+    scc_profile_name=$(jq -r '.products[] | select(.name=="custom-deployable-arch").flavors[] | select(.label=="BabySLZ").compliance.controls[0].profile.name' < ibm_catalog.json)
+    scc_profile_version=$(jq -r '.products[] | select(.name=="custom-deployable-arch").flavors[] | select(.label=="BabySLZ").compliance.controls[0].profile.version' < ibm_catalog.json)
+
+    if [[ -n $scc_profile_name && -n $scc_profile_version ]]; then
+        # run a scan and apply results to version
+        ./.github/scripts/perform-sccv3-scan.sh --profile_name="$scc_profile_name" --profile_version="$scc_profile_version" --account_id="$SCC_ACCOUNT_ID" --instance_id="$sccInstanceId" --scc_region="$sccRegion" --version_locator="$versionLocator"
+    fi
+}
+
 function cleanUpResources() {
     local projectId=$1
     local configId=$2
@@ -291,7 +308,9 @@ version=$4
 variationLabel=$5
 formatKind=$6
 installType=$7
-tarBall=$8
+sccInstanceId=$8
+sccRegion=$9
+tarBall=${10}
 
 # these values will be determined and set
 configId=""
@@ -300,9 +319,9 @@ projectId=""
 
 getProjectIdFromName "$projectName" "$projectId"
 
-# steps 
+# main steps 
 onboardVersionToCatalog "$tarBall" "$version" "$catalogName" "$offeringName" "$variationLabel" "$formatKind" "$installType" "$versionLocator"
 validateInstallProjectConfig "$projectId" "$offeringName" "$version" "$versionLocator" "$configId"
-./.github/scripts/perform-sccv3-scan.sh --profile_name="IBM Cloud for Financial Services" --profile_version="1.4.0" --account_id="$SCC_ACCOUNT_ID" --instance_id="7dc34340-f645-4d94-a1ca-95aa074f90f2" --scc_region="us-south" --version_locator="$versionLocator"
+runComplianceScan "$offeringName" "$variationLabel" "$versionLocator" "$sccInstanceId" "$sccRegion"
 publishVersion "$versionLocator"
 cleanUpResources "$projectId" "$configId" "$versionLocator"

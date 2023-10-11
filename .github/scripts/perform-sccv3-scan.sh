@@ -161,15 +161,11 @@ PROFILE_JSON=$(curl --silent --location --request GET \
 --header 'Content-Type: application/json' \
 --header 'Authorization: Bearer '"${ACCESS_TOKEN}")
 
-echo "PROFILE_JSON=$PROFILE_JSON"
-
 PROFILE_ID=$(echo "${PROFILE_JSON}" | jq -r --arg PROFILE_NAME "${PROFILE_NAME}" --arg PROFILE_VERSION "${PROFILE_VERSION}" '.profiles[] | select(.profile_name == $PROFILE_NAME and .profile_version == $PROFILE_VERSION) | {id}' | jq -r .id)
 if [[ -z "${PROFILE_ID}" ]]; then
     echo "Could not determine profile id for profile named: ${PROFILE_NAME}"
     exit 1
 fi
-
-echo "Profile id is ${PROFILE_ID} for profile named ${PROFILE_NAME}"
 
 ####################################################################################
 # STEP 3: get default parameters for profile, needed for attachment
