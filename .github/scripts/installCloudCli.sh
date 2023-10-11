@@ -7,6 +7,7 @@ curl -sL https://ibm.biz/idt-installer | bash
 ibmcloud plugin install catalogs-management
 ibmcloud plugin install schematics
 ibmcloud plugin install project
+ibmcloud plugin install vpc-infrastructure
 
 # list whats installed into the log
 ibmcloud plugin list
