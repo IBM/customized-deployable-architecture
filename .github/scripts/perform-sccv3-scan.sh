@@ -324,6 +324,21 @@ done
 
 echo "Scan ID ${SCAN_ID} is complete!"
 
+# perform a token refresh
+IAM_RESPONSE=$(curl -s --request POST \
+'https://iam.cloud.ibm.com/identity/token' \
+--header 'Content-Type: application/x-www-form-urlencoded' \
+--header 'Accept: application/json' \
+--data-urlencode 'grant_type=urn:ibm:params:oauth:grant-type:apikey' --data-urlencode 'apikey='"${SCC_API_KEY}") # pragma: allowlist secret
+
+ERROR_MESSAGE=$(echo "${IAM_RESPONSE}" | jq 'has("errorMessage")')
+if [[ "${ERROR_MESSAGE}" != false ]]; then
+    echo "${IAM_RESPONSE}" | jq '.errorMessage'
+    echo "Could not obtain an access token"
+    exit 1
+fi
+ACCESS_TOKEN=$(echo "${IAM_RESPONSE}" | jq -r '.access_token')
+
 # need to make sure the scan has recorded it status fully within the SCC database.  Temporarily wait 30 sec to be sure.
 echo "Waiting for 30 secs to make sure the scan has recorded its status fully within the SCC database.."
 sleep 30
