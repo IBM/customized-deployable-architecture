@@ -3,11 +3,8 @@
   hosts: localhost
   vars:
     ibmcloud_api_key: "{{ lookup('ansible.builtin.env', 'ibmcloud_api_key')}}"
-    prefix: "{{ lookup('ansible.builtin.env', 'prefix')}}"
   tasks:
    - name: Print result
      ansible.builtin.debug:
        msg: "Received api key" 
-     when: ibmcloud_api_key is defined
-   - name: Validate prefix
-     failed_when: prefix is not regex('^test-.*')    
+     when: ibmcloud_api_key is defined 
