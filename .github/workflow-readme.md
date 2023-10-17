@@ -26,4 +26,20 @@ The steps within the workflow are the following.
 
 ### Project based onboarding workflow
 
-This workflow highlights the coordination of IBM Catalog, IBM Projects and IBM Schematics to illustrate the EPX process flow.
+This workflow highlights the coordination between IBM Catalog, IBM Projects and IBM Schematics to illustrate the EPX process flow.  Here the 
+offering version is imported to a catalog and a configuration created in a Project enabling the project to track its validation status.  Prior 
+to the execution of the workflow some basic setup is needed between the catalog and project.
+
+Before executing the workflow - one time setup
+- create the catalog
+- create the project
+- Link the catalog and the project by editing the catalog details.  In this workflow, the authorization is an IBM Cloud api key.  Define it as part of the catalog details with the project.
+
+
+#### Security and Compliance scanning
+
+This workflow also utilizes the IBM Security and Compliance service to scan the provisioned resources and validate the claimed security controls.  This requires an instance of Security and Compliance (SCC) on an IBM Cloud account.  
+
+Additional secrets have been defined in this repository to hold the id of the account that owns the SCC instance and to store an api key for that same account.  The SCC controls that are claimed are specified in the `ibm_catalog.json` file in the compliance section.  Scan results are applied 
+to each version that is onboarded. 
+
