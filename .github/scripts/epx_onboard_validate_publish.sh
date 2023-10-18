@@ -264,6 +264,8 @@ function runComplianceScan() {
         # run a scan and apply results to version
         echo "Running SCC scan for profile $scc_profile_name version $scc_profile_version"
         ./.github/scripts/perform-sccv3-scan.sh --profile_name="$scc_profile_name" --profile_version="$scc_profile_version" --account_id="$SCC_ACCOUNT_ID" --instance_id="$sccInstanceId" --scc_region="$sccRegion" --version_locator="$versionLocator"
+    else
+        echo "Skipping SCC scan.  An SCC profile/version not found in the ibm_catalog.json file."
     fi
 }
 
