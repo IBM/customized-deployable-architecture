@@ -257,10 +257,10 @@ function runComplianceScan() {
     local sccRegion=$5
 
     # from the ibm_catalog.json file determine the SCC profile name and version
-    scc_profile_name=$(jq -r '.products[] | select(.name=="custom-deployable-arch").flavors[] | select(.label=="BabySLZ").compliance.controls[0].profile.name' < ibm_catalog.json)
-    scc_profile_version=$(jq -r '.products[] | select(.name=="custom-deployable-arch").flavors[] | select(.label=="BabySLZ").compliance.controls[0].profile.version' < ibm_catalog.json)
+    scc_profile_name=$(jq -r --arg offeringname "${offeringName}" --arg variationlabel "${variationLabel}" '.products[] | select(.name==$offeringname).flavors[] | select(.label==$variationlabel).compliance.controls[0].profile.name' < ibm_catalog.json)
+    scc_profile_version=$(jq -r --arg offeringname "${offeringName}" --arg variationlabel "${variationLabel}" '.products[] | select(.name==$offeringname).flavors[] | select(.label==$variationlabel).compliance.controls[0].profile.version' < ibm_catalog.json)
 
-    if [[ -n $scc_profile_name && -n $scc_profile_version ]]; then
+    if [[ $scc_profile_name != null  &&  $scc_profile_version != null ]]; then
         # run a scan and apply results to version
         echo "Running SCC scan for profile $scc_profile_name version $scc_profile_version"
         ./.github/scripts/perform-sccv3-scan.sh --profile_name="$scc_profile_name" --profile_version="$scc_profile_version" --account_id="$SCC_ACCOUNT_ID" --instance_id="$sccInstanceId" --scc_region="$sccRegion" --version_locator="$versionLocator"
