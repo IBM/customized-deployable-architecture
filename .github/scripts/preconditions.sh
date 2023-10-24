@@ -9,7 +9,7 @@ function validateProject() {
     projectId=$(ibmcloud project list --output json | jq -r --arg projectname "$projectName" '.projects[] | select(.definition.name==$projectname).id') 
 
     step=$((step+1))
-    echo "Step $step . checking existance of Project"
+    echo "Step $step . checking existence of Project"
 
     if [[ "$projectId" != null ]]; then
         # there is no existing project
@@ -34,7 +34,7 @@ function validateCatalog() {
     catalogId=$(ibmcloud catalog list --output json | jq -r --arg catalogname "$catalogName" '.[] | select(.label==$catalogname).id')
 
     step=$((step+1))
-    echo "Step $step. checking existance of Catalog"
+    echo "Step $step. checking existence of Catalog"
     if [[ "$catalogId" != null ]]; then
         # there is no existing project
         echo "-- success: Catalog \"$catalogName\" exists and its id is $catalogId"
@@ -48,7 +48,7 @@ function validateCatalog() {
     offeringId=$(ibmcloud catalog offerings -c "$catalogName" --output json | jq -r --arg offeringname "$offeringName" '.resources[] | select(.label==$offeringname).id')
 
     step=$((step+1))
-    echo "Step $step.  checking existance of offering"
+    echo "Step $step.  checking existence of offering"
     if [[ "$offeringId" != null ]]; then
         echo "-- success: offering \"$offeringName\" exists in catalog \"$catalogName\" and its id is $offeringId."
     else
