@@ -3,11 +3,13 @@
 function validateProject() {
     local projectName=$1
     projectCrn=$2
+    step=$3
 
     # project needs to exist
     projectId=$(ibmcloud project list --output json | jq -r --arg projectname "$projectName" '.projects[] | select(.definition.name==$projectname).id') 
 
-    echo "Step 2. checking existance of Project"
+    step=$((step+1))
+    echo "Step $step . checking existance of Project"
 
     if [[ "$projectId" != null ]]; then
         # there is no existing project
@@ -26,11 +28,13 @@ function validateCatalog() {
     local authorization=$4
     trustedProfileId=$5
     catalogCrn=$6
+    step=$7
 
     # catalog needs to exist
     catalogId=$(ibmcloud catalog list --output json | jq -r --arg catalogname "$catalogName" '.[] | select(.label==$catalogname).id')
 
-    echo "Step 3. checking existance of Catalog"
+    step=$((step+1))
+    echo "Step $step. checking existance of Catalog"
     if [[ "$catalogId" != null ]]; then
         # there is no existing project
         echo "-- success: Catalog \"$catalogName\" exists and its id is $catalogId"
@@ -43,7 +47,8 @@ function validateCatalog() {
     # see if the catalog offering exists yet
     offeringId=$(ibmcloud catalog offerings -c "$catalogName" --output json | jq -r --arg offeringname "$offeringName" '.resources[] | select(.label==$offeringname).id')
 
-    echo "Step 4.  checking existance of offering"
+    step=$((step+1))
+    echo "Step $step.  checking existance of offering"
     if [[ "$offeringId" != null ]]; then
         echo "-- success: offering \"$offeringName\" exists in catalog \"$catalogName\" and its id is $offeringId."
     else
@@ -51,7 +56,7 @@ function validateCatalog() {
     fi
 
     # query the catalog to see if the account context has been setup
-    validateCatalogAccountContext "$catalogName" "$projectName" "$authorization" "$trustedProfileId"
+    validateCatalogAccountContext "$catalogName" "$projectName" "$authorization" "$trustedProfileId" "$step"
 }
 
 function validateCatalogAccountContext() {
@@ -59,8 +64,10 @@ function validateCatalogAccountContext() {
     local projectName=$2
     local authorization=$3
     trustedProfileId=$4
+    step=$5
 
-    echo "Step 5. checking for Project to Catalog link via target account configuration"
+    step=$((step+1))
+    echo "Step $step. checking for Project to Catalog link via target account configuration"
     # see if the account context exists between the catalog and the project with the correct authorization method
     targetAccounts=$(ibmcloud catalog target-account list -c "$catalogName" -output json)
     if [[ "$targetAccounts" == "No target accounts found in this catalog" ]]; then
@@ -103,12 +110,12 @@ function validateCatalogAccountContext() {
         echo "-- failed. The catalog does not have any target account contexts configured with a project."
         exit 1
     fi    
-
 }
 
 function validateSCC() {
     local instanceId=$1
     local sccRegion=$2
+    step=$3
 
     # verify that this instance exists
     SCC_API_BASE_URL="https://$sccRegion.compliance.test.cloud.ibm.com/instances/$instanceId/v3"
@@ -128,13 +135,14 @@ function validateSCC() {
     fi
 
     ACCESS_TOKEN=$(echo "${IAM_RESPONSE}" | jq -r '.access_token')
-
+    
     PROFILE_JSON=$(curl --silent --location --request GET \
         "${SCC_API_BASE_URL}/profiles" \
         --header 'Content-Type: application/json' \
         --header 'Authorization: Bearer '"${ACCESS_TOKEN}")
 
-    echo "Step 1. checking for SCC instance."
+    step=$((step+1))
+    echo "Step $step. checking for SCC instance - switching to SCC account."
 
     numberProfiles=$(echo "${PROFILE_JSON}" | jq -r '.total_count')
     if [[ $numberProfiles -gt 0 ]]; then
@@ -149,8 +157,10 @@ function validateService2Service() {
     local projectCrn=$2
     local authorizationMethod=$3
     local trustedProfileId=$4
+    step=$5
 
-    echo "Step 6. checking for service to service authorizations - switching to target account."
+    step=$((step+1))
+    echo "Step $step. checking for service to service authorizations - switching to target account."
 
     # need to be sure to be logged in under the target account to be able to list the IAM authorizations
     ibmcloud login --apikey "${TARGET_ACCOUNT_API}" -a https://test.cloud.ibm.com -r us-south --quiet 2>/dev/null 1>/dev/nul
@@ -223,7 +233,7 @@ catalogCrn=""
 
 echo "This script will validate that the necessary configuration has been setup to use a Project to "
 echo "track the onboarding and validation of a new version of an offering.  A Project supports "
-echo "two kinds of authorization mechanisms, an apikey or trusted profile, so one or the other will be "
+echo "two kinds of authorization mechanisms, an api key or trusted profile, so one or the other will be "
 echo "needed here.  If a trusted profile is used, then the CRNs of the catalog and the project need to "
 echo "be defined in the \"Trust relationship\" - IBM Cloud services section of the trusted profile."
 echo
@@ -237,10 +247,14 @@ if [[ $reply != y* ]]; then
 fi
 echo 
 
-# login for this steps with api key for account that owns catalog and SCC instance
-validateSCC "$sccInstanceId" "$sccRegion"
-validateProject "$projectName" "$projectCrn"
-validateCatalog "$catalogName" "$offeringName" "$projectName" "$authorization" "$trustedProfileId" "$catalogCrn"
+step=0
 
-# login for this step with api key for target account which owns the trusted profile 
-validateService2Service "$catalogCrn" "$projectCrn" "$authorization" "$trustedProfileId"
+# login for this steps with api key for account that owns catalog and project
+validateProject "$projectName" "$projectCrn" "$step"
+validateCatalog "$catalogName" "$offeringName" "$projectName" "$authorization" "$trustedProfileId" "$catalogCrn" "$step"
+
+# login for this step with an api key for target account which owns the trusted profile 
+validateService2Service "$catalogCrn" "$projectCrn" "$authorization" "$trustedProfileId" "$step"
+
+# login for this step with an api key for an account that has an SCC instance
+validateSCC "$sccInstanceId" "$sccRegion" "$step"
