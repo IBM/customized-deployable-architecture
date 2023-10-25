@@ -29,6 +29,22 @@
                     "install_type": "fullstack",
                     "working_directory": "solutions/custom-slz",
                     "usage_template": "module \"custom_arch\" {\n    source           = \"https://cm.globalcatalog.cloud.ibm.com/api/v1-beta/offering/source//${{workingDirectory}}?archive=tgz&catalogID=${{catalogID}}&flavor=${{flavor}}&kind=${{kind}}&name=${{name}}&version=${{version}}\"\n    prefix           = var.prefix\n    ssh_key          = var.ssh_key\n    ibmcloud_api_key = var.ibmcloud_api_key\n}\n\n",
+                    "scripts": [	
+                        {
+                            "type": "ansible",
+                            "short_description": "script that will run before validation.",
+                            "path": "/solutions/custom-slz/scripts/validate-pre-ansible-playbook.yaml",
+                            "stage": "pre",
+                            "action": "validate"
+                        },
+                        {
+                            "type": "ansible",
+                            "short_description": "script that will run after validation.",
+                            "path": "/solutions/custom-slz/scripts/validate-post-ansible-playbook.yaml",
+                            "stage": "post",
+                            "action": "validate"
+                        }
+                    ],
                     "compliance": {
                         "authority": "scc-v3",
                         "controls": [
