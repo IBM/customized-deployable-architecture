@@ -33,14 +33,14 @@
                         {
                             "type": "ansible",
                             "short_description": "script that will run before validation.",
-                            "path": "/solutions/custom-slz/scripts/validate-pre-ansible-playbook.yaml",
+                            "path": "solutions/custom-slz/scripts/validate-pre-ansible-playbook.yaml",
                             "stage": "pre",
                             "action": "validate"
                         },
                         {
                             "type": "ansible",
                             "short_description": "script that will run after validation.",
-                            "path": "/solutions/custom-slz/scripts/validate-post-ansible-playbook.yaml",
+                            "path": "solutions/custom-slz/scripts/validate-post-ansible-playbook.yaml",
                             "stage": "post",
                             "action": "validate"
                         }
