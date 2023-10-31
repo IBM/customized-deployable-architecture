@@ -1,24 +1,40 @@
 #! /bin/bash
 
+function validateLoggedIn() {
+
+    numRegions=$(ibmcloud regions --output json | jq '. | length' )
+    if [[ $numRegions -eq 0 ]]; then
+        echo "To begin login under the account that owns the catalog."
+        exit 1
+    fi  
+}
+
 function validateProject() {
     local projectName=$1
     projectCrn=$2
     step=$3
 
-    # project needs to exist
-    projectId=$(ibmcloud project list --output json | jq -r --arg projectname "$projectName" '.projects[] | select(.definition.name==$projectname).id') 
+    # are there any projects at all?
+    anyProjects=$(ibmcloud project list --output json | jq 'has("projects")')
+    if [[ $anyProjects == true ]]; then
+        # project needs to exist
+        projectId=$(ibmcloud project list --output json | jq -r --arg projectname "$projectName" '.projects[] | select(.definition.name==$projectname).id') 
 
-    step=$((step+1))
-    echo "Step $step . checking existence of Project"
+        step=$((step+1))
+        echo "Step $step . checking existence of Project"
 
-    if [[ "$projectId" != null ]]; then
-        # there is no existing project
-        echo "-- success: Project \"$projectName\" exists and its id is $projectId"
-        projectCrn=$(ibmcloud project list --output json | jq -r --arg projectname "$projectName" '.projects[] | select(.definition.name==$projectname).crn')
+        if [[ "$projectId" != "" ]]; then
+            # there is no existing project
+            echo "-- success: Project \"$projectName\" exists and its id is $projectId"
+            projectCrn=$(ibmcloud project list --output json | jq -r --arg projectname "$projectName" '.projects[] | select(.definition.name==$projectname).crn')
+        else
+            echo "-- failed.  The project \"$projectName\" does not yet exist."
+            exit 1    
+        fi
     else
-        echo "-- failed.  The project \"$projectName\" does not yet exist."
-        exit 1    
+        echo "-- failed.  The project \"$projectName\" does not yet exist.  There are no projects defined yet."
     fi
+    
 }
 
 function validateCatalog() {
@@ -30,12 +46,18 @@ function validateCatalog() {
     catalogCrn=$6
     step=$7
 
+    numberCatalogs=$(ibmcloud catalog list --output json | jq '. | length')
+    if [[ $numberCatalogs -eq 0 ]]; then
+        echo "-- failed.  No catalogs were found under this account."
+        exit 1
+    fi
+
     # catalog needs to exist
     catalogId=$(ibmcloud catalog list --output json | jq -r --arg catalogname "$catalogName" '.[] | select(.label==$catalogname).id')
 
     step=$((step+1))
     echo "Step $step. checking existence of Catalog"
-    if [[ "$catalogId" != null ]]; then
+    if [[ "$catalogId" != "" ]]; then
         # there is no existing project
         echo "-- success: Catalog \"$catalogName\" exists and its id is $catalogId"
         catalogCrn=$(ibmcloud catalog list --output json | jq -r --arg catalogname "$catalogName" '.[] | select(.label==$catalogname).crn')
@@ -249,6 +271,7 @@ echo
 
 step=0
 
+validateLoggedIn
 # login for this steps with api key for account that owns catalog and project
 validateProject "$projectName" "$projectCrn" "$step"
 validateCatalog "$catalogName" "$offeringName" "$projectName" "$authorization" "$trustedProfileId" "$catalogCrn" "$step"
