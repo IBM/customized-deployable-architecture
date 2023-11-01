@@ -1,9 +1,14 @@
-- name: Validate pre playbook
+- name: Hello world ansible pre playbook
   hosts: localhost
   vars:
     ibmcloud_api_key: "{{ lookup('ansible.builtin.env', 'ibmcloud_api_key')}}"
   tasks:
-   - name: Print result
-     ansible.builtin.debug:
-       msg: "Received api key" 
-     when: ibmcloud_api_key is defined 
+    - name: API key is defined
+      debug:
+        msg: "ibmcloud_api_key is defined"
+      when: ibmcloud_api_key is defined
+
+    - name: API key is NOT defined
+      debug:
+        msg: "*** ibmcloud_api_key NOT defined"
+      when: ibmcloud_api_key is undefined

@@ -1,1 +1,6 @@
-- name: hello world ansible playbook
+- name: Hello world ansible post playbook
+  hosts: all
+  tasks:
+          - name: Post Validate Message
+            debug:
+              msg: "Hello From POST validate"
