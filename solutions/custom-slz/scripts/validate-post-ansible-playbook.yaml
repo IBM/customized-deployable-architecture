@@ -1,6 +1,8 @@
 - name: Hello world ansible post playbook
-  hosts: all
+  hosts: localhost
   tasks:
-          - name: Post Validate Message
-            debug:
-              msg: "Hello From POST validate"
+    - name: Post Validate Environment
+      debug:
+        msg:
+          - "Hello From POST validate, Environment is:"
+          - "{{ansible_env}}"
