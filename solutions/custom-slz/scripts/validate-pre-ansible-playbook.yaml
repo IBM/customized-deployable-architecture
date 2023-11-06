@@ -8,7 +8,12 @@
         msg: "*** ibmcloud_api_key NOT defined"
       when: (ibmcloud_api_key is undefined) or (ibmcloud_api_key | length == 0)
 
-    - name: Pre Validate Environment
+    - name: Pre Validate Ansible Environment
       debug:
         msg:
+          - "  ENV:"
+          - "*****************************************"
           - "{{ansible_env}}"
+          - "  FACTS:"
+          - "*****************************************"
+          -  "{{ansible_facts}}"
