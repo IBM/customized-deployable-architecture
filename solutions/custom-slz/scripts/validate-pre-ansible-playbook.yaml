@@ -1,4 +1,4 @@
-- name: Hello world ansible pre playbook
+- name: Hello world ansible pre validate playbook
   hosts: localhost
   vars:
     ibmcloud_api_key: "{{ lookup('ansible.builtin.env', 'ibmcloud_api_key')}}"
