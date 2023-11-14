@@ -1,9 +1,4 @@
 
-# initialize the VSI to be an Ansible managed node by installing python
-variable "workLoadInitScript" {
-  type    = string
-  default = null
-}
 
 # the OS image to install on the VSI
 variable "image" {
