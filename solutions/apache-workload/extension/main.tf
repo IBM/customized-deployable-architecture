@@ -67,7 +67,7 @@ module "slz_vsi" {
   image_id                   = data.ibm_is_image.image.id
   create_security_group      = true
   security_group             = var.appSecurityRules
-  tags                       = [apache]
+  tags                       = ["apache"]
   subnets                    = [{"name": local.subnet_name, "id": local.subnet_id, "zone":data.ibm_is_subnet.by-subnet-id.zone, "cidr": data.ibm_is_subnet.by-subnet-id.ipv4_cidr_block}]
   vpc_id                     = local.vpc_id
   prefix                     = join("-", [local.prefix, "apache-webserver"])
