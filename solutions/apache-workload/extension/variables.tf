@@ -19,6 +19,11 @@ variable "region" {
   default = "us-south"
 }
 
+variable "prerequisite_workspace_id" {
+  description = "IBM Cloud Schematics workspace ID of an existing custom-deployable-arch."
+  type        = string
+}
+
 variable "prefix" {
   description = "Prefix string for resources created."
   default = ""
