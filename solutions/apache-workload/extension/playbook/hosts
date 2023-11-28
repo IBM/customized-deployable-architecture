@@ -6,4 +6,4 @@
 10.10.10.5
 
 [nodes:vars]
-ansible_ssh_common_args='-o ProxyCommand="ssh -W %h:%p -q root@150.238.49.232"'
+ansible_ssh_common_args='-o ProxyCommand="ssh -W %h:%p root@150.238.49.232"'
