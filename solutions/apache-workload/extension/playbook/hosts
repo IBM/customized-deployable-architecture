@@ -1,2 +1,9 @@
-[webservers]
-kb-test-1128a-apache-webserver-1
+
+[proxy]
+150.238.49.232
+
+[nodes]
+10.10.10.5
+
+[nodes:vars]
+ansible_ssh_common_args='-o ProxyCommand="ssh -W %h:%p -q root@150.238.49.232"'
