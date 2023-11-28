@@ -7,3 +7,6 @@ my-webserver-target ansible_host=10.10.10.5
 
 [webserver_private:vars]
 ansible_ssh_common_args='-o ProxyCommand="ssh -W %h:%p -q root@150.238.49.232"'
+
+[all:vars]
+ansible_user=root
