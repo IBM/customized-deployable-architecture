@@ -1,9 +1,9 @@
 
-[proxy]
-150.238.49.232
+[jumpbox_public]
+my-public-bastion ansible_host=150.238.49.232
 
-[nodes]
-10.10.10.5
+[webserver_private]
+my-webserver-target ansible_host=10.10.10.5
 
-[nodes:vars]
-ansible_ssh_common_args='-o ProxyCommand="ssh -W %h:%p root@150.238.49.232"'
+[webserver_private:vars]
+ansible_ssh_common_args='-o ProxyCommand="ssh -W %h:%p -q root@150.238.49.232"'
