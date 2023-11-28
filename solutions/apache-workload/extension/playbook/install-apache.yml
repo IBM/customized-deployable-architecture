@@ -1,5 +1,5 @@
  - name: Playbook to install Apache
-   hosts: [webservers]
+   hosts: all
    tasks:
     - name: Ansible apt install apache2
       apt:
