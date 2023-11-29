@@ -1,5 +1,5 @@
  - name: Playbook to install Apache
-   hosts: my-webserver-target
+   hosts: webservers
    remote_user: root
    
    tasks:
