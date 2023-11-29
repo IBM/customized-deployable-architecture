@@ -1,5 +1,7 @@
  - name: Playbook to install Apache
-   hosts: webserver_private
+   hosts: my-webserver-target
+   remote_user: root
+   
    tasks:
     - name: Ansible apt install apache2
       apt:
