@@ -15,9 +15,9 @@ echo "my-webserver-target ansible_host=${webserver}"
 echo " "
 
 echo "[webserver_private:vars]"
-echo "ansible_ssh_common_args='-o ProxyCommand=\"ssh -W %h:%p -q root@${fip} -o IdentityFile=/Users/kbiegert/git/IBM/customized-deployable-architecture/solutions/apache-workload/extension/playbook/keyfile \"'"
+echo "ansible_ssh_common_args='-o ProxyCommand=\"ssh -W %h:%p -q root@${fip} -o IdentityFile=./keyfile \"'"
 echo " "
 
 echo "[all:vars]"
-echo "ansible_ssh_private_key_file=/Users/kbiegert/git/IBM/customized-deployable-architecture/solutions/apache-workload/extension/playbook/keyfile " 
+echo "ansible_ssh_private_key_file=./keyfile " 
 echo " "
