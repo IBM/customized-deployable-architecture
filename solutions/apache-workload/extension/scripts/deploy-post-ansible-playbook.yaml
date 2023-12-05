@@ -1,6 +1,0 @@
- - name: Playbook to install Apache
-   tasks:
-    - name: Ansible apt install apache2
-      apt:
-        name: apache2
-        state: present
