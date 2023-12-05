@@ -1,0 +1,33 @@
+#
+#  A playbook that will create an inventory and then execute ansible against the inventory
+#  to install an application.
+#
+#  Tasks in Ansible are ran in the order of their definition within the playbook so these
+#  tasks will run as needed in this order.
+#
+- hosts: localhost
+  connection: local
+  vars:
+    # get these values from the environment passed to us.  these come from the terraform 
+    # workspace.
+    jumpbox_fip: "{{ lookup('ansible.builtin.env', 'fp_vsi_floating_ip_address')}}"
+    webserver_ip: "{{ lookup('ansible.builtin.env', 'webserver_ip_address')}}"
+    private_key: "{{ lookup('ansible.builtin.env', 'ssh_private_key')}}"
+  tasks:
+    - name: generate inventory
+      command: ./generate-inventory.sh {{ jumpbox_fip }} {{ webserver_ip }} "{{ private_key }}"
+      register: generate_result
+      ignore_errors: True
+
+    - name: copy generated inventory to local file
+      copy:
+        content: "{{ generate_result.stdout }}"
+        dest: "inventory-test.txt"  
+
+    # run ansible using the inventory file created and install apache
+    - name: install apache 
+      command: ansible-playbook -i inventory-test.txt install-apache-on-webservers.yaml --check
+      register: playbook_out
+
+    # this is to get output from the ansible operation that installed the apache app.
+    - debug: var=playbook_out
