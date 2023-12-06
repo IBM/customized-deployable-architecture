@@ -14,6 +14,21 @@
     webserver_ip: "{{ lookup('ansible.builtin.env', 'webserver_ip_address')}}"
     private_key: "{{ lookup('ansible.builtin.env', 'ssh_private_key')}}"
   tasks:
+    - name: Prints a debug message
+      ansible.builtin.debug:
+        msg:
+        - "This playbook is at the extension level scripts directory"
+
+    - name: Print current directory name
+      ansible.builtin.command: pwd
+      register: directory_name
+    - debug: var=directory_name.stdout_lines 
+
+    - name: List contents
+      ansible.builtin.command: ls -lgart
+      register: directory_list
+    - debug: var=directory_list.stdout_lines    
+
     - name: generate inventory
       command: ./generate-inventory.sh {{ jumpbox_fip }} {{ webserver_ip }} "{{ private_key }}"
       register: generate_result
