@@ -7,17 +7,18 @@
 #
 - hosts: localhost
   connection: local
-  vars:
-    # get these values from the environment passed to us.  these come from the terraform 
-    # workspace.
-    jumpbox_fip: "{{ lookup('ansible.builtin.env', 'fp_vsi_floating_ip_address')}}"
-    webserver_ip: "{{ lookup('ansible.builtin.env', 'webserver_ip_address')}}"
-    private_key: "{{ lookup('ansible.builtin.env', 'ssh_private_key')}}"
+  
+
   tasks:
     - name: Prints a debug message
       ansible.builtin.debug:
         msg:
         - "This playbook is at the extension level scripts directory"
+
+    - name: Print environment vars
+      ansible.builtin.command: env
+      register: dump_env_vars
+    - debug: var=dump_env_vars.stdout_lines
 
     - name: Print current directory name
       ansible.builtin.command: pwd
@@ -35,7 +36,7 @@
     - debug: var=playbook_directory_list.stdout_lines
 
     - name: generate inventory and keyfile
-      command: ../playbook/generate-inventory.sh "{{ jumpbox_fip }}" "{{ webserver_ip }}" "{{ private_key }}"
+      command: ../playbook/generate-inventory.sh "{{ fp_vsi_floating_ip_address }}" "{{ webserver_ip_address }}" "{{ ssh_private_key }}"
       register: generate_result
       ignore_errors: True
     - debug: var=generate_result.stdout_lines  
