@@ -24,23 +24,18 @@
       register: directory_name
     - debug: var=directory_name.stdout_lines 
 
-    - name: List contents
+    - name: List current directory contents
       ansible.builtin.command: ls -lgart
       register: directory_list
     - debug: var=directory_list.stdout_lines
 
-    - name: Change to playbook directory
-      ansible.builtin.command: cd ../playbook
-      register: playbook_name
-    - debug: var=playbook_name.stdout_lines 
-
     - name: List playbook directory contents
-      ansible.builtin.command: ls -lgart
-      register: playbook_directory_list
-    - debug: var=playbook_directory_list.stdout_lines 
+      ansible.builtin.command: ls -lgart ../playbook
+      register: directory_list
+    - debug: var=directory_list.stdout_lines
 
     - name: generate inventory
-      command: ./generate-inventory.sh {{ jumpbox_fip }} {{ webserver_ip }} "{{ private_key }}"
+      command: ../playbook/generate-inventory.sh {{ jumpbox_fip }} {{ webserver_ip }} "{{ private_key }}"
       register: generate_result
       ignore_errors: True
 
@@ -49,9 +44,14 @@
         content: "{{ generate_result.stdout }}"
         dest: "inventory-test.txt"  
 
+    - name: List current directory contents
+      ansible.builtin.command: ls -lgart
+      register: directory_list_new
+    - debug: var=directory_list_new.stdout_lines    
+
     # run ansible using the inventory file created and install apache
     - name: install apache 
-      command: ansible-playbook -i inventory-test.txt install-apache-on-webservers.yaml --check
+      command: ansible-playbook -i inventory-test.txt ../playbook/install-apache-on-webservers.yaml --check
       register: playbook_out
 
     # this is to get output from the ansible operation that installed the apache app.
