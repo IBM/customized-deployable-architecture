@@ -31,18 +31,19 @@
 
     - name: List playbook directory contents
       ansible.builtin.command: ls -lgart ../playbook
-      register: directory_list
-    - debug: var=directory_list.stdout_lines
+      register: playbook_directory_list
+    - debug: var=playbook_directory_list.stdout_lines
 
-    - name: generate inventory
-      command: ../playbook/generate-inventory.sh {{ jumpbox_fip }} {{ webserver_ip }} "{{ private_key }}"
+    - name: generate inventory and keyfile
+      command: ../playbook/generate-inventory.sh "{{ jumpbox_fip }}" "{{ webserver_ip }}" "{{ private_key }}"
       register: generate_result
       ignore_errors: True
+    - debug: var=generate_result.stdout_lines  
 
-    - name: copy generated inventory to local file
-      copy:
-        content: "{{ generate_result.stdout }}"
-        dest: "inventory-test.txt"  
+    - name: show the contents of the inventory file
+      command: cat inventory-test.txt
+      register: inventory_contents
+    - debug: var=inventory_contents.stdout_lines  
 
     - name: List current directory contents
       ansible.builtin.command: ls -lgart
