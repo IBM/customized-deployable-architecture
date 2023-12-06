@@ -27,7 +27,17 @@
     - name: List contents
       ansible.builtin.command: ls -lgart
       register: directory_list
-    - debug: var=directory_list.stdout_lines    
+    - debug: var=directory_list.stdout_lines
+
+    - name: Change to playbook directory
+      ansible.builtin.command: cd ../playbook
+      register: playbook_name
+    - debug: var=playbook_name.stdout_lines 
+
+    - name: List playbook directory contents
+      ansible.builtin.command: ls -lgart
+      register: playbook_directory_list
+    - debug: var=playbook_directory_list.stdout_lines 
 
     - name: generate inventory
       command: ./generate-inventory.sh {{ jumpbox_fip }} {{ webserver_ip }} "{{ private_key }}"
