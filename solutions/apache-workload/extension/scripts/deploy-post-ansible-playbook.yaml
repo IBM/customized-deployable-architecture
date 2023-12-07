@@ -44,7 +44,12 @@
     - name: show the contents of the inventory file
       command: cat inventory-test.txt
       register: inventory_contents
-    - debug: var=inventory_contents.stdout_lines  
+    - debug: var=inventory_contents.stdout_lines
+
+    - name: show the contents of the keyfile
+      command: cat keyfile
+      register: keyfile_contents
+    - debug: var=keyfile_contents.stdout_lines  
 
     - name: List current directory contents
       ansible.builtin.command: ls -lgart
