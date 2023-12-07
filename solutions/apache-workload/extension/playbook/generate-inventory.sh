@@ -16,8 +16,13 @@ echo "-----end debug output------------"
 #   - remove a leading newline character
 #   - key file permissions must be 600
 echo "${private_key}" | sed 's/<<-EOF//' > keyfile1.tmp
-cat keyfile1.tmp | tail -r | tail -n +2 | tail -r > keyfile2.tmp
-tail -c +2 keyfile2.tmp > keyfile
+
+tail -r keyfile1.tmp > keyfile2.tmp
+tail -n +2 keyfile2.tmp > keyfile3.tmp
+tail -r keyfile3.tmp > keyfile4.tmp
+
+tail -c +2 keyfile4.tmp > keyfile
+
 chmod 600 keyfile
 
 # step 2 - create an ansible inventory file and fill in the ip addresses for the jump box and vsi
