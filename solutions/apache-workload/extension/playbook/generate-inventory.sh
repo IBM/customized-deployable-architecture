@@ -11,8 +11,12 @@ echo "private_key=${3}"
 echo "-----end debug output------------"
 
 # step 1 - create a file with the ssh private key value so that it may be used below with cli
-#
-echo "${private_key}" > keyfile
+#   - remove leading heredoc marker
+#   - remove last line which is another heredoc marker
+#   - remove a leading newline character
+#   - key file permissions must be 600
+echo "${private_key}" | sed 's/<<-EOF//' | sed '$d' > keyfile.tmp
+tail -c +2 keyfile.tmp > keyfile
 chmod 600 keyfile
 
 # step 2 - create an ansible inventory file and fill in the ip addresses for the jump box and vsi
