@@ -18,12 +18,13 @@ echo "-----end debug output------------"
 echo "${private_key}" | sed 's/<<-EOF//' > keyfile1.tmp
 
 cat keyfile1.tmp | sed '$d' > keyfile2.tmp
+cat keyfile2.tmp | sed '$d' > keyfile3.tmp
 
 # tail -r keyfile1.tmp > keyfile2.tmp
 # tail -n +2 keyfile2.tmp > keyfile3.tmp
 # tail -r keyfile3.tmp > keyfile4.tmp
 
-tail -c +2 keyfile2.tmp > keyfile
+tail -c +2 keyfile3.tmp > keyfile
 
 chmod 600 keyfile
 
