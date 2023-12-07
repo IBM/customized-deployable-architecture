@@ -17,18 +17,17 @@ echo "-----end debug output------------"
 #   - key file permissions must be 600
 echo "${private_key}" | sed 's/<<-EOF//' > keyfile1.tmp
 
+# remove the last two lines of the file to remove the heredoc "EOF" marker
 cat keyfile1.tmp | sed '$d' > keyfile2.tmp
 cat keyfile2.tmp | sed '$d' > keyfile3.tmp
 
-# tail -r keyfile1.tmp > keyfile2.tmp
-# tail -n +2 keyfile2.tmp > keyfile3.tmp
-# tail -r keyfile3.tmp > keyfile4.tmp
-
+# remove a newline characater at the beginning of the file
 tail -c +2 keyfile3.tmp > keyfile
 
-# file has to have a newline at the end of it
+# file has to have a newline at the end of it so add one back
 echo "" >> keyfile
 
+# keyfile permissions must be 600
 chmod 600 keyfile
 
 # step 2 - create an ansible inventory file and fill in the ip addresses for the jump box and vsi
