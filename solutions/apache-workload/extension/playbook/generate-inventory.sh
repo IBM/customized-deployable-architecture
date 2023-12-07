@@ -26,6 +26,9 @@ cat keyfile2.tmp | sed '$d' > keyfile3.tmp
 
 tail -c +2 keyfile3.tmp > keyfile
 
+# file has to have a newline at the end of it
+echo "" >> keyfile
+
 chmod 600 keyfile
 
 # step 2 - create an ansible inventory file and fill in the ip addresses for the jump box and vsi
@@ -40,7 +43,7 @@ echo "my-webserver-target ansible_host=${webserver}"
 echo " "
 
 echo "[webserver_private:vars]"
-echo "ansible_ssh_common_args='-o ProxyCommand=\"ssh -W %h:%p -q root@${fip} -o IdentityFile=./keyfile \"'"
+echo "ansible_ssh_common_args='-o StrictHostKeyChecking=no -o ProxyCommand=\"ssh -W %h:%p -q root@${fip} -o StrictHostKeyChecking=no -o IdentityFile=./keyfile \"'"
 echo " "
 
 echo "[all:vars]"
