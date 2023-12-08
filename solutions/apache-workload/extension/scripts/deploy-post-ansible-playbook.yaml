@@ -10,55 +10,26 @@
   
 
   tasks:
-    - name: Prints a debug message
-      ansible.builtin.debug:
-        msg:
-        - "This playbook is at the extension level scripts directory"
-
-    - name: Print environment vars
-      ansible.builtin.command: env
-      register: dump_env_vars
-    - debug: var=dump_env_vars.stdout_lines
-
-    - name: Print current directory name
-      ansible.builtin.command: pwd
-      register: directory_name
-    - debug: var=directory_name.stdout_lines 
-
-    - name: List current directory contents
-      ansible.builtin.command: ls -lgart
-      register: directory_list
-    - debug: var=directory_list.stdout_lines
-
-    - name: List playbook directory contents
-      ansible.builtin.command: ls -lgart ../playbook
-      register: playbook_directory_list
-    - debug: var=playbook_directory_list.stdout_lines
-
-    - name: generate inventory and keyfile
-      command: ../playbook/generate-inventory.sh "{{ fp_vsi_floating_ip_address }}" "{{ webserver_ip_address }}" "{{ ssh_private_key }}"
+    - name: generate inventory file
+      command: ../playbook/generate-inventory.sh "{{ fp_vsi_floating_ip_address }}" "{{ webserver_ip_address }}"
       register: generate_result
       ignore_errors: True
     - debug: var=generate_result.stdout_lines  
 
     - name: show the contents of the inventory file
-      command: cat inventory-test.txt
+      command: cat inventory.ini
       register: inventory_contents
     - debug: var=inventory_contents.stdout_lines
 
-    - name: show the contents of the keyfile
-      command: cat keyfile
-      register: keyfile_contents
-    - debug: var=keyfile_contents.stdout_lines  
-
-    - name: List current directory contents
-      ansible.builtin.command: ls -lgart
-      register: directory_list_new
-    - debug: var=directory_list_new.stdout_lines    
+    - name: generate ssh key file
+      command: ../playbook/generate-keyfile.sh "{{ ssh_private_key }}"
+      register: keyfile_result
+      ignore_errors: True
+    - debug: var=keyfile_result.stdout_lines     
 
     # run ansible using the inventory file created and install apache
     - name: install apache 
-      command: ansible-playbook -i inventory-test.txt ../playbook/install-apache-on-webservers.yaml --check
+      command: ansible-playbook -i inventory.ini ../playbook/install-apache-on-webservers.yaml
       register: playbook_out
 
     # this is to get output from the ansible operation that installed the apache app.
