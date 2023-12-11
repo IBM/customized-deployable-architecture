@@ -26,7 +26,6 @@ locals {
   slz_output = var.prerequisite_workspace_id != "" ? jsondecode(data.ibm_schematics_output.schematics_output[0].output_json) : null
   # prefix will either come from the prerequisite's workspace (extension) or it will come from a variable (fullstack).
   prefix      = var.prerequisite_workspace_id != "" ? local.slz_output[0].prefix.value : var.prefix
-  #prefix      = var.prefix
   subnet_name = join("-", [local.prefix, local.vpc_type, "vsi-zone-1"])
 }
 
@@ -52,15 +51,10 @@ data "ibm_is_image" "image" {
 
 locals {
   resource_group_id = var.resource_group_id != "" ? var.resource_group_id : data.ibm_is_subnet.subnet[0].resource_group
-  #resource_group_id = var.resource_group_id
   subnet_id  = var.subnet_id != "" ? var.subnet_id : data.ibm_is_subnet.subnet[0].id
-  #subnet_id  = var.subnet_id
   vpc_id     = var.vpc_id != "" ? var.vpc_id : data.ibm_is_subnet.subnet[0].vpc
-  #vpc_id     = var.vpc_id
   ssh_key_id = var.ssh_key_id != "" ? var.ssh_key_id : data.ibm_is_ssh_key.ssh-key[0].id
-  #ssh_key_id = var.ssh_key_id
   fp_vsi_floating_ip_address = var.fp_vsi_floating_ip_address != "" ? var.fp_vsi_floating_ip_address : data.ibm_is_floating_ip.jump-box-fip[0].address
-  #fp_vsi_floating_ip_address = var.fp_vsi_floating_ip_address
 }
 
 data "ibm_is_subnet" "by-subnet-id" {
