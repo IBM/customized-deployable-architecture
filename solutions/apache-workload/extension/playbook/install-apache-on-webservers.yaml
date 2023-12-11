@@ -1,3 +1,7 @@
+#
+# This is a basic ansible playbook with a single task that installs an application on a target system.  The target system
+# is defined in the ansible inventory file in a group named "webserver_private".  
+#
  - name: Playbook to install Apache
    hosts: webserver_private
    remote_user: root
