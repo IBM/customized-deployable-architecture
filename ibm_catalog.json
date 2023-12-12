@@ -179,6 +179,15 @@
                     "install_type": "extension",
                     "working_directory": "solutions/apache-workload/extension",
                     "usage_template": "module \"custom_apache\" {\n source                    = \"https://cm.globalcatalog.cloud.ibm.com/api/v1-beta/offering/source//${{workingDirectory}}?archive=tgz&catalogID=${{catalogID}}&flavor=${{flavor}}&kind=${{kind}}&name=${{name}}&version=${{version}}\"\n  ibmcloud_api_key          = var.ibmcloud_api_key\n  prerequisite_workspace_id = var.prerequisite_workspace_id\n  ssh_private_key          =var.ssh_private_key\n}\n\n",
+                    "scripts": [	
+                        {
+                            "type": "ansible",
+                            "short_description": "Run ansible after deployment and install Apache",
+                            "path": "scripts/deploy-post-ansible-playbook.yaml",
+                            "stage": "post",
+                            "action": "deploy"
+                        }
+                    ],
                     "compliance": {
                         "authority": "scc-v3",
                         "controls": [
@@ -227,17 +236,6 @@
                             "key": "region"
                         },
                         {
-                            "custom_config": {
-                                "config_constraints": {
-                                    "catalogID": "f418eaf7-602a-472d-9e9f-ab75a7c193ab",
-                                    "flavorConstraint": "babyslz",
-                                    "offeringID": "58825778-876b-482e-832c-4599de632c49",
-                                    "versionConstraint": ">=0.0.52"
-                                },
-                                "grouping": "deployment",
-                                "original_grouping": "deployment",
-                                "type": "schematics_workspace"
-                            },
                             "key": "prerequisite_workspace_id",
                             "required": true
                         }

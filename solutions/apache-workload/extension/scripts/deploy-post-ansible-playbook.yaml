@@ -1,0 +1,36 @@
+#
+#  This is a bootstrap ansible playbook.  It sets up the needed inventory and ssh private key files so that
+#  ansible may be executed using the resources currently deployed by this deployable architecture 
+#  extension and its prerequisite.  The extension deploys a virtual server within a virtual private cloud that is
+#  within a secure subnet.  The virtual server is accessible via ssh using a jumpbox that is also within the 
+#  virtual private cloud but it has been configured with a public floating point IP address.  Both the jumpbox 
+#  and the virtual server have been configured with the same public ssh key.
+#
+#  This bootstrap playbook calls ansible and provides the generated inventory and key file as inputs to 
+#  complete the installation of the Apache application on the desired virtual server.
+#
+- hosts: localhost
+  connection: local
+
+
+  tasks:
+    # create an Ansible inventory file.  This inventory file identifies the where to install Apache and how to 
+    # connect to that machine via a jumpbox since the machine is in a secure VPC.
+    - name: generate ansible inventory file
+      command: ../playbook/generate-inventory.sh "{{ fp_vsi_floating_ip_address }}" "{{ webserver_ip_address }}"
+      ignore_errors: True  
+
+    # create a key file for use by ssh.  This private key pairs with the ssh public key that was configured for the 
+    # jumpbox and virtual server where Apache will be installed. The private key value is an input to the extension deployable 
+    # architecture that created the virtual server.     
+    - name: generate ssh key file
+      command: ../playbook/generate-keyfile.sh "{{ ssh_private_key }}"
+      ignore_errors: True     
+
+    # run ansible using the inventory file and key file to install apache.  capture the output for printing.
+    - name: install apache 
+      command: ansible-playbook -i inventory.ini ../playbook/install-apache-on-webservers.yaml
+      register: playbook_out
+
+    # print the results of the install apache task
+    - debug: var=playbook_out

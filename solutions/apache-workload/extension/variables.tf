@@ -1,12 +1,8 @@
 
-# initialize the VSI to be an Ansible managed node by installing python
-variable "workLoadInitScript" {
-  type    = string
-  default = null
-}
 
 # the OS image to install on the VSI
 variable "image" {
+  type    = string
   default = "ibm-ubuntu-20-04-4-minimal-amd64-2"
 }
 
@@ -30,6 +26,7 @@ variable "prerequisite_workspace_id" {
 }
 
 variable "prefix" {
+  type    = string
   description = "Prefix string for resources created."
   default = ""
 }

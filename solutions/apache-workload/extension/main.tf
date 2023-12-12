@@ -67,41 +67,12 @@ module "slz_vsi" {
   image_id                   = data.ibm_is_image.image.id
   create_security_group      = true
   security_group             = var.appSecurityRules
-  tags                       = []
+  tags                       = ["apache"]
   subnets                    = [{"name": local.subnet_name, "id": local.subnet_id, "zone":data.ibm_is_subnet.by-subnet-id.zone, "cidr": data.ibm_is_subnet.by-subnet-id.ipv4_cidr_block}]
   vpc_id                     = local.vpc_id
   prefix                     = join("-", [local.prefix, "apache-webserver"])
   machine_type               = "cx2-2x4"
-  user_data                  = var.workLoadInitScript
   boot_volume_encryption_key = null
   vsi_per_subnet             = 1
   ssh_key_ids                = [local.ssh_key_id]
-}
-
-resource "null_resource" "execute_ansible" {
-  depends_on = [module.slz_vsi]
-    
-  connection {
-    type         = "ssh"
-    user         = "root"
-    bastion_host = local.fp_vsi_floating_ip_address
-    host         = module.slz_vsi.list[0].ipv4_address
-    private_key  = var.ssh_private_key
-    agent        = false
-    timeout      = "15m"
-  }
-
-  provisioner "file" {
-    source      = "${path.module}/playbook/install-apache.yml"
-    destination = "/root/install-apache.yml"
-  }
-
-  provisioner "remote-exec" {
-    inline = [
-      "sleep 150",
-      "apt-get update",
-      "apt-get --yes install ansible",
-      "ansible-playbook --connection=local -i 'localhost,' /root/install-apache.yml",
-    ]
-  }
 }
