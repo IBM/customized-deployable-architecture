@@ -31,4 +31,4 @@ echo "[all:vars]"
 echo "ansible_ssh_private_key_file=./keyfile "
 echo " "
 } > inventory.ini
-38 changes: 38 additions & 0 deletions 
+
