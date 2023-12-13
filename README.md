@@ -1,7 +1,7 @@
 # Customized deployable architecture
 
 ## Tutorials
-This repo contains tutorials that step through the concept of a deployable architecture, how to develop one, how to customize an existing one found in the IBM catalog, and more.  The tutorials are 
+This repository contains tutorials that step through the concept of a deployable architecture, how to develop one, how to customize an existing one found in the IBM catalog, and more.  The tutorials are 
 a work in progress and are continually being improved upon.  Tutorials so far include:
 -  [deployable architecture overview](./da%20customization%20tutorials/0%20-%20da%20overview/)
 -  [deployable architecture deployment lifecycle](./da%20customization%20tutorials/1%20-%20da%20deployment%20lifecycle/)
@@ -13,9 +13,11 @@ a work in progress and are continually being improved upon.  Tutorials so far in
 Future tutorials will include how to setup Security and Compliance scanning on the IBM Cloud and how to record the results as well a tutorial on the overall deployable architecture development lifecycle.
 
 ## Example customized deployable architectures
-This repo also provides an [example of a customization](./solutions/custom-slz) of the IBM deployable architecture [VSI on VPC landing zone](https://cloud.ibm.com/catalog/architecture/deploy-arch-ibm-slz-vsi-ef663980-4c71-4fac-af4f-4a510a9bcf68-global).  This customization is a minor customization but illustrates how easy it is accomoplish making a change that is suited to a particular need.  The customized deployable architecture still deploys a base networking layer with a Virtual Private Cloud but is now limited to the 'us-east' IBM Cloud region.   
+This repository contains two exampole deployable architectures.
 
-In addition to that example, this repo also contains an example of a deployable architecture that extends the base deployment by deploying a workload.  The workload is a virtual server that is deployed within the VPC created by the base and it runs an Apache web server.  There are two implementations of this deployable architecture, an ['extension'](./solutions/apache-workload/extension/) and a ['fullstack'](./solutions/apache-workload/fullstack/).  A deployable architecture that is an 'extension' requires that another offering be deployed prior to its own deployment.  It has a dependency.   A deployable architecture that is a 'fullstack' does not have any dependencies and will deploy the entire solution.
+The first is an [example of a customization](./solutions/custom-slz) of the IBM deployable architecture [VSI on VPC landing zone](https://cloud.ibm.com/catalog/architecture/deploy-arch-ibm-slz-vsi-ef663980-4c71-4fac-af4f-4a510a9bcf68-global).  This customization is a minor customization but illustrates how easy it is accomoplish making a change that is suited to a particular need.  The customized deployable architecture still deploys a base networking layer with a Virtual Private Cloud but is now limited to the 'us-east' IBM Cloud region.   
+
+The second is an example of a deployable architecture that extends the base deployment by deploying a workload.  The workload is a virtual server that is deployed within the VPC created by the base and it runs an Apache web server.  There are two implementations of this deployable architecture, an ['extension'](./solutions/apache-workload/extension/) and a ['fullstack'](./solutions/apache-workload/fullstack/).  A deployable architecture that is an 'extension' requires that another offering be deployed prior to its own deployment.  It has a dependency.   A deployable architecture that is a 'fullstack' does not have any dependencies and will deploy the entire solution.  The deployable architecture provisions a virtual server within the environment created by the customized VSI on VPC landing zone.  Ansible and IBM Projects service are used to perform the actual application install of Apache.  See [README](./solutions/apache-workload/extension/README.md) for more details.
 
 ![Custom topology](/images/baby-slz.svg)
 
