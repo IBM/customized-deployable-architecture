@@ -212,14 +212,14 @@ function installProjectConfig() {
     configId=$2
 
     # eventually do a force approve to get past failed SCC
-    ibmcloud project --project-id "$projectId" --id "$configId" --comment "cli pipeline" force-approve
+    ibmcloud project --project-id "$projectId" --id "$configId" --comment "cli pipeline" config-force-approve
     if [[ $? -eq 1 ]]; then
         echo "error attempting to force approve the project configuration."
         exit 1
     fi
 
     # run a projects deploy
-    ibmcloud project --project-id "$projectId" --id "$configId" config-install 
+    ibmcloud project --project-id "$projectId" --id "$configId" config-deploy
     if [[ $? -eq 1 ]]; then
         echo "error attempting to install the project configuration."
         exit 1
@@ -228,12 +228,12 @@ function installProjectConfig() {
 
     # wait and poll until state is "installed"
     attempts=0
-    state=$(ibmcloud project --project-id "$projectId" --id "$configId" config-get --output json | jq -r '.state')
+    state=$(ibmcloud project --project-id "$projectId" --id "$configId" config --output json | jq -r '.state')
     echo "project config deploy status: $state"
-    while [[ $attempts -le 240 ]] && [[ "$state" != "installed" ]]
+    while [[ $attempts -le 240 ]] && [[ "$state" != "deployed" ]]
     do
         sleep 15
-        state=$(ibmcloud project --project-id "$projectId" --id "$configId" config-get --output json | jq -r '.state')
+        state=$(ibmcloud project --project-id "$projectId" --id "$configId" config --output json | jq -r '.state')
         echo "project config deploy status: $state"
         attempts=$((attempts+1))
     done
@@ -246,7 +246,7 @@ function validateInstallProjectConfig() {
     local versionLocator=$4
     configId=$5
 
-    # do a Project config-check and wait for it to finish
+    # do a Project config-validate and wait for it to finish
     validateProjectConfig "$projectId" "$offeringName" "$version" "$versionLocator" "$configId"
     # do a Project config-install and wait for it to finish
     installProjectConfig "$projectId" "$configId" 
