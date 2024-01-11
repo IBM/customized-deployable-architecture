@@ -137,8 +137,8 @@ function generateValidationValues() {
     SUFFIX="$(date +%m%d-%H-%M)"
     PREFIX="epx-${SUFFIX}"
 
-    # construct a json string and substitute values for the deployment parameters for this offering version.  
-    inputString="--input="$(jq -n --arg prefix "$PREFIX" --arg sshkey "$SSH_KEY" '[{"name": "prefix", "value":$prefix}, {"name": "ssh_key", "value": $sshkey}]')
+    # construct a json string and substitute values for the deployment parameters for this offering version.
+    inputString=$(jq -n --arg prefix "$PREFIX" --arg sshkey "$SSH_KEY" '{"prefix": $prefix, "ssh_key": $sshkey}')
 
     echo "validation values are: $inputString"
 }    
@@ -161,7 +161,7 @@ function validateProjectConfig() {
     generateValidationValues "$inputString" 
 
     # these values are specific to the offering version 
-    ibmcloud project config-update --project-id "$projectId"  --id "$configId" "$inputString"
+    ibmcloud project config-update --project-id "$projectId"  --id "$configId" --definition-inputs "$inputString"
 
     if [[ $? -eq 1 ]]; then
         echo "error attempting to update the project configuration with configuration values for validation."
@@ -170,7 +170,7 @@ function validateProjectConfig() {
     echo "project configuration updated"
 
     # validate via projects.  this only starts the job.  need to poll to get status
-    ibmcloud project --project-id "$projectId" --id "$configId" config-check
+    ibmcloud project --project-id "$projectId" --id "$configId" config-validate
     if [[ $? -eq 1 ]]; then
         echo "error attempting to validate the project configuration."
         exit 1
@@ -179,23 +179,23 @@ function validateProjectConfig() {
 
     # wait and poll until state is "pipeline_failed" for now.  fails due to SCC.  look for state when SCC passes also
     attempts=0
-    state=$(ibmcloud project --project-id "$projectId" --id "$configId" config-get --output json | jq -r '.pipeline_state')
+    state=$(ibmcloud project --project-id "$projectId" --id "$configId" config --output json | jq -r '.state')
     echo "project config validation status: $state"
-    while [[ $attempts -le 240 ]] && [[ "$state" != "pipeline_failed" ]] && [[ "$state" != "pipeline_passed" ]]
+    while [[ $attempts -le 240 ]] && [[ "$state" != "validating_failed" ]] && [[ "$state" != "validating_passed" ]]
     do
         sleep 15
-        state=$(ibmcloud project --project-id "$projectId" --id "$configId" config-get --output json | jq -r '.pipeline_state')
+        state=$(ibmcloud project --project-id "$projectId" --id "$configId" config --output json | jq -r '.state')
         echo "project config validation status: $state"
         attempts=$((attempts+1))
     done
 
-    # the config-check has finished and is showing a state of "pipeline_failed".  Make sure that the reason for the state
+    # the config-validate has finished and is showing a state of "validating_failed".  Make sure that the reason for the state
     # is due to only the fail of the SCC/CRA step.
     validateSuccess="false"
-    ibmcloud project --project-id "$projectId" --id "$configId" config-get --output json > version.json
-    if [[ $(jq -r '.job_summary.plan_summary.failed' < version.json) == 0 ]]; then
-        if [[ $(jq -r '.job_summary.plan_messages.error_messages | length' < version.json) == 0 ]]; then
-            if [[ $(jq -r '.cra_logs.status' < version.json) == "failed" ]]; then
+    ibmcloud project --project-id "$projectId" --id "$configId" config --output json > version.json
+    if [[ $(jq -r '.last_validated.job.summary.plan_summary.failed' < version.json) == 0 ]]; then
+        if [[ $(jq -r '.last_validated.job.summary.plan_messages.error_messages | length' < version.json) == 0 ]]; then
+            if [[ $(jq -r '.last_validated.cra_logs.status' < version.json) == "failed" ]]; then
                 validateSuccess="true"
             fi
         fi
