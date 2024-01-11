@@ -94,10 +94,20 @@ function getProjectConfigurationId() {
         exit 1
     fi
 
-    configId=$(ibmcloud project --project-id "$projectId" configs --output json | jq -r --arg versionLocator "$versionLocator" '.configs[] | select(.definition.locator_id==$versionLocator).id')
+    # get all of the configuration ids in this project
+    allConfigIds=$(ibmcloud project --project-id "$projectId" configs --output json | jq -r '.configs[].id')
+    for configId in $allConfigIds
+    do
+        # query each config and look for the a match on the version locator just onboarded.
+	    found=$(ibmcloud project --project-id "$projectId" config --id "$configId" --output json | jq -e --arg versionLocator "$versionLocator" '.definition.locator_id==$versionLocator')
+	    if [[ $found == "true" ]]; then
+            break
+	    fi	
+    done
 
-    if [[ $configId == "" ]]; then
+    if [[ $found == "false" ]]; then
         echo "a project configuration for $offeringName, $version, $versionLocator was not found as expected.  exiting"
+        configId=""
         exit 1
     fi
 }
