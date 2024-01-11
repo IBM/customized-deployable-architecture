@@ -9,9 +9,11 @@
     "cos": [],
     "enable_transit_gateway": false,
     "key_management": {
-       "name": "slz-kms",
-       "resource_group": "Default"
-    },
+      "keys": [],
+      "name": "slz-kms",
+      "resource_group": "Default",
+      "use_hs_crypto": false
+   },
     "network_cidr": "10.0.0.0/8",
     "resource_groups": [
        {
