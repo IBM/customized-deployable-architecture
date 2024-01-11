@@ -285,19 +285,19 @@ function cleanUpResources() {
     local vl=$3
 
     # cleanup 
-    ibmcloud project --project-id "$projectId" --id "$configId" config-uninstall
+    ibmcloud project --project-id "$projectId" --id "$configId" config-undeploy
     if [[ $? -eq 1 ]]; then
         echo "error attempting to uninstall the project configuration."
         exit 1
     fi
 
     attempts=0
-    state=$(ibmcloud project --project-id "$projectId" --id "$configId" config-get --output json | jq -r '.state')
+    state=$(ibmcloud project --project-id "$projectId" --id "$configId" config --output json | jq -r '.state')
     echo "project config resource clean up status: $state"
-    while [[ $attempts -le 240 ]] && [[ "$state" != "not_installed" ]]
+    while [[ $attempts -le 240 ]] && [[ "$state" != "approved" ]]
     do
         sleep 15
-        state=$(ibmcloud project --project-id "$projectId" --id "$configId" config-get --output json | jq -r '.state')
+        state=$(ibmcloud project --project-id "$projectId" --id "$configId" config --output json | jq -r '.state')
         echo "project config resource clean up status: $state"
         attempts=$((attempts+1))
     done
