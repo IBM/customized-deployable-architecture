@@ -98,6 +98,7 @@ function getProjectConfigurationId() {
     allConfigIds=$(ibmcloud project --project-id "$projectId" configs --output json | jq -r '.configs[].id')
     for configId in $allConfigIds
     do
+        echo "checking project config id $configId for match for version locator $versionLocator"
         # query each config and look for the a match on the version locator just onboarded.
 	    found=$(ibmcloud project --project-id "$projectId" config --id "$configId" --output json | jq -e --arg versionLocator "$versionLocator" '.definition.locator_id==$versionLocator')
 	    if [[ $found == "true" ]]; then
