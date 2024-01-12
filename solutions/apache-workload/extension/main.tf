@@ -41,7 +41,7 @@ data "ibm_is_ssh_key" "ssh-key" {
 
 data "ibm_is_floating_ip" "jump-box-fip" {
   count  = var.prerequisite_workspace_id == "" ? 0 : 1
-  name = join("-", [local.prefix, "jump-box-1-fip"])
+  name = join("-", [local.prefix, "jump-box-001-fip"])
 }
 
 # the image resource is always present and it is ok to query it.
@@ -62,7 +62,7 @@ data "ibm_is_subnet" "by-subnet-id" {
 }
 
 module "slz_vsi" {
-  source                     = "git::https://github.com/terraform-ibm-modules/terraform-ibm-landing-zone-vsi.git?ref=v2.0.0"
+  source                     = "git::https://github.com/terraform-ibm-modules/terraform-ibm-landing-zone-vsi.git?ref=v3.2.1"
   resource_group_id          = local.resource_group_id
   image_id                   = data.ibm_is_image.image.id
   create_security_group      = true

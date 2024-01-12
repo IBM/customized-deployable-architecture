@@ -1,6 +1,7 @@
 
 # the OS image to install on the VSI
 variable "image" {
+  description = "Available images may be found by using ibmcloud is images cli command."
   type    = string
   default = "ibm-ubuntu-20-04-4-minimal-amd64-2"
 }
