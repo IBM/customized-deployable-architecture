@@ -1,8 +1,8 @@
 {
     "products": [
         {
-            "name": "custom-deployable-arch",
-            "label": "custom-deployable-arch",
+            "name": "deploy-arch-ibm-gm-test-slz",
+            "label": "Test SLZ",
             "product_kind": "solution",
             "tags": ["network", "network_vpc"],
             "keywords": ["custom", "vpc", "secure", "baby"],
@@ -148,7 +148,7 @@
                 "works_with": [
                     {
                         "catalog_id": "33eb1d96-dfb4-4d60-a21a-c376ed0c89c3",
-                        "name": "custom-deployable-arch",
+                        "name": "deploy-arch-ibm-gm-test-slz",
                         "kind": "terraform",
                         "version": "0.0.52",
                         "flavor": "babyslz"
@@ -239,7 +239,7 @@
                         {
                             "catalog_id": "33eb1d96-dfb4-4d60-a21a-c376ed0c89c3",
                             "id": "cfd4c957-eb94-4230-8bf6-d522f0c18590",
-                            "name": "custom-deployable-arch",
+                            "name": "deploy-arch-ibm-gm-test-slz",
                             "version": ">=0.0.52",
                             "flavors": [
                                 "babyslz"
