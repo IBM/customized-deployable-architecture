@@ -5,11 +5,8 @@ echo "Making changes to BabySLZ variation enable successfull deployment on ys1"
 cd solutions/custom-slz || exit
 
 echo "...modify main.tf"
-echo ".....change us-east to us-south"
-echo ".....change source reference url in main.tf"
-../../.github/scripts/ys1/main-tf-changes.awk < main.tf > main.tf.new
-cp main.tf.new main.tf
-rm main.tf.new
+echo ".....change region from us-east to us-south"
+sed -i '' 's/us-east/us-south/g' main.tf
 
 echo "...modify override.json"
 echo ".....change slz-service-rg to Default"
