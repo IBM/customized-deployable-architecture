@@ -8,12 +8,11 @@
 # Keep the main branch up to date as per usual.  Create a fresh test branch periodically by running this script
 # and create a test release from this branch.  This way dual maintenance is not needed on two branches.
 #
-#
 # The script changes:
 # - in the custom-slz DA, change 'us-east' to 'us-south'
-# - in the custom-slz DA, change the override json file to use the resource group 'Default' instead of the slz resource groups
-# - in the ibm_catalog.json file, set the programmatic name to 'deploy-arch-ibm-gm-test-slz' to prevent a name collision with
-#   'custom-deployable-arch' AND set the label to 'Test SLZ'.
+# - in the ibm_catalog.json file, set the programmatic name to 'deploy-arch-ibm-gm-test-slz' to prevent a name 
+#   collision with 'custom-deployable-arch' AND set the label to 'Test SLZ'.
+#
 
 echo "Making changes to BabySLZ variation enable successfull deployment on ys1"
 
@@ -22,14 +21,6 @@ cd solutions/custom-slz || exit
 echo "...modify main.tf"
 echo ".....change region from us-east to us-south"
 sed -i '' 's/us-east/us-south/g' main.tf
-
-echo "...modify override.json"
-echo ".....change slz-service-rg to Default"
-echo ".....change slz-workload-rg to Default"
-echo ".....change resource group create settings in override.json"
-../../.github/scripts/ys1/override-json-changes.awk < override.json > override.json.new
-cp override.json.new override.json
-rm override.json.new
 
 cd ../..
 echo "...modify ibm_catalog.json"
