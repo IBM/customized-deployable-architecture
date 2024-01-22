@@ -19,4 +19,11 @@ echo ".....change resource group create settings in override.json"
 cp override.json.new override.json
 rm override.json.new
 
+echo "...modify ibm_catalog.json"
+echo ".....change \"name\": \"custom-deployable-arch\" to \"name\": \"deploy-arch-ibm-gm-test-slz\""
+sed -i '' 's/name\": \"custom-deployable-arch/name\": \"deploy-arch-ibm-gm-test-slz/g' ibm_catalog.json
+
+echo ".....change \"label\": \"custom-deployable-arch\" to \"label\": \"Test SLZ\""
+sed -i '' 's/label\": \"custom-deployable-arch/label\": \"Test SLZ/g' ibm_catalog.json
+
 echo "done with changes."

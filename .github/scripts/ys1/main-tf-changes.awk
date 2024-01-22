@@ -12,14 +12,13 @@
         versionString = substr($0, versionIndex + length("version="), length($0)-versionIndex-length("version="))
         print("  source           = \"git::https://github.com/terraform-ibm-modules/terraform-ibm-landing-zone.git//patterns/vsi?ref="versionString"\"")
     }
-    else {
+    else if (match($0, " *region *=.*\"us-east\"")) {
+        print("#"$0)
         # replace us-east with us-south since its ys1
-        if (match($0, " *region *=.*\"us-east\"")) {
-            print("#"$0)
-            sub("us-east", "us-south", $0)
-            print($0)
-        }
-        else 
-            print($0)
+        sub("us-east", "us-south", $0)
+        print($0)
+    }
+    else 
+        print($0)
     }
 } 
