@@ -4,13 +4,8 @@
 This repository contains tutorials that step through the concept of a deployable architecture, how to develop one, how to customize an existing one found in the IBM catalog, and more.  The tutorials are 
 a work in progress and are continually being improved upon.  Tutorials so far include:
 -  [deployable architecture overview](./da%20customization%20tutorials/0%20-%20da%20overview/)
--  [deployable architecture deployment lifecycle](./da%20customization%20tutorials/1%20-%20da%20deployment%20lifecycle/)
 -  [basic depployable architecture customization](./da%20customization%20tutorials/2%20-%20basic%20da%20customization/)
--  [using an override to customize a deployable architecture](./da%20customization%20tutorials/3%20-%20override%20da%20customization/)
 -  [developing an extension for a deployable architecture](./da%20customization%20tutorials/4%20-%20extending%20a%20da/)
-
-### Coming soon.  
-Future tutorials will include how to setup Security and Compliance scanning on the IBM Cloud and how to record the results as well a tutorial on the overall deployable architecture development lifecycle.
 
 ## Example customized deployable architectures
 This repository contains two exampole deployable architectures.
