@@ -59,7 +59,7 @@ echo "Logging CLI into SCC owning account."
 ibmcloud login --apikey "${SCC_API_KEY}" --no-region
 
 # set the SCC endpoint by using the 
-SECURITY_AND_COMPLIANCE_CENTER_API_URL=https://$SCC_REGION.compliance.cloud.ibm.com/instances/$SCC_INSTANCE_ID/v3
+export SECURITY_AND_COMPLIANCE_CENTER_API_URL=https://$SCC_REGION.compliance.cloud.ibm.com/instances/$SCC_INSTANCE_ID/v3
 echo "The SCC endpoint has been set to $SECURITY_AND_COMPLIANCE_CENTER_API_URL"
 
 # -----------------------------------------------------------------------------------------
