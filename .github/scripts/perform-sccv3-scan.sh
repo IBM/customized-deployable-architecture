@@ -34,16 +34,16 @@ fi
 
 #
 # required ENV variables:
-#   CATALOG_ACCOUNT_API_KEY - used to login to the IBM Cloud to query/update a catalog in this account.
-#   SCC_ACCOUNT_API_KEY - used to query and configure an instance of IBM SCC owned by this account.
+#   CATALOG_API_KEY - used to login to the IBM Cloud to query/update a catalog in this account.
+#   SCC_API_KEY - used to query and configure an instance of IBM SCC owned by this account.
 #
-if [[ -z "${CATALOG_ACCOUNT_API_KEY}" ]]; then
-    echo "Environment variable CATALOG_ACCOUNT_API_KEY is not set. Exiting."
+if [[ -z "${CATALOG_API_KEY}" ]]; then
+    echo "Environment variable CATALOG_API_KEY is not set. Exiting."
     exit 1
 fi
 
-if [[ -z "${SCC_ACCOUNT_API_KEY}" ]]; then
-    echo "Environment variable SCC_ACCOUNT_API_KEY is not set. Exiting."
+if [[ -z "${SCC_API_KEY}" ]]; then
+    echo "Environment variable SCC_API_KEY is not set. Exiting."
     exit 1
 fi
 
@@ -56,7 +56,7 @@ MAX_SCAN_QUERY_RETRIES=10  # max numober of times to retry getting scan status
 # step 1 - login to the Cloud account that owns the instance of SCC
 # -----------------------------------------------------------------------------------------
 echo "Logging CLI into SCC owning account."
-ibmcloud login --apikey "${SCC_ACCOUNT_API_KEY}" --no-region
+ibmcloud login --apikey "${SCC_API_KEY}" --no-region
 
 # set the SCC endpoint by using the 
 SECURITY_AND_COMPLIANCE_CENTER_API_URL=https://$SCC_REGION.compliance.cloud.ibm.com/instances/$SCC_INSTANCE_ID/v3
@@ -198,11 +198,11 @@ echo "Scan ID ${SCAN_ID} is complete!"
 
 # login as the owner of the catalog so that we can update it.
 echo "Logging CLI into catalog account.."
-ibmcloud login --apikey "${CATALOG_ACCOUNT_API_KEY}" --no-region
+ibmcloud login --apikey "${CATALOG_API_KEY}" --no-region
 
 scc_apply_cmd="ibmcloud catalog offering version scc-apply --scan ${SCAN_ID} --version-locator ${VERSION_LOCATOR} --timeout 7200 --service-instance ${SCC_INSTANCE_ID} --instance-region ${SCC_REGION}"
-if [ "${SCC_ACCOUNT_API_KEY}" != "${CATALOG_ACCOUNT_API_KEY}" ]; then
-    scc_apply_cmd+=" --target-api-key ${SCC_ACCOUNT_API_KEY}"
+if [ "${SCC_API_KEY}" != "${CATALOG_API_KEY}" ]; then
+    scc_apply_cmd+=" --target-api-key ${SCC_API_KEY}"
 fi
 
 # apply the scan to the version, retry up to 3 times
@@ -232,7 +232,7 @@ done
 
 # log back into the SCC account to get a new access token
 echo "Logging CLI into SCC owning account."
-ibmcloud login --apikey "${SCC_ACCOUNT_API_KEY}" --no-region
+ibmcloud login --apikey "${SCC_API_KEY}" --no-region
 
 # delete the attachment
 scc_delete_attach_cmd=$(ibmcloud scc attachment delete --attachment-id "$ATTACH_ID" --profile-id "$PROFILE_ID")
