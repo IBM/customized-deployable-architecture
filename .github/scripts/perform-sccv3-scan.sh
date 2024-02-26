@@ -1,414 +1,243 @@
 #! /bin/bash
 
-# hard fail on errors
-set -eo pipefail
+# Steps to perform a scan
+# 1. login to the IBM Cloud with the account that owns the an instance of IBM SCC
+# 2. determine the id of the Security and Compliance profile that was given by name
+# 3. create a new attachment for the profile
+# 4. initiate an ondemand scan for the attachment against the resources deployed
+# 5. wait for the scan to complete by querying its status
+# 6. apply the scan results to the onboarded version of the offering
+# 7. clean up by deleting the attachment that was created
+#
 
-####################################################################################
-# SCRIPT LOGIC FLOW
-# 1. Log CLI into catalog account
-# 2. Query ID of Profile by using supplied Name and Version
-# 3. Retrieve the "default_parameters" array from Profile detail
-# 3a. Update default allowed images param from CLI
-# 4. Create a new attachment for profile (with disabled scan schedule)
-# 5. Initiate on-demand scan for attachment
-# 6. Query scan status in attachment detail, loop until "complete" or timeout expires
-# 7. Update catalog with completed SCAN_ID
-# 8. Delete attachment created in step 4
-####################################################################################
+# inputs:
+#   SCC_PROFILE_NAME: the name of the compliance profile as found in IBM Security and Compliance. 
+#   SCC_PROFILE_VERSION: the version of the profile.
+#   SCC_ACCOUNT_ID: the IBM Cloud account id that owns the instance of SCC to use for scanning AND it is the account that owns the resources to be scanned.
+#   SCC_INSTANCE_ID: the SCC instance id to use for scanning.
+#   SCC_REGION: the IBM Cloud region where the SCC instance is located.
+#   VERSION_LOCATOR: the catalog version locator value for this version of the offering. 
+#
+SCC_PROFILE_NAME="${1}"
+SCC_PROFILE_VERSION="${2}"
+SCC_ACCOUNT_ID="${3}"
+SCC_INSTANCE_ID="${4}"
+SCC_REGION="${5}"
+VERSION_LOCATOR="${6}"
 
-MAX_SCAN_SECONDS=5400  # 90 mins
-SCAN_QUERY_WAIT=30     # seconds
-PRG=$(basename -- "${0}")
-
-########################################
-# BEGIN SCRIPT SETUP
-########################################
-USAGE="
-usage:	${PRG}
-        [--help]
-
-        Required environment variables:
-        CATALOG_API_KEY - api key from the account where the catalog exists
-        SCC_API_KEY - api key from the account where the SCC instance + deployed resources exist
-
-        Required arguments:
-        --profile_name=<profile_name>
-        --profile_version=<profile version>
-        --account_id=<account_id>
-        --instance_id=<instance_id>
-        --scc_region=<region>
-        --version_locator=<version_locator>
-"
-
-
-# Verify required environment variables are set
-all_env_vars_exist=true
-env_var_array=( CATALOG_API_KEY SCC_API_KEY )
-set +u
-for var in "${env_var_array[@]}"; do
-  [ -z "${!var}" ] && echo "$var not defined." && all_env_vars_exist=false
-done
-set -u
-if [ ${all_env_vars_exist} == false ]; then
-  echo "One or more required environment variables are not defined. Exiting."
-  exit 1
-fi
-
-PROFILE_NAME=""
-PROFILE_VERSION=""
-ACCOUNT_ID=""
-INSTANCE_ID=""
-SCC_REGION=""
-VERSION_LOCATOR=""
-
-# Loop through all args
-for arg in "$@"; do
-    set +e
-    found_match=false
-
-    if echo "${arg}" | grep -q -e --profile_name=; then
-        PROFILE_NAME=$(echo "${arg}" | awk -F= '{ print $2 }')
-        found_match=true
-    fi
-
-    if echo "${arg}" | grep -q -e --profile_version=; then
-        PROFILE_VERSION=$(echo "${arg}" | awk -F= '{ print $2 }')
-        found_match=true
-    fi
-
-    if echo "${arg}" | grep -q -e --account_id=; then
-        ACCOUNT_ID=$(echo "${arg}" | awk -F= '{ print $2 }')
-        found_match=true
-    fi
-
-    if echo "${arg}" | grep -q -e --instance_id=; then
-        INSTANCE_ID=$(echo "${arg}" | awk -F= '{ print $2 }')
-        found_match=true
-    fi
-
-    if echo "${arg}" | grep -q -e --scc_region=; then
-        SCC_REGION=$(echo "${arg}" | awk -F= '{ print $2 }')
-        found_match=true
-    fi
-
-    if echo "${arg}" | grep -q -e --version_locator=; then
-        VERSION_LOCATOR=$(echo "${arg}" | awk -F= '{ print $2 }')
-        found_match=true
-    fi
-
-    if [ ${found_match} = false ]; then
-        if [ "${arg}" != --help ]; then
-            echo "Unknown command line argument:  ${arg}"
-        fi
-        echo "${USAGE}"
-        exit 1
-    fi
-
-    set -e
-done
-
-# Verify values have been passed for required args
-all_args_exist=true
-var_array=( PROFILE_NAME PROFILE_VERSION ACCOUNT_ID INSTANCE_ID SCC_REGION VERSION_LOCATOR )
-set +u
-for var in "${var_array[@]}"; do
-    [ -z "${!var}" ] && echo "$var not set." && all_args_exist=false
-done
-set -u
-
-if [ ${all_args_exist} == false ]; then
-    echo "Missing one ore more required arguments. See usage below:"
-    echo "${USAGE}"
-    exit 1
-fi
-########################################
-# END SCRIPT SETUP
-########################################
-
-# SCC API endpoint setup
-SCC_API_BASE_URL="https://$SCC_REGION.compliance.cloud.ibm.com/instances/$INSTANCE_ID/v3"
-echo "SCC_API_BASE_URL=$SCC_API_BASE_URL"
-
-# use api key to get an access token
-IAM_RESPONSE=$(curl -s --request POST \
-'https://iam.cloud.ibm.com/identity/token' \
---header 'Content-Type: application/x-www-form-urlencoded' \
---header 'Accept: application/json' \
---data-urlencode 'grant_type=urn:ibm:params:oauth:grant-type:apikey' --data-urlencode 'apikey='"${SCC_API_KEY}") # pragma: allowlist secret
-
-ERROR_MESSAGE=$(echo "${IAM_RESPONSE}" | jq 'has("errorMessage")')
-if [[ "${ERROR_MESSAGE}" != false ]]; then
-    echo "${IAM_RESPONSE}" | jq '.errorMessage'
-    echo "Could not obtain an access token"
+if [[ -z "${SCC_PROFILE_NAME}" || -z "${SCC_PROFILE_VERSION}" || -z "${SCC_ACCOUNT_ID}" || -z "${SCC_INSTANCE_ID}" || -z "${SCC_REGION}" || -z "${VERSION_LOCATOR}" ]]; then
+    echo "Missing input parameter."
+    echo "   usage: perform-sccv3-scan SCC_PROFILE_NAME SCC_PROFILE_VERSION SCC_ACCOUNT_ID SCC_INSTANCE_ID SCC_REGION VERSION_LOCATOR"
+    echo "Exiting"
     exit 1
 fi
 
-ACCESS_TOKEN=$(echo "${IAM_RESPONSE}" | jq -r '.access_token')
-
-####################################################################################
-# STEP 1: Log CLI into catalog account
-####################################################################################
-echo "Logging CLI into catalog account.."
-ibmcloud login --apikey "${CATALOG_API_KEY}" --no-region
-ibmcloud target -r us-south  # need to target a region to list images later
-
-####################################################################################
-# STEP 2: determine the profile's id
-####################################################################################
-PROFILE_ID=""
-PROFILE_JSON=$(curl --silent --location --request GET \
-"${SCC_API_BASE_URL}/profiles" \
---header 'Content-Type: application/json' \
---header 'Authorization: Bearer '"${ACCESS_TOKEN}")
-
-PROFILE_ID=$(echo "${PROFILE_JSON}" | jq -r --arg PROFILE_NAME "${PROFILE_NAME}" --arg PROFILE_VERSION "${PROFILE_VERSION}" '.profiles[] | select(.profile_name == $PROFILE_NAME and .profile_version == $PROFILE_VERSION) | {id}' | jq -r .id)
-if [[ -z "${PROFILE_ID}" ]]; then
-    echo "Could not determine profile id for profile named: ${PROFILE_NAME}"
+#
+# required ENV variables:
+#   CATALOG_ACCOUNT_API_KEY - used to login to the IBM Cloud to query/update a catalog in this account.
+#   SCC_ACCOUNT_API_KEY - used to query and configure an instance of IBM SCC owned by this account.
+#
+if [[ -z "${CATALOG_ACCOUNT_API_KEY}" ]]; then
+    echo "Environment variable CATALOG_ACCOUNT_API_KEY is not set. Exiting."
     exit 1
 fi
 
-####################################################################################
-# STEP 3: get default parameters for profile, needed for attachment
-####################################################################################
-PROFILE_DETAIL_JSON=$(curl --silent --location --request GET \
-"${SCC_API_BASE_URL}/profiles/${PROFILE_ID}" \
---header 'Content-Type: application/json' \
---header 'Authorization: Bearer '"${ACCESS_TOKEN}")
-
-# get default params array from profile detail and rename 'parameter_default_value' field to 'parameter_value'
-DEFAULT_PARAMS_JSON=$(echo "${PROFILE_DETAIL_JSON}" | jq -r '[.default_parameters[] | .["parameter_value"] = .parameter_default_value | del(.parameter_default_value)]')
-if [[ -z "${DEFAULT_PARAMS_JSON}" ]]; then
-    echo "Could not determine profile default parameters for profile named: ${PROFILE_NAME}"
+if [[ -z "${SCC_ACCOUNT_API_KEY}" ]]; then
+    echo "Environment variable SCC_ACCOUNT_API_KEY is not set. Exiting."
     exit 1
 fi
 
-####################################################################################
-# STEP 3a: get default parameters for profile, needed for attachment
-####################################################################################
-ACTIVE_IMAGE_LIST=$(ibmcloud is images --output json | jq -c '[.[] | select(.status == "available" and .operating_system.dedicated_host_only == false and .operating_system.architecture == "amd64") | .name]' | sed "s/\"/'/g")
-if [[ -n "${ACTIVE_IMAGE_LIST}" ]]; then
-    echo "Using ACTIVE image list"
-    NEW_PARAMS_JSON=$(echo "${DEFAULT_PARAMS_JSON}" | jq --arg IMAGES "${ACTIVE_IMAGE_LIST}" '(.[] | select(.parameter_name == "defined_images") | .parameter_value) = $IMAGES')
-else
-    echo "Using default params"
-    NEW_PARAMS_JSON="${DEFAULT_PARAMS_JSON}"
-fi
+# constants 
+MAX_SCAN_SECONDS=5400      # 90 mins for maximum time for scan to complete
+SCAN_QUERY_WAIT=30         # seconds between queries to determin scan status
+MAX_SCAN_QUERY_RETRIES=10  # max numober of times to retry getting scan status
 
-####################################################################################
-# STEP 4: create a new attachment for the scan
-####################################################################################
-ATTACH_ID=""
-ATTACHMENT_NAME="catalog-pipeline-$(date +%Y%m%d%H%M%S)"
-ATTACH_RESULT_JSON=$(curl --silent --request POST \
-"${SCC_API_BASE_URL}/profiles/${PROFILE_ID}/attachments" \
---header 'Authorization: Bearer '"${ACCESS_TOKEN}" \
---header 'Content-Type: application/json' \
---data-raw '{"account_id": "'"${ACCOUNT_ID}"'", "attachments": [{"included_scope": {"scope_id": "'"${ACCOUNT_ID}"'", "scope_type": "account"}, "exclusions": [], "status": "disabled", "attachment_parameters": '"${NEW_PARAMS_JSON}"', "name": "'"${ATTACHMENT_NAME}"'"}]}')
+# -----------------------------------------------------------------------------------------
+# step 1 - login to the Cloud account that owns the instance of SCC
+# -----------------------------------------------------------------------------------------
+echo "Logging CLI into SCC owning account."
+ibmcloud login --apikey "${SCC_ACCOUNT_API_KEY}" --no-region
 
+# set the SCC endpoint by using the 
+SECURITY_AND_COMPLIANCE_CENTER_API_URL=https://$SCC_REGION.compliance.cloud.ibm.com/instances/$SCC_INSTANCE_ID/v3
+echo "The SCC endpoint has been set to $SECURITY_AND_COMPLIANCE_CENTER_API_URL"
 
-if [[ -z "${ATTACH_RESULT_JSON}" ]]; then
-    echo "Failed to create new attachment for profile named: ${PROFILE_NAME}"
+# -----------------------------------------------------------------------------------------
+# step 2 - determine the id of the Security and Compliance profile that was given by name
+# -----------------------------------------------------------------------------------------
+PROFILE_LIST_JSON=$(ibmcloud scc profile list --output json)
+if [[ -z "$PROFILE_LIST_JSON" || $? != 0 ]]; then
+    echo "Unable to list SCC profiles. Exiting."
     exit 1
 fi
 
-ATTACH_ID=$(echo "${ATTACH_RESULT_JSON}" | jq -r '.attachments[0].id')
+# determine the profile id from the list 
+PROFILE_ID=$(echo "${PROFILE_LIST_JSON}" | jq -r --arg SCC_PROFILE_NAME "${SCC_PROFILE_NAME}" --arg SCC_PROFILE_VERSION "${SCC_PROFILE_VERSION}" '.profiles[] | select(.profile_name==$SCC_PROFILE_NAME and .profile_version==$SCC_PROFILE_VERSION) | {id}' | jq -r .id)
+if [[ -z "$PROFILE_ID" ]]; then
+    echo "Profile ID not found for the profile named ${SCC_PROFILE_NAME} and version $SCC_PROFILE_VERSION .  Exiting"
+    exit 1
+fi
+
+echo "SCC profile id is $PROFILE_ID for profile ${SCC_PROFILE_NAME} and version $SCC_PROFILE_VERSION"
+
+# ----------------------------------------------------------------------------------------- 
+# step 3 - create a new attachment for the profile and determine its id 
+#    multiple steps needed as required by SCC to create an attachment
+#    3.1 - query the SCC profile and retrieve the default parameters of the profile
+#    3.2 - create the attachment using the default parameters from the profile
+# -----------------------------------------------------------------------------------------
+
+# query the SCC profile and retrieve the default parameters of the profile
+PROFILE_JSON=$(ibmcloud scc profile get --profile-id "$PROFILE_ID" --output json)
+if [[ -z "$PROFILE_JSON" || $? != 0 ]]; then
+    echo "Unable to query the SCC profile $PROFILE_ID to determine attachment defaults. Exiting."
+    exit 1
+fi
+
+# extract from the profile all of the default parameters ignoring everything else.  remove the default value settings.
+DEFAULT_PROFILE_PARMS_JSON=$(echo "${PROFILE_JSON}" | jq -r '[.default_parameters[] | .["parameter_value"] = .parameter_default_value | del(.parameter_default_value)]')
+if [[ -z "$DEFAULT_PROFILE_PARMS_JSON" ]]; then
+    echo "Default SCC profile parameters were not found for the profile named $SCC_PROFILE_NAME , version $SCC_PROFILE_VERSION and id.  Exiting."
+    exit 1
+fi
+
+# create the attachment using the default parameters from the profile
+ATTACHMENT_NAME="github-action-$(date +%Y%m%d%H%M%S)"
+CREATE_JSON=$(ibmcloud scc attachment create --profile-id "$PROFILE_ID" --attachments='[{"name": "'"$ATTACHMENT_NAME"'", "description": "created during github action to onboard DA", "status": "disabled", "scope":[{"environment":"ibm-cloud","properties":[{"name":"scope_id","value":"'"$SCC_ACCOUNT_ID"'"},{"name":"scope_type","value":"account"}]}], "attachment_parameters": '"${DEFAULT_PROFILE_PARMS_JSON}"'}]' --output json)
+if [[ -z "$CREATE_JSON" || $? != 0 ]]; then
+    echo "Unable to create an SCC attachment on profile $SCC_PROFILE_NAME .  Exiting."
+    exit 1
+fi
+
+# determine the attachment id
+ATTACH_ID=$(echo "${CREATE_JSON}" | jq -r '.attachments[0].id')
 if [[ -z "${ATTACH_ID}" || "${ATTACH_ID}" == "null" ]]; then
-    echo "Failed to retrieve new ATTACHMENT_ID for profile named: ${PROFILE_NAME}"
-    echo "DEBUG: ATTACH_RESULT_JSON:"
-    echo "${ATTACH_RESULT_JSON} | jq"
+    echo "Unable to determine the attachement id for attachment $ATTACHMENT_NAME on profile ${SCC_PROFILE_NAME} . Exiting."
     exit 1
 fi
 
-echo "Attachment created: ${ATTACH_ID}"
+echo "SCC attachment id is ${ATTACH_ID}"
 
-sleep 10 # wait before starting scan
+# small wait before starting the scan to let everything catch up.
+sleep 10
 
-####################################################################################
-# STEP 5: initiate an existing on demand scc scan for attachment
-####################################################################################
-SCAN_RESULT=$(curl --silent --request POST \
-"${SCC_API_BASE_URL}/scans" \
---header 'Authorization: Bearer '"${ACCESS_TOKEN}" \
---header 'Content-Type: application/json' \
---data-raw '{ "attachment_id": "'"${ATTACH_ID}"'"}')
+# ----------------------------------------------------------------------
+# step 4 - initiate an ondemand scan for the attachment
+# ----------------------------------------------------------------------
+SCAN_JSON=$(ibmcloud scc attachment scan --attachment-id "$ATTACH_ID" --output json)
+if [[ -z "$SCAN_JSON" || $? != 0 ]]; then
+    echo "Unable to query the ondemand scan for attachment id $ATTACH_ID. Scan may not have been initiated successfully. Exiting."
+    exit 1
+fi
 
-SCAN_ID=$(echo "${SCAN_RESULT}" | jq -r '.id')
+SCAN_ID=$(echo "${SCAN_JSON}" | jq -r '.id')
 if [[ -z "${SCAN_ID}" || "${SCAN_ID}" == "null" ]]; then
-    echo "error getting Scan ID.   result=${SCAN_RESULT}"
-    echo
-    echo "Could not initiate OnDemand SCC scan."
+    echo "Unable to determine the ondemand scan id.  Exiting."
     exit 1
 fi
 
-echo
-echo "Scan initiated: ${SCAN_ID}"
-
-# need to either wait an amount of time for the scan to start.  if we query the status too soon the last
-# completed status will be returned.
+echo "Scan initiated.  Scan id is ${SCAN_ID}"
+# wait so that scan status may be updated in the backend.  
 sleep 30
 
-####################################################################################
-# STEP 6: query attachment detail until scan status is complete
-####################################################################################
+# ----------------------------------------------------------------------
+# step 5 - wait for the scan to complete by querying its status
+# ----------------------------------------------------------------------
+
 elapsedSeconds=0
 scanDone=0
+retries=0
 while [ ${scanDone} -eq 0 ]
 do
-    # look for last scan in attachment detail
-    ATTACH_DETAIL_JSON=$(curl --silent --location --request GET \
-    "${SCC_API_BASE_URL}/profiles/${PROFILE_ID}/attachments/${ATTACH_ID}" \
-    --header 'Content-Type: application/json' \
-    --header 'Authorization: Bearer '"${ACCESS_TOKEN}")
+    # query the attachment and look at the last scan information
+    ATTACH_DETAIL_JSON=$(ibmcloud scc attachment get --attachment-id "$ATTACH_ID" --profile-id "$PROFILE_ID" --output json)
+    if [[ -z "$ATTACH_DETAIL_JSON" || $? != 0 ]]; then
+        echo "Unable to get status of scan for attachment.  ibmcloud return code was $? ... retrying."
+        sleep ${SCAN_QUERY_WAIT} 
+        ((retries=retries + 1))
 
-    # save the return code from curl command
-    CURL_RC=$?
-
-    # check for errors making the call
-    if [[ -z "${ATTACH_DETAIL_JSON}" || ${CURL_RC} != 0 ]]
-    then
-        echo "Error getting status of the attachment."
-        echo "Attachment detail is ${ATTACH_DETAIL_JSON}"
-        echo "curl return code is ${CURL_RC}"
-        echo
-        exit 1
-    fi
-
-    # exmaine the attach detail response.  look for the key "last_scan" in the response, and make sure that scan_id matches the one created above
-    LAST_SCAN_ID=$(echo "${ATTACH_DETAIL_JSON}" | jq -r '.last_scan.id')
-    if [[ "${LAST_SCAN_ID}" != "null" && "${LAST_SCAN_ID}" == "${SCAN_ID}" ]]
-    then
-        SCAN_STATUS=$(echo "${ATTACH_DETAIL_JSON}" | jq -r '.last_scan.status')
-        if [[ "${SCAN_STATUS}" == "completed" ]]
-        then
-            scanDone=1
-            echo "Scan completed"
-        else
-            echo "scan status: ${SCAN_STATUS} - Elapsed seconds: ${elapsedSeconds}"
-            # scan is not yet done.  sleep before querying status again.
-            sleep ${SCAN_QUERY_WAIT}
-            ((elapsedSeconds=elapsedSeconds + SCAN_QUERY_WAIT))
-
-            # see if scan has been running too long
-            if [[ ${elapsedSeconds} -gt ${MAX_SCAN_SECONDS} ]]
-            then
-                echo "Timeout waiting for scan to complete.  Scan time has exceeded the max of ${MAX_SCAN_SECONDS} ."
-                exit 1
-            fi
-
-            # refresh the token every 5 minutes = 300 seconds
-            if [ $((elapsedSeconds % 300)) = 0 ]; then
-                echo "Refreshing iam token"
-                # use api key to get an access token
-                IAM_RESPONSE=$(curl -s --request POST \
-                'https://iam.cloud.ibm.com/identity/token' \
-                --header 'Content-Type: application/x-www-form-urlencoded' \
-                --header 'Accept: application/json' \
-                --data-urlencode 'grant_type=urn:ibm:params:oauth:grant-type:apikey' --data-urlencode 'apikey='"${SCC_API_KEY}") # pragma: allowlist secret
-
-                ERROR_MESSAGE=$(echo "${IAM_RESPONSE}" | jq 'has("errorMessage")')
-                if [[ "${ERROR_MESSAGE}" != false ]]; then
-                    echo "${IAM_RESPONSE}" | jq '.errorMessage'
-                    echo "Could not obtain an access token"
-                    exit 1
-                fi
-                ACCESS_TOKEN=$(echo "${IAM_RESPONSE}" | jq -r '.access_token')
-            fi
+        if [[ ${retries} -gt ${MAX_SCAN_QUERY_RETRIES} ]]; then
+            echo "Maximum retries ${MAX_SCAN_QUERY_RETRIES} exceeded attempting to get scan status.  Exiting."
+            exit 1
         fi
     else
-        echo "Unexpected response from the SCC service while getting status of scan."
-        echo "response is ${ATTACH_DETAIL_JSON}"
-        echo
-        exit 1
+        # 
+        LAST_SCAN_ID=$(echo "${ATTACH_DETAIL_JSON}" | jq -r '.last_scan.id')
+        if [[ "${LAST_SCAN_ID}" != "null" && "${LAST_SCAN_ID}" == "${SCAN_ID}" ]]; then
+            SCAN_STATUS=$(echo "${ATTACH_DETAIL_JSON}" | jq -r '.last_scan.status')
+            if [[ "${SCAN_STATUS}" == "completed" ]]; then
+                scanDone=1
+                echo "Scan completed"
+            else
+                echo "scan status: ${SCAN_STATUS} - Elapsed seconds: ${elapsedSeconds}"
+                # scan is not yet done.  sleep before querying status again.
+                sleep ${SCAN_QUERY_WAIT}
+                ((elapsedSeconds=elapsedSeconds + SCAN_QUERY_WAIT))
+
+                # see if scan has been running too long
+                if [[ ${elapsedSeconds} -gt ${MAX_SCAN_SECONDS} ]]; then
+                    echo "Timeout waiting for scan to complete.  Scan time has exceeded the max of ${MAX_SCAN_SECONDS} ."
+                    exit 1
+                fi
+
+                # scans can take a while.  refresh the user login session every 5 minutes
+                if [ $((elapsedSeconds % 300)) = 0 ]; then
+                    echo "Refreshing iam token"
+                    ibmcloud catalog utility netrc
+                fi
+            fi
+        fi        
     fi
 done
 
 echo "Scan ID ${SCAN_ID} is complete!"
 
-# perform a token refresh
-IAM_RESPONSE=$(curl -s --request POST \
-'https://iam.cloud.ibm.com/identity/token' \
---header 'Content-Type: application/x-www-form-urlencoded' \
---header 'Accept: application/json' \
---data-urlencode 'grant_type=urn:ibm:params:oauth:grant-type:apikey' --data-urlencode 'apikey='"${SCC_API_KEY}") # pragma: allowlist secret
+# ----------------------------------------------------------------------
+# step 6 - apply the scan results to the version of the offering 
+# ----------------------------------------------------------------------
 
-ERROR_MESSAGE=$(echo "${IAM_RESPONSE}" | jq 'has("errorMessage")')
-if [[ "${ERROR_MESSAGE}" != false ]]; then
-    echo "${IAM_RESPONSE}" | jq '.errorMessage'
-    echo "Could not obtain an access token"
-    exit 1
+# login as the owner of the catalog so that we can update it.
+echo "Logging CLI into catalog account.."
+ibmcloud login --apikey "${CATALOG_ACCOUNT_API_KEY}" --no-region
+
+scc_apply_cmd="ibmcloud catalog offering version scc-apply --scan ${SCAN_ID} --version-locator ${VERSION_LOCATOR} --timeout 7200 --service-instance ${SCC_INSTANCE_ID} --instance-region ${SCC_REGION}"
+if [ "${SCC_ACCOUNT_API_KEY}" != "${CATALOG_ACCOUNT_API_KEY}" ]; then
+    scc_apply_cmd+=" --target-api-key ${SCC_ACCOUNT_API_KEY}"
 fi
-ACCESS_TOKEN=$(echo "${IAM_RESPONSE}" | jq -r '.access_token')
 
-# need to make sure the scan has recorded it status fully within the SCC database.  Temporarily wait 30 sec to be sure.
-echo "Waiting for 30 secs to make sure the scan has recorded its status fully within the SCC database.."
-sleep 30
-
-####################################################################################
-# STEP 7: apply the scan results to a version of an offering in the catalog
-####################################################################################
-set +u
-if [[ -z "${SKIP_CATALOG_UPDATE}" ]]; then
-    attempts=0
-    retries=3
-
-    # see https://github.ibm.com/GoldenEye/issues/issues/5673#issuecomment-62087361
-    export BLUEMIX_CM_TIMEOUT=7200
-
-    scc_apply_cmd="ibmcloud catalog offering version scc-apply --scan ${SCAN_ID} --version-locator ${VERSION_LOCATOR} --timeout ${BLUEMIX_CM_TIMEOUT}"
-    if [ "${SCC_API_KEY}" != "${CATALOG_API_KEY}" ]; then
-        scc_apply_cmd+=" --target-api-key ${SCC_API_KEY}"
-    fi
-
-    while [[ ${attempts} -le ${retries} ]]; do
-        sleep 10
-        attempts=$((attempts+1))
-        echo "Applying SCC scan, attempt ${attempts}"
-        if ${scc_apply_cmd}; then
-            break
+# apply the scan to the version, retry up to 3 times
+attempts=0
+retries=3
+while [[ ${attempts} -le ${retries} ]]; do
+    sleep 10
+    attempts=$((attempts+1))
+    echo "Appling scan results to offering version in catalog."
+    if ${scc_apply_cmd}; then
+        break
+    else
+        echo "Applying scan to the offering version failed."
+        if [[ ${attempts} -lt ${retries} ]]; then
+            echo "Retrying.."
+            echo
         else
-            echo "Applying scan to the version failed."
-            if [[ ${attempts} -lt ${retries} ]]; then
-                echo "Retrying.."
-                echo
-            else
-                echo "Maximum attempts reached, giving up!"
-                exit 1
-            fi
+            echo "Maximum attempts reached, giving up!"
+            exit 1
         fi
-    done
-    unset BLUEMIX_CM_TIMEOUT
-else
-    echo "Skipping Catalog Update (OS env variable SKIP_CATALOG_UPDATE was set)"
-fi
-set -u
+    fi
+done
 
-# perform one more token refresh in case catalog update took a while
-IAM_RESPONSE=$(curl -s --request POST \
-'https://iam.cloud.ibm.com/identity/token' \
---header 'Content-Type: application/x-www-form-urlencoded' \
---header 'Accept: application/json' \
---data-urlencode 'grant_type=urn:ibm:params:oauth:grant-type:apikey' --data-urlencode 'apikey='"${SCC_API_KEY}") # pragma: allowlist secret
+# ----------------------------------------------------------------------
+# step 7 - clean up by deleting the SCC attachment
+# ----------------------------------------------------------------------
 
-ERROR_MESSAGE=$(echo "${IAM_RESPONSE}" | jq 'has("errorMessage")')
-if [[ "${ERROR_MESSAGE}" != false ]]; then
-    echo "${IAM_RESPONSE}" | jq '.errorMessage'
-    echo "Could not obtain an access token"
-    exit 1
-fi
-ACCESS_TOKEN=$(echo "${IAM_RESPONSE}" | jq -r '.access_token')
+# log back into the SCC account to get a new access token
+echo "Logging CLI into SCC owning account."
+ibmcloud login --apikey "${SCC_ACCOUNT_API_KEY}" --no-region
 
-####################################################################################
-# STEP 8: Delete the attachment
-####################################################################################
-echo "Deleting attachment ${ATTACH_ID}"
-ATTACH_DELETE_JSON=$(curl --silent --request DELETE \
-"${SCC_API_BASE_URL}/profiles/${PROFILE_ID}/attachments/${ATTACH_ID}" \
-    --header 'Content-Type: application/json' \
-    --header 'Authorization: Bearer '"${ACCESS_TOKEN}")
-CURL_RC=$?
-ATTACH_DELETE_HAS_ERRORS=$(echo "${ATTACH_DELETE_JSON}" | jq 'has("errors")')
-if [[ "${CURL_RC}" != 0 || "${ATTACH_DELETE_HAS_ERRORS}" == true ]]; then
-    echo "Error deleting attachment"
-    echo "Attach delete response: ${ATTACH_DELETE_JSON}"
-    exit 1
+# delete the attachment
+scc_delete_attach_cmd=$(ibmcloud scc attachment delete --attachment-id "$ATTACH_ID" --profile-id "$PROFILE_ID")
+if [[ ${scc_delete_attach_cmd} != 0 ]]; then
+    echo "An error occurred while deleting the SCC attachment with id $ATTACH_ID . Manual clean may be necessary."
 fi
+
+echo "Done with SCC scan"
