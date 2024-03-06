@@ -31,6 +31,12 @@ sed -i '' 's/name\": \"custom-deployable-arch/name\": \"deploy-arch-ibm-gm-test-
 echo ".....change \"label\": \"custom-deployable-arch\" to \"label\": \"Test SLZ\""
 sed -i '' 's/label\": \"custom-deployable-arch/label\": \"Test SLZ/g' ibm_catalog.json
 
+echo ".....change \"name\": \"custom-apache\" to \"name\": \"deploy-arch-ibm-gm-custom-apache\""
+sed -i '' 's/name\": \"custom-apache/name\": \"deploy-arch-ibm-gm-custom-apache/g' ibm_catalog.json
+
+echo ".....change \"label\": \"custom-apache\" to \"label\": \"Custom Apache\""
+sed -i '' 's/label\": \"custom-apache/label\": \"Custom Apache/g' ibm_catalog.json
+
 echo "...set an icon for Test SLZ"
 # determine the index of offering "Test SLZ" in ibm_catalog.json
 productIndex=$(jq '[.products[].label] | index("Test SLZ")' < ibm_catalog.json)
