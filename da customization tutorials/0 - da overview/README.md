@@ -1,5 +1,5 @@
 # Deployable Architecture Overview
 
-// TODO  What is a DA, how is it being used and lifecycled
-
-[Running secure enterprise workloads on IBM Cloud](https://cloud.ibm.com/docs/overview?topic=overview-secure-enterprise)
+Please see the following resources for indepth information regarding Deployable Architectures.
+- [What are deployable architectures](https://cloud.ibm.com/docs/secure-enterprise?topic=secure-enterprise-what-are-deployable-architectures)
+- [Deployable architecture lifecyle](https://cloud.ibm.com/docs/secure-enterprise?topic=secure-enterprise-setup-project)
