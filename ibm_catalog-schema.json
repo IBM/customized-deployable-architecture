@@ -1,0 +1,541 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "Schema for Global Catalog manifest",
+	"description": "version 1.0.0",
+    "type": "object",
+    "properties": {
+        "products": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string",
+						"markdownDescription": "A unique programmatic name for this offering.  The name must be unique within the catalog."
+                    },
+                    "label": {
+                        "type": "string",
+						"markdownDescription": "The display name for this offering."
+                    },
+                    "product_kind": {
+                        "type": "string",
+						"markdownDescription": "Specifies the type of offering where  \n \t**solution** = deployable architecture,  \n \t**module** = module.",
+						"enum": [ "solution", "module" ]
+                    },
+                    "tags": {
+                        "type": "array",
+                        "markdownDescription": "A list of predefined string values used for filtering. These values auto populate *Categories* and *Industry* filter tags. To obtain a list of tags to set a Category use the command `ibmcloud catalog offering category-options`.  To get a list of all of the filtering tags for Industry use this command `ibmcloud catalog filter options --all`",
+                        "items": {
+                            "type": "string"
+                        },
+						"uniqueItems": true
+                    },
+                    "keywords": {
+                        "type": "array",
+                        "markdownDescription": "A list of keywords to associate to this offering that may be matched during a catalog search.",
+                        "items": {
+                            "type": "string"
+                        },
+						"uniqueItems": true
+                    },
+                    "short_description": {
+                        "type": "string",
+						"markdownDescription": "A brief description of this offering."
+                    },
+                    "long_description": {
+                        "type": "string",
+						"markdownDescription": "A description of this offering that expands upon the short description and gives more details regarding what this offering does."
+                    },
+                    "offering_docs_url": {
+                        "type": "string",
+						"markdownDescription": "The url where the documentation for this product is located."
+                    },
+                    "offering_icon_url": {
+                        "type": "string",
+						"markdownDescription": "The url where the icon for this product is located.  Also supported is the ‘data:image/svg+xml;base64’ format and the icon is stored inline."
+                    },
+                    "module_info": {
+                        "type": "object",
+                        "properties": {
+                            "works_with": {
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "properties": {
+                                        "name": {
+                                            "type": "string"
+                                        },
+                                        "kind": {
+                                            "type": "string"
+                                        },
+                                        "version": {
+                                            "type": "string"
+                                        },
+                                        "flavor": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "required": [
+                                        "name",
+                                        "kind",
+                                        "version",
+                                        "flavor"
+                                    ]
+                                }
+                            }
+                        },
+                        "required": [
+                            "works_with"
+                        ]
+                    },
+                    "support_details": {
+                        "type": "string"
+                    },
+                    "flavors": {
+                        "type": "array",
+                        "markdownDescription": "A list of variations (flavors) for this offering.",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "label": {
+                                    "type": "string",
+                                    "markdownDescription": "The display name for this variation."
+                                },
+                                "name": {
+                                    "type": "string",
+                                    "markdownDescription": "A unique programmatic name for this variation.  Must unique within this offering."
+                                },
+                                "install_type": {
+                                    "type": "string",
+                                    "markdownDescription": "The install type of this variation where   \n \t**fullstack** = has no pre-requisities or dependencies,  \n \t**extension** = has at least one pre-requisite or dependency that must be installed first. ",
+									"enum": [ "fullstack", "extension"]
+                                },
+                                "working_directory": {
+                                    "type": "string",
+                                    "markdownDescription": "Specify the name of the directory within the repository where the implmentation is for this variation."
+                                },
+                                "usage_template": {
+                                    "type": "string",
+                                    "markdownDescription": "Specifies a sample of how this variation could be utilized in a terraform template."
+                                },
+                                "scripts": {
+                                    "type": "array",
+                                    "markdownDescription": "Specifies Ansible scripts that will be executed by the Projects service in a given stage of deployment.",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "type": {
+                                                "type": "string",
+												"enum": [ "ansible" ]
+                                            },
+                                            "short_description": {
+                                                "type": "string"
+                                            },
+                                            "path": {
+                                                "type": "string"
+                                            },
+                                            "stage": {
+                                                "type": "string",
+												"enum": [ "pre", "post"]
+                                            },
+                                            "action": {
+                                                "type": "string",
+												"enum": [ "deploy", "validate", "undeploy"]
+                                            }
+                                        },
+                                        "required": [
+                                            "type",
+                                            "short_description",
+                                            "path",
+                                            "stage",
+                                            "action"
+                                        ]
+                                    }
+                                },
+                                "change_notices": {
+                                    "type": "object",
+                                    "markdownDescription": "A list of change notices grouped by **breaking**, **new** and **update** that will be shown on the consumption page.",
+                                    "properties": {
+                                        "breaking": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "title": {
+                                                        "type": "string"
+                                                    },
+                                                    "description": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "required": [
+                                                    "title",
+                                                    "description"
+                                                ]
+                                            }
+                                        },
+                                        "new": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "title": {
+                                                        "type": "string"
+                                                    },
+                                                    "description": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "required": [
+                                                    "title",
+                                                    "description"
+                                                ]
+                                            }
+                                        },
+                                        "update": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "title": {
+                                                        "type": "string"
+                                                    },
+                                                    "description": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "required": [
+                                                    "title",
+                                                    "description"
+                                                ]
+                                            }
+                                        }
+                                    },
+                                    "required": [
+                                        "breaking",
+                                        "new",
+                                        "update"
+                                    ]
+                                },
+                                "compliance": {
+                                    "type": "object",
+                                    "properties": {
+                                        "authority": {
+                                            "type": "string"
+                                        },
+                                        "controls": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "profile": {
+                                                        "type": "object",
+                                                        "properties": {
+                                                            "name": {
+                                                                "type": "string"
+                                                            },
+                                                            "version": {
+                                                                "type": "string"
+                                                            }
+                                                        },
+                                                        "required": [
+                                                            "name",
+                                                            "version"
+                                                        ]
+                                                    },
+                                                    "names": {
+                                                        "type": "array",
+                                                        "items": {
+                                                            "type": "string"
+                                                        }
+                                                    }
+                                                },
+                                                "required": [
+                                                    "profile",
+                                                    "names"
+                                                ]
+                                            }
+                                        }
+                                    },
+                                    "required": [
+                                        "authority",
+                                        "controls"
+                                    ]
+                                },
+                                "licenses": {
+                                    "type": "array",
+                                    "markdownDescription": "A list of the licenses that govern the use of this offering and variation.",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "name": {
+                                                "type": "string"
+                                            },
+                                            "url": {
+                                                "type": "string"
+                                            }
+                                        },
+                                        "required": [
+                                            "name",
+                                            "url"
+                                        ]
+                                    }
+                                },
+                                "schematics_env_values": {
+                                    "type": "object",
+                                    "properties": {
+                                        "value": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "required": [
+                                        "value"
+                                    ]
+                                },
+                                "dependencies": {
+                                    "type": "array",
+                                    "markdownDescription": "A list of offerings that must be deployed prior to the deployment of this variation.",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "catalog_id": {
+                                                "type": "string"
+                                            },
+                                            "id": {
+                                                "type": "string"
+                                            },
+                                            "name": {
+                                                "type": "string"
+                                            },
+                                            "version": {
+                                                "type": "string"
+                                            },
+                                            "flavors": {
+                                                "type": "array",
+                                                "items": {
+                                                    "type": "string"
+                                                }
+                                            },
+                                            "install_type": {
+                                                "type": "string",
+												"enum": [ "fullstack", "extension" ]
+                                            }
+                                        },
+                                        "required": [
+                                            "id",
+                                            "name",
+                                            "version"
+                                        ]
+                                    }
+                                },
+                                "configuration": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "key": {
+                                                "type": "string"
+                                            },
+                                            "type": {
+                                                "type": "string"
+                                            },
+                                            "default_value": {
+                                                "type": "string"
+                                            },
+                                            "description": {
+                                                "type": "string"
+                                            },
+                                            "required": {
+                                                "type": "boolean"
+                                            },
+                                            "display_name": {
+                                                "type": "string"
+                                            },
+                                            "custom_config": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "type": {
+                                                        "type": "string",
+														"enum": [ "array", "cluster_var", "json_editor",
+																	"multiline_secure_value", "platform_resource",
+																	"power_iaas", "preset_configuration", "region",
+																	"resource_group", "schematics_workspace", "textarea",
+																	"vpc", "vpc_region", "vpc_ssh_key"
+														]
+                                                    },
+                                                    "grouping": {
+                                                        "type": "string"
+                                                    },
+                                                    "original_grouping": {
+                                                        "type": "string"
+                                                    },
+                                                    "config_constraints": {
+                                                        "type": "object",
+                                                        "properties": {
+                                                            "selection": {
+                                                                "type": "string"
+                                                            },
+                                                            "valueType": {
+                                                                "type": "string"
+                                                            },
+                                                            "generationType": {
+                                                                "type": "string"
+                                                            },
+                                                            "catalogID": {
+                                                                "type": "string"
+                                                            },
+                                                            "flavorConstraint": {
+                                                                "type": "string"
+                                                            },
+                                                            "installTypeConstraint": {
+                                                                "type": "string"
+                                                            },
+                                                            "offeringID": {
+                                                                "type": "string"
+                                                            },
+                                                            "versionConstraint": {
+                                                                "type": "string"
+                                                            },
+                                                            "identifier": {
+                                                                "type": "string"
+                                                            },
+                                                            "showKinds": {
+                                                                "type": "array",
+                                                                "items": {
+                                                                    "type": "string"
+                                                                }
+                                                            },
+                                                            "subtype": {
+                                                                "type": "string"
+                                                            },
+                                                            "resourceType": {
+                                                                "type": "string"
+                                                            },
+                                                            "type": {
+                                                                "type": "string"
+                                                            }
+                                                        }
+                                                    }
+                                                },
+                                                "required": [
+                                                    "type"
+                                                ]
+                                            }
+                                        },
+                                        "required": [
+                                            "key"
+                                        ]
+                                    }
+                                },
+                                "iam_permissions": {
+                                    "type": "array",
+                                    "markdownDescription": "The minimum required permissions that the account deploying the resources created by this variation needs as defined by the IAM service.",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "role_crns": {
+                                                "type": "array",
+                                                "items": {
+                                                    "type": "string"
+                                                }
+                                            },
+                                            "service_name": {
+                                                "type": "string"
+                                            }
+                                        },
+                                        "required": [
+                                            "role_crns",
+                                            "service_name"
+                                        ]
+                                    }
+                                },
+                                "architecture": {
+                                    "type": "object",
+                                    "markdownDescription": "A description of the architecture of this variation. Includes one or more diagrams and descriptions.",
+                                    "properties": {
+                                        "descriptions": {
+                                            "type": "string"
+                                        },
+                                        "features": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "title": {
+                                                        "type": "string"
+                                                    },
+                                                    "description": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "required": [
+                                                    "title",
+                                                    "description"
+                                                ]
+                                            }
+                                        },
+                                        "diagrams": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "diagram": {
+                                                        "type": "object",
+                                                        "properties": {
+                                                            "caption": {
+                                                                "type": "string"
+                                                            },
+                                                            "url": {
+                                                                "type": "string"
+                                                            },
+                                                            "metadata": {
+                                                                "type": "array",
+                                                                "items": {}
+                                                            }
+                                                        },
+                                                        "required": [
+                                                            "caption",
+                                                            "url"
+                                                        ]
+                                                    },
+                                                    "description": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "required": [
+                                                    "diagram",
+                                                    "description"
+                                                ]
+                                            }
+                                        }
+                                    },
+                                    "required": [
+                                        "descriptions",
+                                        "diagrams"
+                                    ]
+                                }
+                            },
+                            "required": [
+                                "label",
+                                "name",
+                                "install_type",
+                                "architecture"
+                            ]
+                        },
+						"minItems": 1
+                    }
+                },
+                "required": [
+                    "name",
+                    "label",
+                    "product_kind",
+                    "flavors"
+                ]
+            },
+			"minItems": 1
+        }
+    },
+    "required": [
+        "products"
+    ]
+}
