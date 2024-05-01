@@ -6,7 +6,7 @@ Master branch will hold the latest definitions of what a stack repo looks like.
 This Specifc stack is based on two staging published DAs, a _slimed_ down SLZ that can be provisioned on stating, and a DA with a VSI/Script installing an Apache server on that SLZ.
 
 <p align="center">
-<img border="1px" style="display: block;" src="images/prj-stack.svg">
+<img border="1px" style="display: block;" src="../../../images/prj-stack.svg">
 <p align="center"  style="font-size:9px;">
 Fig. 1: Two DA stack
 </p>
