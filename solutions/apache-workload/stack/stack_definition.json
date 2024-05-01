@@ -1,0 +1,93 @@
+{
+	"inputs": [
+		{
+			"name": "ssh_private_key",
+			"required": true,
+			"type": "password",
+			"hidden": false,
+			"custom_config": {}
+		},
+		{
+			"name": "prefix",
+			"required": true,
+			"type": "string",
+			"hidden": false,
+			"default": "stackDemo",
+			"custom_config": {}
+		},
+		{
+			"name": "ssh_key",
+			"required": true,
+			"type": "string",
+			"hidden": false,
+			"default": "__NOT_SET__",
+			"custom_config": {}
+		}
+	],
+	"members": [
+		{
+			"inputs": [
+				{
+					"name": "ssh_private_key",
+					"value": "ref:../../inputs/ssh_private_key"
+				},
+				{
+					"name": "prerequisite_workspace_id",
+					"value": "ref:../Test%20SLZ/outputs/schematics_workspace_id"
+				},
+				{
+					"name": "fp_vsi_floating_ip_address",
+					"value": "ref:../Test%20SLZ/outputs/workload_vsi_fip"
+				},
+				{
+					"name": "prefix",
+					"value": "ref:../../inputs/prefix"
+				},
+				{
+					"name": "resource_group_id",
+					"value": "ref:../Test%20SLZ/outputs/resource_group_id"
+				},
+				{
+					"name": "ssh_key_id",
+					"value": "ref:../Test%20SLZ/outputs/ssh_key_id"
+				},
+				{
+					"name": "subnet_id",
+					"value": "ref:../Test%20SLZ/outputs/workload_subnet_id"
+				},
+				{
+					"name": "vpc_id",
+					"value": "ref:../Test%20SLZ/outputs/workload_vpc_id"
+				},
+				{
+					"name": "region",
+					"value": "us-east"
+				},
+				{
+					"name": "image",
+					"value": "ibm-ubuntu-22-04-3-minimal-amd64-2"
+				},
+				{
+					"name": "appSecurityRules",
+					"value": "{\"name\":\"httpd-sg\",\"rules\":[{\"name\":\"httpd-port-80\",\"direction\":\"inbound\",\"source\":\"0.0.0.0/0\",\"tcp\":{\"port_max\":80,\"port_min\":80}},{\"name\":\"ssh-port-22\",\"direction\":\"inbound\",\"source\":\"0.0.0.0/0\",\"tcp\":{\"port_max\":22,\"port_min\":22}},{\"name\":\"outbound-off\",\"direction\":\"outbound\",\"source\":\"0.0.0.0/0\"},{\"name\":\"httpd-port-443\",\"direction\":\"inbound\",\"source\":\"0.0.0.0/0\",\"tcp\":{\"port_max\":443,\"port_min\":443}}]}"
+				}
+			],
+			"name": "Custom Apache",
+			"version_locator": "1082e7d2-5e2f-0a11-a3bc-f88a8e1931fc.36192d85-e841-408d-a094-04d57079feed-global"
+		},
+		{
+			"inputs": [
+				{
+					"name": "ssh_key",
+					"value": "ref:../../inputs/ssh_key"
+				},
+				{
+					"name": "prefix",
+					"value": "ref:../../inputs/prefix"
+				}
+			],
+			"name": "Test SLZ",
+			"version_locator": "1082e7d2-5e2f-0a11-a3bc-f88a8e1931fc.5614102d-2e5d-4070-9637-a7621d479275-global"
+		}
+	]
+}

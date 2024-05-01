@@ -366,8 +366,7 @@
           "label": "Standard",
           "name": "standard",
           "install_type": "fullstack",
-          "working_directory": "solutions/apache-workload/fullstack",
-          "usage_template": "module \"custom_apache\" {\n source                    = \"https://cm.globalcatalog.cloud.ibm.com/api/v1-beta/offering/source//${{workingDirectory}}?archive=tgz&catalogID=${{catalogID}}&flavor=${{flavor}}&kind=${{kind}}&name=${{name}}&version=${{version}}\"\n  ibmcloud_api_key          = var.ibmcloud_api_key\n  ssh_key = var.ssh_key\n  ssh_private_key          = var.ssh_private_key\n   prefix = var.prefix\n}\n\n",
+          "working_directory": "solutions/apache-workload/stack",
           "compliance": {
             "authority": "scc-v3",
             "controls": [
@@ -389,6 +388,8 @@
           "configuration": [
             {
               "key": "ssh_key",
+              "type": "string",
+              "default_value": "__NOT_SET__",
               "required": true
             },
             {
@@ -403,13 +404,9 @@
               "type": "password"
             },
             {
-              "key": "ibmcloud_api_key",
-              "required": true,
-              "type": "password"
-            },
-            {
               "key": "prefix",
               "required": true,
+              "default_value": "stackPrefix",
               "type": "string"
             }
           ],
@@ -504,10 +501,10 @@
               {
                 "diagram": {
                   "caption": "Custom Edge variation",
-                  "url": "https://raw.githubusercontent.com/IBM/customized-deployable-architecture/main/images/custom-slz.svg",
+                  "url": "https://raw.githubusercontent.com/IBM/customized-deployable-architecture/main/images/prj-stack.svg",
                   "metadata": []
                 },
-                "description": "Custom Edge variation of Secure infrastructure on VPC for regulated industries requires at least 2 CPUs and 4 GB of memory.\n\nSecure infrastructure on VPC for regulated industries is implemented with virtual servers. It utilizes two separate Virtual Private Clouds (VPC), a Management VPC and a Workload VPC, to manage the environment and the deployed workload. Each VPC is a multi-zoned, multi-subnet implementation that keeps your workloads secure.\n\nVirtual Private Endpoints connect the VPCs to each other and to IBM Cloud services, including Key Protect, IAM, Container Registry, Object Storage, and any additional services. IBM Cloud services are configured for storage and key management.\n\nIBM Cloud Flow Logs for VPC enable the collection, storage, and presentation of information about the Internet Protocol (IP) traffic that is going to and from network interfaces within your VPC. In addition, Activity Tracker logs events from enabled services. IBM Cloud Flow Logs for VPC and Activity Tracker are included in this configuration. Additional security services can be added such as Hyper Connect Crypto Service."
+                "description": "A stack representation in a project."
               }
             ]
           }
