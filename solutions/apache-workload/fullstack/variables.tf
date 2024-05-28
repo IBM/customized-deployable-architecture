@@ -24,7 +24,7 @@ variable "ibmcloud_api_key" {
 # custom secure infrastructure resources were deployed.
 variable "region" {
   type    = string
-  default = "us-east"
+  default = "us-south"
 }
 
 variable "prerequisite_workspace_id" {

@@ -1,8 +1,8 @@
 {
   "products": [
     {
-      "name": "deploy-arch-ibm-gm-test-slz",
-      "label": "Test SLZ",
+      "name": "deploy-arch-ibm-force-squad-test-slz",
+      "label": "Test SLZ Force Squad",
       "product_kind": "solution",
       "tags": [
         "network",
@@ -22,7 +22,7 @@
         "works_with": [
           {
             "catalog_id": "33eb1d96-dfb4-4d60-a21a-c376ed0c89c3",
-            "name": "deploy-arch-ibm-gm-custom-apache",
+            "name": "deploy-arch-ibm-force-squad-custom-apache",
             "kind": "terraform",
             "version": "0.0.52",
             "flavor": "standard"
@@ -143,7 +143,7 @@
       ]
     },
     {
-      "name": "deploy-arch-ibm-gm-custom-apache",
+      "name": "deploy-arch-ibm-force-squad-custom-apache",
       "label": "Custom Apache",
       "product_kind": "solution",
       "tags": [
