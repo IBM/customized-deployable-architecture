@@ -4,35 +4,27 @@
 # This script creates a file to contain an ssh private key value.  The file will be used as part of 
 # an ssh operation by ansible.
 #
-# The value passed to the script is expected to be in heredoc format (multi-line string).  The heredoc
-# notation needs to be removed and the file must end with a newline.
+# The value passed to the script may be in heredoc format (multi-line string).  If it is present 
+# the heredoc notation needs to be removed and the file must end with a newline.
 #
 
 private_key="${1}"
 
-# The private key value was wrapped within heredoc notation to facilate passing a multi-line
-# input value to terraform.  It is of the form:
-#   <<-EOF
-#   actual private key value
-#   EOF
-# Need to strip the heredoc notation and create a file with just the key value followed 
-# by a new line character.  The file must have the required permissions set of 600.
+echo "${private_key}" > keyfile
 
-# remove the first heredoc notation on line 1
-echo "${private_key}" | sed 's/<<-EOF//' > keyfile1.tmp
+# echo "${private_key}" > keyfile1.tmp
+# # if a line begins with "<<" then remove it
+# sed "/^<<-EOF/d" < keyfile1.tmp > keyfile2.tmp
+# sed "/^<<EOF/d" < keyfile2.tmp  > keyfile3.tmp
+# # if there is a heredoc marker then remove the line
+# sed "/^EOF/d" < keyfile3.tmp > keyfile
 
-# remove the last two lines of the file to remove the heredoc "EOF" marker
-sed '$d' < keyfile1.tmp > keyfile2.tmp
-sed '$d' < keyfile2.tmp > keyfile3.tmp
-
-# remove the newline characater at the beginning of the file that is left over from heredoc notation
-tail -c +2 keyfile3.tmp > keyfile
+# rm keyfile1.tmp 2>/dev/null
+# rm keyfile2.tmp 2>/dev/null
+# rm keyfile3.tmp 2>/dev/null
 
 # file has to have a newline at the end of it so add one back
-echo "" >> keyfile
+#echo "" >> keyfile
 
 # ssh keyfile permissions must be 600
 chmod 600 keyfile
-
-# cleanup 
-rm keyfile1.tmp keyfile2.tmp keyfile3.tmp

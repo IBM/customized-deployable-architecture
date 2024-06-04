@@ -216,7 +216,6 @@
                 "original_grouping": "deployment",
                 "type": "multiline_secure_value"
               },
-              "default_value": "<<-EOF\nINSERT YOUR KEY HERE\nEOF",
               "key": "ssh_private_key",
               "required": true,
               "type": "password"
