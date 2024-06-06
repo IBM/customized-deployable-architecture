@@ -108,6 +108,14 @@
               "service_name": "is.vpc"
             }
           ],
+          "change_notices": {
+            "update": [
+              {
+                "title": "Updated ubuntu image",
+                "description": "Use ubuntu image \"ibm-ubuntu-22-04-4-minimal-amd64-1\" on the VSIs created."
+              }
+            ]
+          },
           "architecture": {
             "descriptions": "",
             "features": [
@@ -301,6 +309,14 @@
               "service_name": "is.vpc"
             }
           ],
+          "change_notices": {
+            "update": [
+              {
+                "title": "Updated ubuntu image",
+                "description": "Use ubuntu image \"ibm-ubuntu-22-04-4-minimal-amd64-1\" on the VSIs created."
+              }
+            ]
+          },
           "architecture": {
             "descriptions": "",
             "features": [
@@ -397,7 +413,6 @@
                 "original_grouping": "deployment",
                 "type": "multiline_secure_value"
               },
-              "default_value": "<<-EOF\nINSERT YOUR KEY HERE\nEOF",
               "key": "ssh_private_key",
               "required": true,
               "type": "password"
@@ -448,6 +463,14 @@
               "service_name": "is.vpc"
             }
           ],
+          "change_notices": {
+            "update": [
+              {
+                "title": "Updated ubuntu image",
+                "description": "Use ubuntu image \"ibm-ubuntu-22-04-4-minimal-amd64-1\" on the VSIs created."
+              }
+            ]
+          },
           "architecture": {
             "descriptions": "",
             "features": [
