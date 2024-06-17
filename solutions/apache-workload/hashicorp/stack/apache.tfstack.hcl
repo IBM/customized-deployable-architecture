@@ -32,6 +32,22 @@ required_providers {
         source  = "IBM-Cloud/ibm"
         version = ">=1.45.1"
     }
+
+    # need this to authenticate with HCP to use HCP Vault Secrets
+    hcp = {
+        source  = "hashicorp/hcp"
+        version = "~> 0.79.0"
+    }
+}
+
+# need this to authenticate with HCP to use HCP Vault Secrets
+provider "hcp" "this" {
+    config {
+        workload_identity {
+            resource_name = var.workload_idp_name
+            token_file    = var.identity_token_file
+        }
+    }
 }
 
 provider "ibm" {
@@ -39,9 +55,21 @@ provider "ibm" {
     region           = var.region
 }
 
+# A data only component that retrieves secrets from HCP Vault Secrets
 # an HCP resource deployment that contains the sensitive/secret values needed.  The component must output the values for referencing below.
 component "secrets" {
+    source = "./vault_secrets"
 
+    inputs = {
+        vault_secrets_app_name                    = var.vault_secrets_app_name 
+        vault_secrets_secret_name                 = var.vault_secrets_apikey_secret_name
+        vault_secrets_ssh_private_key_secret_name = var.vault_secrets_ssh_private_key_secret_name
+        vault_secrets_ssh_key_secret_name         = var.vault_secrets_ssh_key_secret_name
+    }
+
+    providers = {
+        hcp = provider.hcp.this
+    }
 }
 
 component "apache" {
