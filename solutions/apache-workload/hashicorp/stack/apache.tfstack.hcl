@@ -8,22 +8,22 @@ variable "region" {
 }
 
 variable "vault_secrets_app_name" {
-    description = "The name of the Vault Secrets application"
+    description = "The name of the HCP Vault Secrets application name used."
     type        = string
 }
 
 variable "vault_secrets_apikey_secret_name" {
-    description = "The name of the secret containing the apikey"
+    description = "The name of the secret containing the apikey."
     type        = string
 }
 
 variable "vault_secrets_ssh_private_key_secret_name" {
-    description = "The name of the secret containing the ssh private key"
+    description = "The name of the secret containing the ssh private key."
     type        = string
 }
 
 variable "vault_secrets_ssh_key_secret_name" {
-    description = "The name of the secret containing the ssh key"
+    description = "The name of the secret containing the ssh key."
     type        = string
 }
 

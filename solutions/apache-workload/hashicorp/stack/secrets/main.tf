@@ -1,4 +1,7 @@
 #
+#  This is a data only component used to fetch static credentials from HCP Vault.  The instance
+#  of HCP Vault should be created and set up with these credentials outside of this stack.
+#
 data "hcp_vault_secrets_secret" "apikey" {
     # vault - specify the secret name for apikey
     app_name    = var.vault_secrets_app_name
