@@ -1,7 +1,7 @@
 {
     "$schema": "http://json-schema.org/draft-07/schema#",
     "title": "Schema for Global Catalog manifest",
-	"description": "version 1.0.0",
+	"description": "version 1.0.1",
     "type": "object",
     "properties": {
         "products": {
@@ -357,10 +357,10 @@
                                                     "type": {
                                                         "type": "string",
 														"enum": [ "array", "cluster_var", "json_editor",
-																	"multiline_secure_value", "platform_resource",
-																	"power_iaas", "preset_configuration", "region",
-																	"resource_group", "schematics_workspace", "textarea",
-																	"vpc", "vpc_region", "vpc_ssh_key"
+															"multiline_secure_value", "platform_resource",
+															"power_iaas", "preset_configuration", "region",
+															"resource_group", "schematics_workspace", "textarea",
+															"vpc", "vpc_region", "vpc_ssh_key"
 														]
                                                     },
                                                     "grouping": {
@@ -453,7 +453,7 @@
                                     "type": "object",
                                     "markdownDescription": "A description of the architecture of this variation. Includes one or more diagrams and descriptions.",
                                     "properties": {
-                                        "descriptions": {
+                                        "description": {
                                             "type": "string"
                                         },
                                         "features": {
@@ -481,12 +481,28 @@
                                                 "properties": {
                                                     "diagram": {
                                                         "type": "object",
+                                                        "anyOf": [
+                                                            {"required": ["url"]},
+                                                            {"required": ["url_proxy"]}
+                                                        ],  
                                                         "properties": {
                                                             "caption": {
                                                                 "type": "string"
                                                             },
                                                             "url": {
                                                                 "type": "string"
+                                                            },
+                                                            "url_proxy": {
+                                                                "type": "object",
+                                                                "required": ["url"],
+                                                                "properties": {
+                                                                    "url": {
+                                                                        "type": "string"
+                                                                    },
+                                                                    "sha": {
+                                                                        "type": "string"
+                                                                    }
+                                                                }
                                                             },
                                                             "metadata": {
                                                                 "type": "array",
