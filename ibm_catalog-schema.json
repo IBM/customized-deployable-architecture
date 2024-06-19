@@ -510,8 +510,7 @@
                                                             }
                                                         },
                                                         "required": [
-                                                            "caption",
-                                                            "url"
+                                                            "caption"
                                                         ]
                                                     },
                                                     "description": {
