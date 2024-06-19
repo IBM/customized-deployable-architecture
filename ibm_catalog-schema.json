@@ -526,7 +526,6 @@
                                         }
                                     },
                                     "required": [
-                                        "descriptions",
                                         "diagrams"
                                     ]
                                 }
