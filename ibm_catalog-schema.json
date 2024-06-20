@@ -1,7 +1,7 @@
 {
     "$schema": "http://json-schema.org/draft-07/schema#",
     "title": "Schema for Global Catalog manifest",
-	"description": "version 1.0.1",
+	"description": "version 1.0.2",
     "type": "object",
     "properties": {
         "products": {
@@ -158,6 +158,7 @@
                                     "properties": {
                                         "breaking": {
                                             "type": "array",
+                                            "markdownDescription": "A list of breaking changes introduced in this version.",
                                             "items": {
                                                 "type": "object",
                                                 "properties": {
@@ -176,6 +177,7 @@
                                         },
                                         "new": {
                                             "type": "array",
+                                            "markdownDescription": "A list of new functional changes introduced in this version.",
                                             "items": {
                                                 "type": "object",
                                                 "properties": {
@@ -194,6 +196,7 @@
                                         },
                                         "update": {
                                             "type": "array",
+                                            "markdownDescription": "A list of updates to existing function introduced in this version.",
                                             "items": {
                                                 "type": "object",
                                                 "properties": {
@@ -210,12 +213,7 @@
                                                 ]
                                             }
                                         }
-                                    },
-                                    "required": [
-                                        "breaking",
-                                        "new",
-                                        "update"
-                                    ]
+                                    }
                                 },
                                 "compliance": {
                                     "type": "object",
@@ -283,6 +281,7 @@
                                 },
                                 "schematics_env_values": {
                                     "type": "object",
+                                    "markdownDescription": "Environment variables and their values to pass the IBM Schematics service.",
                                     "properties": {
                                         "value": {
                                             "type": "string"
