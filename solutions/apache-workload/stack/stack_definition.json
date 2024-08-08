@@ -65,7 +65,7 @@
 				},
 				{
 					"name": "image",
-					"value": "ibm-ubuntu-22-04-3-minimal-amd64-2"
+					"value": "ibm-ubuntu-22-04-4-minimal-amd64-3"
 				},
 				{
 					"name": "appSecurityRules",
@@ -73,7 +73,7 @@
 				}
 			],
 			"name": "Custom Apache",
-			"version_locator": "33eb1d96-dfb4-4d60-a21a-c376ed0c89c3.e7eb4b1b-2459-4448-895f-423d222f5e2c"
+			"version_locator": "33eb1d96-dfb4-4d60-a21a-c376ed0c89c3.62e504b6-9283-48dc-8f86-bd9493b464bb"
 		},
 		{
 			"inputs": [
@@ -87,7 +87,7 @@
 				}
 			],
 			"name": "Test SLZ",
-			"version_locator": "33eb1d96-dfb4-4d60-a21a-c376ed0c89c3.65ac764a-74e4-4717-acfa-6bdbe1e405d7"
+			"version_locator": "33eb1d96-dfb4-4d60-a21a-c376ed0c89c3.56a6896c-5b3f-44e2-b811-18f12d70baac"
 		}
 	]
 }
