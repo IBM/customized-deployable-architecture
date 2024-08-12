@@ -3,17 +3,22 @@ output "prefix" {
     description = "prefix used for the apache deployment"
 }
 
-output "subnet-id" {
+output "resource_group_id" {
+    value       = local.resource_group_id
+    description = "id of the resource group containing the deployed resources"
+}
+
+output "subnet_id" {
     value = local.subnet_id
     description = "id of the target subnet where Apache VSI is deployed"
 }
 
-output "vpc-id" {
+output "vpc_id" {
     value = local.vpc_id
     description = "id of the VPC where the Apache VSI is deployed"
 }
 
-output "ssh-key-id" {
+output "ssh_key_id" {
     value = local.ssh_key_id
     description = "id of the public ssh key to configure the VSI with for ssh access"
 }
