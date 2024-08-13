@@ -73,7 +73,7 @@
 				}
 			],
 			"name": "Custom Apache",
-			"version_locator": "33eb1d96-dfb4-4d60-a21a-c376ed0c89c3.62e504b6-9283-48dc-8f86-bd9493b464bb"
+			"version_locator": "33eb1d96-dfb4-4d60-a21a-c376ed0c89c3.9393cf99-4f2f-4f37-8328-2dfad9f77b81"
 		},
 		{
 			"inputs": [
@@ -87,7 +87,7 @@
 				}
 			],
 			"name": "Test SLZ",
-			"version_locator": "33eb1d96-dfb4-4d60-a21a-c376ed0c89c3.56a6896c-5b3f-44e2-b811-18f12d70baac"
+			"version_locator": "33eb1d96-dfb4-4d60-a21a-c376ed0c89c3.3fad627c-519d-4c8d-b999-d2f4dc4d6369"
 		}
 	]
 }
