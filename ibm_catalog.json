@@ -63,7 +63,7 @@
             {
               "key": "prefix",
               "required": false,
-              "default_value": "gv-baby-slz1"
+              "default_value": "gv-baby-slz2"
             },
             {
               "key": "ssh_key",
