@@ -1,10 +1,10 @@
 #
 #
 module "custom_slz" {
-    source           = "https://cm.globalcatalog.cloud.ibm.com/api/v1-beta/offering/source/archive//solutions/custom-slz?archive=tgz&catalogID=33eb1d96-dfb4-4d60-a21a-c376ed0c89c3&flavor=babyslz&installType=fullstack&kind=terraform&name=custom-deployable-arch&version=^0.0.72"
-    prefix           = var.prefix
-    ssh_key          = var.ssh_key
-    ibmcloud_api_key = var.ibmcloud_api_key
+  source           = "https://cm.globalcatalog.cloud.ibm.com/api/v1-beta/offering/source/archive//solutions/custom-slz?archive=tgz&catalogID=33eb1d96-dfb4-4d60-a21a-c376ed0c89c3&flavor=babyslz&installType=fullstack&kind=terraform&name=custom-deployable-arch&version=^0.0.84"
+  prefix           = var.prefix
+  ssh_key          = var.ssh_key
+  ibmcloud_api_key = var.ibmcloud_api_key
 }
 
 #
@@ -19,18 +19,18 @@ locals {
 
   # construct the name of the targeted vpc and then find it in the output 
   vpc_name = join("-", [var.prefix, local.vpc_type, "vpc"])
-  vpc_id = [for vpc in module.custom_slz.vpc_data : vpc.vpc_id if vpc.vpc_name == local.vpc_name][0]
+  vpc_id   = [for vpc in module.custom_slz.vpc_data : vpc.vpc_id if vpc.vpc_name == local.vpc_name][0]
 
   # construct the name of the targeted subnet and then find it in the output
   subnet_name = join("-", [var.prefix, local.vpc_type, "vsi-zone-1"])
-  subnet_id = [for subnet in module.custom_slz.subnet_data : subnet.id if subnet.name == local.subnet_name][0]
+  subnet_id   = [for subnet in module.custom_slz.subnet_data : subnet.id if subnet.name == local.subnet_name][0]
 
   # construct the name of the ssh key and then find it in the output
   ssh_key_name = "ssh-key"
-  ssh_key_id = [for ssh_key in module.custom_slz.ssh_key_data : ssh_key.id if ssh_key.name == local.ssh_key_name][0]
+  ssh_key_id   = [for ssh_key in module.custom_slz.ssh_key_data : ssh_key.id if ssh_key.name == local.ssh_key_name][0]
 
   # construct the name of the jump box and then find it in the output
-  fp_vsi_name = join("-", [var.prefix, "jump-box-001"])
+  fp_vsi_name                = join("-", [var.prefix, "jump-box-001"])
   fp_vsi_floating_ip_address = [for fp in module.custom_slz.fip_vsi : fp.floating_ip if fp.name == local.fp_vsi_name][0]
 
   # get the resource group id that was used by the custom slz layer from the outputs
@@ -38,11 +38,11 @@ locals {
 }
 
 module "custom_apache" {
-  source                     = "https://cm.globalcatalog.cloud.ibm.com/api/v1-beta/offering/source/archive//solutions/apache-workload/extension?archive=tgz&catalogID=33eb1d96-dfb4-4d60-a21a-c376ed0c89c3&flavor=standard&installType=extension&kind=terraform&name=custom-apache&version=^0.0.72"
+  source = "https://cm.globalcatalog.cloud.ibm.com/api/v1-beta/offering/source/archive//solutions/apache-workload/extension?archive=tgz&catalogID=33eb1d96-dfb4-4d60-a21a-c376ed0c89c3&flavor=standard&installType=extension&kind=terraform&name=custom-apache&version=^0.0.84"
   ### directly use this as an extension by supplying just these values.
-  ibmcloud_api_key           = var.ibmcloud_api_key
-  prerequisite_workspace_id  = var.prerequisite_workspace_id
-  ssh_private_key            = var.ssh_private_key
+  ibmcloud_api_key          = var.ibmcloud_api_key
+  prerequisite_workspace_id = var.prerequisite_workspace_id
+  ssh_private_key           = var.ssh_private_key
   ### or provide all of these, above 3 and these below, values when using this within a fullstack terrform.
   prefix                     = var.prefix
   vpc_id                     = local.vpc_id
