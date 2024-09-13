@@ -63,12 +63,12 @@
             {
               "key": "prefix",
               "required": false,
-              "default_value": "land-zone-vsi-qs"
+              "default_value": "gv-baby-slz1"
             },
             {
               "key": "ssh_key",
               "required": true,
-              "default_value": "__NOT_SET__"
+              "default_value": "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMad3yyD5Qq89ghF6E5LUmMp86Bxd9aMZ95WeKzn/5Oi gvalenc@us.ibm.com"
             }
           ],
           "outputs": [
