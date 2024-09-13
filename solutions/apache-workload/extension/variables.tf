@@ -2,8 +2,8 @@
 # the OS image to install on the VSI
 variable "image" {
   description = "Available images may be found by using ibmcloud is images cli command."
-  type    = string
-  default = "ibm-ubuntu-22-04-3-minimal-amd64-2"
+  type        = string
+  default     = "ibm-ubuntu-22-04-3-minimal-amd64-3"
 }
 
 # API key with sufficient permissions to deploy resources 
@@ -26,9 +26,9 @@ variable "prerequisite_workspace_id" {
 }
 
 variable "prefix" {
-  type    = string
+  type        = string
   description = "Prefix string for resources created."
-  default = ""
+  default     = ""
 }
 
 variable "ssh_private_key" {
@@ -39,30 +39,30 @@ variable "ssh_private_key" {
 
 variable "vpc_id" {
   description = "The id of the VPC where the virtual server is to be created."
-  type = string
-  default = ""
+  type        = string
+  default     = ""
 }
 
 variable "subnet_id" {
   description = "The id of the subnet within the VPC where the virtual server is to be created."
-  type = string
-  default = ""
+  type        = string
+  default     = ""
 }
 
 variable "resource_group_id" {
   description = "The id of the resource group where the virtual server is to be created."
-  type = string
-  default = ""
+  type        = string
+  default     = ""
 }
 
 variable "ssh_key_id" {
   description = "The id of the public ssh key that pairs with the private ssh key deployed with the jump box."
-  type = string
-  default = ""
+  type        = string
+  default     = ""
 }
 
 variable "fp_vsi_floating_ip_address" {
   description = "The floating point IP address of the jump box."
-  type = string
-  default = ""
+  type        = string
+  default     = ""
 }
