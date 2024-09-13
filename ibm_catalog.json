@@ -57,28 +57,88 @@
           },
           "configuration": [
             {
-              "key": "ssh_key",
+              "key": "ibmcloud_api_key",
               "required": true
             },
             {
-              "key": "ibmcloud_api_key",
-              "required": true,
-              "type": "password"
+              "key": "prefix",
+              "required": false,
+              "default_value": "land-zone-vsi-qs"
             },
             {
-              "key": "prefix",
+              "key": "ssh_key",
               "required": true,
-              "type": "string"
+              "default_value": "__NOT_SET__"
             }
           ],
           "outputs": [
             {
-              "description": "ID of the IBM Cloud Schematics workspace. Returns null if not ran in Schematics",
-              "key": "schematics_workspace_id"
+              "key": "fip_vsi",
+              "description": "A list of VSI with name, id, zone, and primary ipv4 address, VPC Name, and floating IP. This list only contains instances with a floating IP attached."
             },
             {
-              "description": "prefix used in this infrastructure",
-              "key": "prefix"
+              "key": "prefix",
+              "description": "Prefix used to name resources is this deployment"
+            },
+            {
+              "key": "resource_group_data",
+              "description": "All of the resource group data"
+            },
+            {
+              "key": "resource_group_id",
+              "description": "Resource group id used for deployed resources"
+            },
+            {
+              "key": "resource_group_name",
+              "description": "Resource group name used for deployed resources"
+            },
+            {
+              "key": "schematics_workspace_id",
+              "description": "ID of the IBM Cloud Schematics workspace. Returns null if not ran in Schematics"
+            },
+            {
+              "key": "ssh_key_data",
+              "description": "List of SSH key data"
+            },
+            {
+              "key": "ssh_key_id",
+              "description": "ssh key id"
+            },
+            {
+              "key": "ssh_key_name",
+              "description": "ssh key name"
+            },
+            {
+              "key": "subnet_data",
+              "description": "All of the subnet data across the vpcs created"
+            },
+            {
+              "key": "vpc_data",
+              "description": "This is the entire vpc data object for all of the VPCs created.  Includes all attributes of the VPCs"
+            },
+            {
+              "key": "workload_subnet_id",
+              "description": "workload subnet id"
+            },
+            {
+              "key": "workload_subnet_name",
+              "description": "workload subnet name"
+            },
+            {
+              "key": "workload_vpc_id",
+              "description": "The workload vpc id"
+            },
+            {
+              "key": "workload_vpc_name",
+              "description": "The workload vpc name"
+            },
+            {
+              "key": "workload_vsi_fip",
+              "description": "Floating point ip address of VSI within the workload VPC used as a Bastion/jumpbox host"
+            },
+            {
+              "key": "workload_vsi_name",
+              "description": "VSI hostname of the Bastion/jumpbox host that has an associated floating ip address"
             }
           ],
           "iam_permissions": [
