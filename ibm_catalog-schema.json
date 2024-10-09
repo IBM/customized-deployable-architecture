@@ -339,7 +339,7 @@
                                                 "type": "string"
                                             },
                                             "default_value": {
-                                                "type": "string"
+                                                "type": ["string", "number", "integer", "boolean", "array", "object"]
                                             },
                                             "description": {
                                                 "type": "string"
