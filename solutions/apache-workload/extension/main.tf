@@ -90,7 +90,7 @@ output "all-inputs" {
 }
 
 module "slz_vsi" {
-  source                     = "git::https://github.com/terraform-ibm-modules/terraform-ibm-landing-zone-vsi.git?ref=v3.3.0"
+  source                     = "git::https://github.com/terraform-ibm-modules/terraform-ibm-landing-zone-vsi.git?ref=v4.0.1"
   resource_group_id          = local.resource_group_id
   image_id                   = data.ibm_is_image.image.id
   create_security_group      = true

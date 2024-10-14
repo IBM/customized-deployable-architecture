@@ -3,7 +3,7 @@
 variable "image" {
   description = "Available images may be found by using ibmcloud is images cli command."
   type    = string
-  default = "ibm-ubuntu-22-04-4-minimal-amd64-3"
+  default = "ibm-ubuntu-22-04-4-minimal-amd64-4"
 }
 
 # API key with sufficient permissions to deploy resources 
