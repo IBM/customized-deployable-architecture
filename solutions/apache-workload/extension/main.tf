@@ -54,7 +54,7 @@ data "ibm_is_image" "image" {
 }
 
 data "ibm_is_subnet" "by-subnet-id" {
-  identifier = subnet_id
+  identifier = var.subnet_id
 
   # lifecycle {
   #   precondition {
