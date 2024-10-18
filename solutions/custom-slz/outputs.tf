@@ -7,11 +7,6 @@ output "prefix" {
   description = "Prefix used to name resources is this deployment"
 }
 
-output "schematics_workspace_id" {
-  description = "ID of the IBM Cloud Schematics workspace. Returns null if not ran in Schematics"
-  value       = var.IC_SCHEMATICS_WORKSPACE_ID
-}
-
 output "vpc_data" {
   description = "This is the entire vpc data object for all of the VPCs created.  Includes all attributes of the VPCs"
   value = module.landing_zone.vpc_data
@@ -74,7 +69,8 @@ output "fip_vsi" {
 
 output "workload_vsi_fip" {
   description = "Floating point ip address of VSI within the workload VPC used as a Bastion/jumpbox host"
-  value = [for fp in module.landing_zone.fip_vsi : fp.floating_ip if fp.name == join("-", [var.prefix, "jump-box-001"])][0]
+  #value = [for fp in module.landing_zone.fip_vsi : fp.floating_ip if fp.name == join("-", [var.prefix, "jump-box-001"])][0]
+  value = module.landing_zone.fip_vsi[0].floating_ip
 }
 output "workload_vsi_name" {
   description = "VSI hostname of the Bastion/jumpbox host that has an associated floating ip address"
