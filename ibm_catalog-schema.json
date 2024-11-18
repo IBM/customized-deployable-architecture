@@ -340,8 +340,7 @@
                                         },
                                         "required": [
                                             "id",
-                                            "name",
-                                            "version"
+                                            "name"
                                         ]
                                     }
                                 },
