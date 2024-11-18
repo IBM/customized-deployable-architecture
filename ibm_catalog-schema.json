@@ -1,7 +1,7 @@
 {
     "$schema": "http://json-schema.org/draft-07/schema#",
     "title": "Schema for Global Catalog manifest",
-	"description": "version 1.0.2",
+	"description": "version 1.0.3",
     "type": "object",
     "properties": {
         "products": {
@@ -83,10 +83,7 @@
                                     ]
                                 }
                             }
-                        },
-                        "required": [
-                            "works_with"
-                        ]
+                        }
                     },
                     "support_details": {
                         "type": "string"
@@ -217,6 +214,10 @@
                                 },
                                 "compliance": {
                                     "type": "object",
+                                    "anyOf": [
+                                        {"required": ["controls"]},
+                                        {"required": ["profiles"]}
+                                    ],
                                     "properties": {
                                         "authority": {
                                             "type": "string"
@@ -253,11 +254,28 @@
                                                     "names"
                                                 ]
                                             }
+                                        },
+                                        "profiles": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "profile_name": {
+                                                        "type": "string"
+                                                    },
+                                                    "profile_version": {
+                                                        "type": "string"    
+                                                    }
+                                                },
+                                                "required": [
+                                                    "profile_name",
+                                                    "profile_version"
+                                                ]    
+                                            }        
                                         }
                                     },
                                     "required": [
-                                        "authority",
-                                        "controls"
+                                        "authority"
                                     ]
                                 },
                                 "licenses": {
