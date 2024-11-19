@@ -292,8 +292,7 @@
                                             }
                                         },
                                         "required": [
-                                            "name",
-                                            "url"
+                                            "name"
                                         ]
                                     }
                                 },
