@@ -25,15 +25,16 @@
                         "controls": [
                             {
                                 "profile": {
-                                    "name": "IBM Cloud for Financial Services",
-                                    "version": "1.4.0"
+                                    "name": "IBM Cloud Framework for Financial Services",
+                                    "version": "1.7.0"
                                 },
                                 "names": [
-                                    "AC-2(a)",
+                                    "AU-4",
                                     "AC-6(0)",
                                     "CM-2(0)",
-                                    "SC-12(0)",
-                                    "SC-28(0)"
+                                    "SC-7(10)",
+                                    "SC-11",
+                                    "SC-23"
                                 ]
                             }
                         ]
@@ -154,8 +155,8 @@
                 {
                     "label": "Standard",
                     "name": "standard",
-                    "install_type": "extension",
-                    "working_directory": "solutions/apache-workload/extension",
+                    "install_type": "fullstack",
+                    "working_directory": "solutions/apache-workload",
                     "usage_template": "module \"custom_apache\" {\n source                    = \"https://cm.globalcatalog.cloud.ibm.com/api/v1-beta/offering/source//${{workingDirectory}}?archive=tgz&catalogID=${{catalogID}}&flavor=${{flavor}}&kind=${{kind}}&name=${{name}}&version=${{version}}\"\n  ibmcloud_api_key          = var.ibmcloud_api_key\n  prerequisite_workspace_id = var.prerequisite_workspace_id\n  ssh_private_key          =var.ssh_private_key\n}\n\n",
                     "scripts": [	
                         {
@@ -171,15 +172,16 @@
                         "controls": [
                             {
                                 "profile": {
-                                    "name": "IBM Cloud for Financial Services",
-                                    "version": "1.4.0"
+                                    "name": "IBM Cloud Framework for Financial Services",
+                                    "version": "1.7.0"
                                 },
                                 "names": [
-                                    "AC-2(a)",
+                                    "AU-4",
                                     "AC-6(0)",
                                     "CM-2(0)",
-                                    "SC-12(0)",
-                                    "SC-28(0)"
+                                    "SC-7(10)",
+                                    "SC-11",
+                                    "SC-23"
                                 ]
                             }
                         ]
@@ -383,21 +385,22 @@
                     "label": "Standard",
                     "name": "standard",
                     "install_type": "fullstack",
-                    "working_directory": "solutions/apache-workload/stack",
+                    "working_directory": "solutions/stack",
                     "compliance": {
                         "authority": "scc-v3",
                         "controls": [
                             {
                                 "profile": {
-                                    "name": "IBM Cloud for Financial Services",
-                                    "version": "1.4.0"
+                                    "name": "IBM Cloud Framework for Financial Services",
+                                    "version": "1.7.0"
                                 },
                                 "names": [
-                                    "AC-2(a)",
+                                    "AU-4",
                                     "AC-6(0)",
                                     "CM-2(0)",
-                                    "SC-12(0)",
-                                    "SC-28(0)"
+                                    "SC-7(10)",
+                                    "SC-11",
+                                    "SC-23"
                                 ]
                             }
                         ]
