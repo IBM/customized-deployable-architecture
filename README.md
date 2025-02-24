@@ -34,4 +34,4 @@ Catalog tiles:
 * custom-deployable-arch is a generic deployable architecture for the network landscape.
 * custom-apache is a deployable architecture as a workload which runs a secure apache server.
 
-The Apache workload tile has both an extension and a fullstack implemenation as variations of the deployable architecture.
+
