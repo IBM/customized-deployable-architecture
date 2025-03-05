@@ -35,15 +35,11 @@
             "controls": [
               {
                 "profile": {
-                  "name": "IBM Cloud for Financial Services",
-                  "version": "1.4.0"
+                  "name": "IBM Cloud Framework for Financial Services",
+                  "version": "1.7.0"
                 },
                 "names": [
-                  "AC-2(a)",
-                  "AC-6(0)",
-                  "CM-2(0)",
-                  "SC-12(0)",
-                  "SC-28(0)"
+                  "IA-3"
                 ]
               }
             ]
@@ -105,7 +101,7 @@
             "update": [
               {
                 "title": "Updated ubuntu image",
-                "description": "Use ubuntu image \"ibm-ubuntu-22-04-4-minimal-amd64-3\" on the VSIs created."
+                "description": "Use ubuntu image \"ibm-ubuntu-22-04-5-minimal-amd64-1\" on the VSIs created."
               },
               {
                 "title": "Terraform runtime",
@@ -161,8 +157,8 @@
         "apache",
         "web server"
       ],
-      "short_description": "Customized example showing an extension and fullstack delivery of an Apache server.",
-      "long_description": "This example is designed to illustrate a deployable architecture that has both an extension and a fullstack delivery option.  It is designed to be compatible with the custom deployable architecture solution also within this Demo.",
+      "short_description": "Customized example showing an add on DA to deploy an Apache server.",
+      "long_description": "This example is designed to illustrate a deployable architecture that uses a dependent add on DA.  It is designed to be compatible with the custom deployable architecture solution also within this Demo.",
       "offering_docs_url": "https://raw.githubusercontent.com/IBM/customized-deployable-architecture/main/README.md",
       "offering_icon_url": "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4gPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGlkPSJMYXllcl8xIiBkYXRhLW5hbWU9IkxheWVyIDEiIHZpZXdCb3g9IjAgMCAxMjAgMTM1Ij48ZGVmcz48c3R5bGU+LmNscy0xe2ZpbGw6I2E1MjA1Njt9LmNscy0ye2ZpbGw6I2ZmZjt9PC9zdHlsZT48L2RlZnM+PHRpdGxlPjAxX0lOU1RBTkFfSWNvblNldDwvdGl0bGU+PHBhdGggY2xhc3M9ImNscy0xIiBkPSJNNTIsNC42NCw5LjU2LDI5LjE1QTE2LDE2LDAsMCwwLDEuNTcsNDNWOTJhMTYsMTYsMCwwLDAsOCwxMy44NEw1MiwxMzAuMzZhMTYsMTYsMCwwLDAsMTYsMGw0Mi40NS0yNC41MWExNiwxNiwwLDAsMCw4LTEzLjg0VjQzYTE2LDE2LDAsMCwwLTgtMTMuODRMNjgsNC42NEExNiwxNiwwLDAsMCw1Miw0LjY0WiI+PC9wYXRoPjxwYXRoIGNsYXNzPSJjbHMtMiIgZD0iTTg5LjQsNDEuNTlBLjc2Ljc2LDAsMCwwLDg4LjM0LDQxYy0xNy44MSw3LjQ5LTM4LDIwLjQ1LTQ2LjgyLDQwYTEuNDQsMS40NCwwLDAsMS0xLjIxLjgzLDEuNDcsMS40NywwLDAsMS0uNjUtLjEyLDEuNCwxLjQsMCwwLDEtLjctMS44NmM5LTE5LjksMjkuMTktMzMuMTUsNDcuMjctNDFhLjY1LjY1LDAsMCwwLS4xNS0xLjIzLDMuMSwzLjEsMCwwLDAtLjU0LS4wNWMtMTUuNzgtLjQ1LTQwLjg1LDEwLjc4LTQ5LjQ1LDI2QzMyLDcwLjg1LDMyLDc4LjM3LDM2LjIyLDg1LjMzYy0uMTguNDQtLjg2LDIuNDYtMSwyLjg4TDMxLDgzLjljLS4yMS0uMjMtLjUyLDAtLjQxLjMxbDMsOC40NWMtLjUsMS41My0uNDQsMS40OS0uODYsMy4wN2ExLjQsMS40LDAsMCwwLDEsMS43MiwxLjI3LDEuMjcsMCwwLDAsLjQzLDAsMS40MSwxLjQxLDAsMCwwLDEuMjktMWMuMzMtMS4yNi40MS0xLjU3LjgtMi44bDcuMzItNC44OWMuMjUtLjE2LjE3LS41NS0uMTMtLjQ5bC01LjY0LjljLjI0LS41OS43My0yLjExLDEtMi43QzUyLDg0LjIsNjAsNzguNCw2Ni4yLDcxLjQ5QS45LjksMCwwLDAsNjUuNTEsNzBhMzcuNjYsMzcuNjYsMCwwLDAtOS4xMy45M2MtMS4yLjM0LTEuODMtLjM4LTEuNjMtMS4xMy4zOS0xLjQzLDkuNS0zLDE0LjQtMi44OGExLDEsMCwwLDAsLjgxLS4zNGMuNTctLjc1LDkuODQtMTQuMjcsMTcuNjYtMjIuMDcsMS4yNS0xLjI4LDEuODYtMi4wOCwxLjc4LTIuOSI+PC9wYXRoPjwvc3ZnPiA=",
       "module_info": {
@@ -174,8 +170,8 @@
         {
           "label": "Standard",
           "name": "standard",
-          "install_type": "extension",
-          "working_directory": "solutions/apache-workload/extension",
+          "install_type": "fullstack",
+          "working_directory": "solutions/apache-workload",
           "usage_template": "module \"custom_apache\" {\n source                    = \"https://cm.globalcatalog.cloud.ibm.com/api/v1-beta/offering/source//${{workingDirectory}}?archive=tgz&catalogID=${{catalogID}}&flavor=${{flavor}}&kind=${{kind}}&name=${{name}}&version=${{version}}\"\n  ibmcloud_api_key          = var.ibmcloud_api_key\n  prerequisite_workspace_id = var.prerequisite_workspace_id\n  ssh_private_key          =var.ssh_private_key\n}\n\n",
           "scripts": [
             {
@@ -191,15 +187,11 @@
             "controls": [
               {
                 "profile": {
-                  "name": "IBM Cloud for Financial Services",
-                  "version": "1.4.0"
+                  "name": "IBM Cloud Framework for Financial Services",
+                  "version": "1.7.0"
                 },
                 "names": [
-                  "AC-2(a)",
-                  "AC-6(0)",
-                  "CM-2(0)",
-                  "SC-12(0)",
-                  "SC-28(0)"
+                  "IA-3"
                 ]
               }
             ]
@@ -330,7 +322,7 @@
             "update": [
               {
                 "title": "Updated ubuntu image",
-                "description": "Use ubuntu image \"ibm-ubuntu-22-04-4-minimal-amd64-4\" on the VSIs created."
+                "description": "Use ubuntu image \"ibm-ubuntu-22-04-5-minimal-amd64-1\" on the VSIs created."
               },
               {
                 "title": "Terraform runtime",
@@ -397,26 +389,48 @@
               }
             ]
           }
-        },
+        }
+      ]
+    },
+    {
+      "name": "deploy-arch-ibm-gm-apache-stack",
+      "label": "Custom Apache Stack",
+      "product_kind": "solution",
+      "tags": [
+        "network",
+        "network_vpc",
+        "ConsumerProducts",
+        "Technology"
+      ],
+      "keywords": [
+        "apache",
+        "web server"
+      ],
+      "short_description": "Customized example showing an EPX stack implementatino of an Apache server in an Landing Zone base.",
+      "long_description": "This example is designed to illustrate a deployable architecture that has an EPX Stack delivery option.  It is designed to be compatible with the custom deployable architecture solution also within this Demo.",
+      "offering_docs_url": "https://raw.githubusercontent.com/IBM/customized-deployable-architecture/main/README.md",
+      "offering_icon_url": "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4gPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGlkPSJMYXllcl8xIiBkYXRhLW5hbWU9IkxheWVyIDEiIHZpZXdCb3g9IjAgMCAxMjAgMTM1Ij48ZGVmcz48c3R5bGU+LmNscy0xe2ZpbGw6I2E1MjA1Njt9LmNscy0ye2ZpbGw6I2ZmZjt9PC9zdHlsZT48L2RlZnM+PHRpdGxlPjAxX0lOU1RBTkFfSWNvblNldDwvdGl0bGU+PHBhdGggY2xhc3M9ImNscy0xIiBkPSJNNTIsNC42NCw5LjU2LDI5LjE1QTE2LDE2LDAsMCwwLDEuNTcsNDNWOTJhMTYsMTYsMCwwLDAsOCwxMy44NEw1MiwxMzAuMzZhMTYsMTYsMCwwLDAsMTYsMGw0Mi40NS0yNC41MWExNiwxNiwwLDAsMCw4LTEzLjg0VjQzYTE2LDE2LDAsMCwwLTgtMTMuODRMNjgsNC42NEExNiwxNiwwLDAsMCw1Miw0LjY0WiI+PC9wYXRoPjxwYXRoIGNsYXNzPSJjbHMtMiIgZD0iTTg5LjQsNDEuNTlBLjc2Ljc2LDAsMCwwLDg4LjM0LDQxYy0xNy44MSw3LjQ5LTM4LDIwLjQ1LTQ2LjgyLDQwYTEuNDQsMS40NCwwLDAsMS0xLjIxLjgzLDEuNDcsMS40NywwLDAsMS0uNjUtLjEyLDEuNCwxLjQsMCwwLDEtLjctMS44NmM5LTE5LjksMjkuMTktMzMuMTUsNDcuMjctNDFhLjY1LjY1LDAsMCwwLS4xNS0xLjIzLDMuMSwzLjEsMCwwLDAtLjU0LS4wNWMtMTUuNzgtLjQ1LTQwLjg1LDEwLjc4LTQ5LjQ1LDI2QzMyLDcwLjg1LDMyLDc4LjM3LDM2LjIyLDg1LjMzYy0uMTguNDQtLjg2LDIuNDYtMSwyLjg4TDMxLDgzLjljLS4yMS0uMjMtLjUyLDAtLjQxLjMxbDMsOC40NWMtLjUsMS41My0uNDQsMS40OS0uODYsMy4wN2ExLjQsMS40LDAsMCwwLDEsMS43MiwxLjI3LDEuMjcsMCwwLDAsLjQzLDAsMS40MSwxLjQxLDAsMCwwLDEuMjktMWMuMzMtMS4yNi40MS0xLjU3LjgtMi44bDcuMzItNC44OWMuMjUtLjE2LjE3LS41NS0uMTMtLjQ5bC01LjY0LjljLjI0LS41OS43My0yLjExLDEtMi43QzUyLDg0LjIsNjAsNzguNCw2Ni4yLDcxLjQ5QS45LjksMCwwLDAsNjUuNTEsNzBhMzcuNjYsMzcuNjYsMCwwLDAtOS4xMy45M2MtMS4yLjM0LTEuODMtLjM4LTEuNjMtMS4xMy4zOS0xLjQzLDkuNS0zLDE0LjQtMi44OGExLDEsMCwwLDAsLjgxLS4zNGMuNTctLjc1LDkuODQtMTQuMjcsMTcuNjYtMjIuMDcsMS4yNS0xLjI4LDEuODYtMi4wOCwxLjc4LTIuOSI+PC9wYXRoPjwvc3ZnPiA=",
+      "module_info": {
+        "works_with": [
+        ]
+      },
+      "support_details": "This is a demonstration and no official support is given.",
+      "flavors": [
         {
           "label": "Standard",
           "name": "standard",
           "install_type": "fullstack",
-          "working_directory": "solutions/apache-workload/stack",
+          "working_directory": "solutions/stack",
           "compliance": {
             "authority": "scc-v3",
             "controls": [
               {
                 "profile": {
                   "name": "IBM Cloud for Financial Services",
-                  "version": "1.4.0"
+                  "version": "1.7.0"
                 },
                 "names": [
-                  "AC-2(a)",
-                  "AC-6(0)",
-                  "CM-2(0)",
-                  "SC-12(0)",
-                  "SC-28(0)"
+                    "IA-3"
                 ]
               }
             ]
@@ -488,7 +502,7 @@
             "update": [
               {
                 "title": "Updated ubuntu image",
-                "description": "Use ubuntu image \"ibm-ubuntu-22-04-4-minimal-amd64-3\" on the VSIs created."
+                "description": "Use ubuntu image \"ibm-ubuntu-22-04-5-minimal-amd64-1\" on the VSIs created."
               },
               {
                 "title": "Terraform runtime",
@@ -556,7 +570,7 @@
             ]
           }
         }
-      ]
-    }
+      ]  
+    }    
   ]
 }

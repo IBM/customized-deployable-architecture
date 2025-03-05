@@ -60,7 +60,7 @@ provider "hcp" "this" {
 }
 
 provider "ibm" {
-    ibmcloud_api_key = component.secrets.apikey
+    ibmcloud_api_key = component.secrets.apikey # pragma: allowlist secret
     region           = var.region
 }
 
@@ -86,7 +86,7 @@ component "apache" {
     source = "https://cm.globalcatalog.test.cloud.ibm.com/api/v1-beta/offering/source/archive//solutions/apache-workload/extension?archive=tgz&flavor=standard&installType=extension&kind=terraform&name=deploy-arch-ibm-gm-custom-apache&version=0.0.74"
     inputs = {
         prefix                     = var.prefix
-        ssh_private_key            = component.secrets.ssh_private_key
+        ssh_private_key            = component.secrets.ssh_private_key # pragma: allowlist secret
         prerequisite_workspace_id  = ""
         fp_vsi_floating_ip_address = component.slz.workload_vsi_fip
         resource_group_id          = component.slz.resource_group_id

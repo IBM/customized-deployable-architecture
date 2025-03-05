@@ -19,6 +19,7 @@ variable "region" {
   type    = string
   default = "us-east"
 }
+
 variable "prefix" {
   type    = string
   description = "Prefix string for resources created."
