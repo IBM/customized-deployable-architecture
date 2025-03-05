@@ -61,7 +61,7 @@
 				},
 				{
 					"name": "image",
-					"value": "ibm-ubuntu-22-04-4-minimal-amd64-4"
+					"value": "ibm-ubuntu-22-04-5-minimal-amd64-1"
 				},
 				{
 					"name": "appSecurityRules",
