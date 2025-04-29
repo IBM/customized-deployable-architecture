@@ -1,7 +1,7 @@
 {
     "$schema": "http://json-schema.org/draft-07/schema#",
     "title": "Schema for Global Catalog manifest",
-	"description": "version 1.0.3",
+	"description": "version 1.0.4",
     "type": "object",
     "properties": {
         "products": {
@@ -431,10 +431,7 @@
                                                             }
                                                         }
                                                     }
-                                                },
-                                                "required": [
-                                                    "type"
-                                                ]
+                                                }
                                             }
                                         },
                                         "required": [
