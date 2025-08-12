@@ -1,7 +1,7 @@
 {
     "$schema": "http://json-schema.org/draft-07/schema#",
     "title": "Schema for Global Catalog manifest",
-	"description": "version 1.0.6",
+	"description": "version 1.0.7",
     "type": "object",
     "properties": {
         "products": {
@@ -374,7 +374,7 @@
                                                 "properties": {
                                                     "type": {
                                                         "type": "string",
-														"enum": [ "array", "cluster_var", "json_editor",
+														"enum": [ "array", "cluster_var", "code_editor", "json_editor",
 															"multiline_secure_value", "platform_resource",
 															"power_iaas", "preset_configuration", "region",
 															"resource_group", "schematics_workspace", "textarea",
