@@ -3,7 +3,7 @@
 variable "image" {
   description = "Available images may be found by using ibmcloud is images cli command."
   type    = string
-  default = "ibm-ubuntu-22-04-4-minimal-amd64-4"
+  default = "ibm-ubuntu-22-04-5-minimal-amd64-6"
 }
 
 # API key with sufficient permissions to deploy resources 
@@ -12,14 +12,6 @@ variable "ibmcloud_api_key" {
   type        = string
   sensitive   = true
 }
-
-# configure the terraform provider and direct it to the same region where the 
-# custom secure infrastructure resources were deployed.
-variable "region" {
-  type    = string
-  default = "us-east"
-}
-
 variable "prefix" {
   type    = string
   description = "Prefix string for resources created."

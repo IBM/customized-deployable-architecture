@@ -76,7 +76,7 @@
    "vpn_gateways": [],
    "vsi": [
       {
-         "image_name": "ibm-ubuntu-22-04-5-minimal-amd64-1",
+         "image_name": "ibm-ubuntu-22-04-5-minimal-amd64-6",
          "machine_type": "cx2-4x8",
          "name": "jump-box",
          "resource_group": "Default",
