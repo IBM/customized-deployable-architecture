@@ -19,11 +19,11 @@ output "vpc_data" {
 
 output "workload_vpc_id" {
   description = "The workload vpc id"
-  value = module.landing_zone.vpc_data[0].vpc_data.id
+  value = module.landing_zone.vpc_data[0].vpc_id
 }
 output "workload_vpc_name" {
   description = "The workload vpc name"
-  value = module.landing_zone.vpc_data[0].vpc_data.name
+  value = module.landing_zone.vpc_data[0].vpc_name
 }
 
 output "subnet_data" {
