@@ -7,11 +7,6 @@ output "prefix" {
   description = "Prefix used to name resources is this deployment"
 }
 
-output "schematics_workspace_id" {
-  description = "ID of the IBM Cloud Schematics workspace. Returns null if not ran in Schematics"
-  value       = var.IC_SCHEMATICS_WORKSPACE_ID
-}
-
 output "vpc_data" {
   description = "This is the entire vpc data object for all of the VPCs created.  Includes all attributes of the VPCs"
   value = module.landing_zone.vpc_data
