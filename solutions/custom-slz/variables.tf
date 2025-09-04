@@ -22,3 +22,8 @@ variable "ssh_key" {
   description = "Public SSH Key for VSI creation. Must be a valid SSH key that does not already exist in the deployment region."
   type        = string
 }
+variable "region" {
+  description = "The IBM Cloud region where resources are to be deployed."
+  type = string
+  default = "us-east"
+}
