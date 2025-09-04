@@ -17,6 +17,11 @@ output "vpc_data" {
   value = module.landing_zone.vpc_data
 }
 
+output "region" {
+  description = "The IBM Cloud region where resources were deployed"
+  value = var.region
+}
+
 output "workload_vpc_id" {
   description = "The workload vpc id"
   value = module.landing_zone.vpc_data[0].vpc_id

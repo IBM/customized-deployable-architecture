@@ -22,14 +22,8 @@ variable "ssh_key" {
   description = "Public SSH Key for VSI creation. Must be a valid SSH key that does not already exist in the deployment region."
   type        = string
 }
-
-##############################################################################
-# Schematics Output
-##############################################################################
-
-# tflint-ignore: terraform_naming_convention
-variable "IC_SCHEMATICS_WORKSPACE_ID" {
-  default     = ""
-  type        = string
-  description = "leave blank if running locally. This variable will be automatically populated if running from an IBM Cloud Schematics workspace"
+variable "region" {
+  description = "The IBM Cloud region where resources are to be deployed."
+  type = string
+  default = "us-south"
 }

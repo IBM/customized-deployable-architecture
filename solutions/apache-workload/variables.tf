@@ -12,6 +12,10 @@ variable "ibmcloud_api_key" {
   type        = string
   sensitive   = true
 }
+variable "region" {
+  description = "The IBM Cloud region to use for deploying resources."
+  type = string
+}
 variable "prefix" {
   type    = string
   description = "Prefix string for resources created."
