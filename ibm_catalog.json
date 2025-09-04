@@ -254,6 +254,10 @@
                                 {
                                     "dependency_output": "workload_vpc_id",
                                     "version_input": "vpc_id"
+                                },
+                                {
+                                    "dependency_output": "region",
+                                    "version_input": "region"
                                 }
                             ],
                             "optional": false    

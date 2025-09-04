@@ -16,7 +16,6 @@ variable "ibmcloud_api_key" {
 variable "region" {
   description = "The IBM Cloud region to use for deploying resources."
   type = string
-  default = "us-east"
 }
 variable "prefix" {
   type    = string
