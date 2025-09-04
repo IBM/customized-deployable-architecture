@@ -45,6 +45,11 @@
                             "type": "password"
                         },
                         {
+                            "key": "region",
+                            "required": true,
+                            "type": "string"
+                        },
+                        {
                             "key": "prefix",
                             "required": true,
                             "type": "string"
