@@ -378,7 +378,7 @@
 															"multiline_secure_value", "platform_resource",
 															"power_iaas", "preset_configuration", "region",
 															"resource_group", "schematics_workspace", "textarea",
-															"vpc", "vpc_region", "vpc_ssh_key"
+															"vpc", "vpc_region", "vpc_ssh_key", "worker_node_flavors"
 														]
                                                     },
                                                     "grouping": {
