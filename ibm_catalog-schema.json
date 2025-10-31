@@ -379,7 +379,7 @@
 															"power_iaas", "preset_configuration", "region",
 															"resource_group", "schematics_workspace", "textarea",
 															"vpc", "vpc_region", "vpc_ssh_key", "worker_node_flavors",
-                                                            "secret_group", "secret"
+                                                            "secret_group", "secret", "kms_key"
 														]
                                                     },
                                                     "grouping": {
