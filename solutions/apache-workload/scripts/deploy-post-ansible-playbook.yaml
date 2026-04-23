@@ -11,8 +11,6 @@
 #
 - hosts: localhost
   connection: local
-  remote_user: ubuntu
-  become: yes  # allow sudo
 
   tasks:
     # create an Ansible inventory file.  This inventory file identifies the where to install Apache and how to 
