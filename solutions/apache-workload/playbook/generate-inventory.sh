@@ -24,11 +24,12 @@ echo "my-webserver-target ansible_host=${webserver}"
 echo " "
 
 echo "[webserver_private:vars]"
-echo "ansible_ssh_common_args='-o StrictHostKeyChecking=no -o ProxyCommand=\"ssh -W %h:%p -q root@${fip} -o StrictHostKeyChecking=no -o IdentityFile=./keyfile \"'"
+echo "ansible_ssh_common_args='-o StrictHostKeyChecking=no -o ProxyCommand=\"ssh -W %h:%p -q ubuntu@${fip} -o StrictHostKeyChecking=no -o IdentityFile=./keyfile \"'"
 echo " "
 
 echo "[all:vars]"
 echo "ansible_ssh_private_key_file=./keyfile "
+echo "ansible_user=ubuntu "
 echo " "
 } > inventory.ini
 
