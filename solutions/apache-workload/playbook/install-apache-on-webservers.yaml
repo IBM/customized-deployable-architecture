@@ -13,4 +13,3 @@
         name: apache2
         state: present
         update_cache: true
-        lock_timeout: 300  # wait up to 5 minutes for the lock

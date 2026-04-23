@@ -11,7 +11,8 @@
 #
 - hosts: localhost
   connection: local
-
+  remote_user: ubuntu
+  become: yes  # allow sudo
 
   tasks:
     # create an Ansible inventory file.  This inventory file identifies the where to install Apache and how to 
@@ -29,6 +30,7 @@
 
     # run ansible using the inventory file and key file to install apache.  capture the output for printing.
     - name: install apache 
+      environment:
       command: ansible-playbook -i inventory.ini ../playbook/install-apache-on-webservers.yaml
       register: playbook_out
 
